@@ -2,12 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - ULTIMATE YOUTUBER STUDIO 2026</title>
+    <title>CAPACITIUMX V329 - ULTIMATE STUDIO & AVATARS</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
+        /* PANTALLA DE BLOQUEO DE PAGO (PAYWALL) */
+        #paywall {
+            position: fixed; top:0; left:0; width: 100vw; height: 100vh;
+            background: rgba(5, 5, 5, 0.98); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 450px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
+        .pay-card h2 { color: var(--neon); margin-top: 0; }
+        .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 12px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; }
+
         header { background: #111; padding: 10px 20px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; }
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
@@ -41,8 +52,27 @@
 </head>
 <body>
 
+<div id="paywall">
+    <div class="pay-card">
+        <h2>🔒 ACTIVAR CAPACITIUMX PRO</h2>
+        <p style="font-size:12px; color:#ccc;">Para obtener acceso ilimitado de por vida al editor profesional por <b>$500 MXN</b>, realiza tu depósito o transferencia SPEI:</p>
+        
+        <div class="clabe-box">
+            📌 <b>BANCO / BANCO DIGITAL:</b> Spin by OXXO<br>
+            💳 <b>CLABE INTERBANCARIA:</b><br>
+            <span style="font-size:16px; color:var(--neon);">646180111800000000</span>
+        </div>
+        
+        <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
+
+        <input type="text" id="license-input" class="input-text" style="text-align:center; font-size:14px; margin-bottom:10px;" placeholder="Ingresa tu Clave de Licencia...">
+        <button class="btn-load" style="width:100%;" onclick="validateLicense()">DESBLOQUEAR AHORA</button>
+        <p id="lic-error" style="color:red; font-size:11px; margin-top:10px; display:none;">❌ Clave de licencia no válida.</p>
+    </div>
+</div>
+
 <header>
-    <div class="logo">CAPACITIUMX V329 - ULTIMATE YOUTUBER STUDIO</div>
+    <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -53,6 +83,16 @@
         
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
+
+        <div class="section-title">🐾 AVATARES ANIMADOS CÁMARA</div>
+        <div class="grid-buttons">
+            <button class="btn-c" onclick="setAvatar('none')">👤 Mi Persona</button>
+            <button class="btn-c" onclick="setAvatar('🐰')">🐰 Conejo</button>
+            <button class="btn-c" onclick="setAvatar('🐶')">🐶 Perro</button>
+            <button class="btn-c" onclick="setAvatar('🐱')">🐱 Gato</button>
+            <button class="btn-c" onclick="setAvatar('🦁')">🦁 León</button>
+            <button class="btn-c" onclick="setAvatar('🤖')">🤖 Robot</button>
+        </div>
 
         <div class="section-title">💥 20 EFECTOS YOUTUBER EN CÁMARA</div>
         <div class="grid-buttons">
@@ -157,6 +197,27 @@
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
+    // --- LÓGICA DE LICENCIA Y ACCESO CÓDIGO MAESTRO ---
+    const MASTER_KEY = "CAPACITIUMX-MASTER-2026"; // TU CÓDIGO ÚNICO E INTRANSFERIBLE
+
+    function validateLicense() {
+        const input = document.getElementById('license-input').value.trim();
+        const errorMsg = document.getElementById('lic-error');
+        
+        // Comprobar si es el código maestro tuyo o una clave válida generada
+        if (input === MASTER_KEY || (input.startsWith("CAPX-") && input.length === 19)) {
+            localStorage.setItem('capX_activated', 'true');
+            document.getElementById('paywall').style.display = 'none';
+        } else {
+            errorMsg.style.display = 'block';
+        }
+    }
+
+    // Auto-activar si ya habías ingresado la clave previamente
+    if (localStorage.getItem('capX_activated') === 'true') {
+        document.getElementById('paywall').style.display = 'none';
+    }
+
     const canvas = document.getElementById('canvas-render');
     const ctx = canvas.getContext('2d');
     const vCam = document.getElementById('v-cam');
@@ -167,8 +228,7 @@
     const procCtx = procCanvas.getContext('2d');
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
-    let imgFilter = 'none';
-    let camFx = 'none';
+    let imgFilter = 'none', camFx = 'none', currentAvatar = 'none';
     let bgMode = 'yellow'; 
     let customBgImg = null;
     let transitionTimer = 0, camFxTimer = 0;
@@ -176,7 +236,6 @@
     let selfieSegmentation = null;
     let latestMask = null;
 
-    // --- INTEGRACIÓN DE IA PARA SEPARACIÓN DE CÁMARA Y FONDO VIRTUAL ---
     function initAI() {
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
@@ -205,7 +264,14 @@
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
-        if (bgMode === 'none') {
+        if (currentAvatar !== 'none') {
+            // Render de Avatar en vez del cuerpo real
+            drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
+            procCtx.font = '280px Arial';
+            procCtx.textAlign = 'center';
+            procCtx.textBaseline = 'middle';
+            procCtx.fillText(currentAvatar, procCanvas.width / 2, procCanvas.height / 2 + 30);
+        } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
@@ -221,10 +287,8 @@
         procCtx.restore();
     }
 
-    function setCamFx(fx) {
-        camFx = fx;
-        camFxTimer = 0;
-    }
+    function setAvatar(emoji) { currentAvatar = emoji; }
+    function setCamFx(fx) { camFx = fx; camFxTimer = 0; }
 
     function drawVirtualBackgroundToCtx(context, x, y, w, h) {
         context.save();
@@ -329,7 +393,6 @@
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
-    // --- 20 TRANSICIONES ANIMADAS ESTILO POWERPOINT ---
     function renderImageWithAnimation(img, animMode) {
         transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
@@ -423,7 +486,6 @@
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // --- 1. SLIDE (FOTO / VIDEO) ---
         if (curIdx !== -1) {
             const m = library[curIdx];
             if (m.type === 'img' && m.el) {
@@ -440,7 +502,6 @@
             }
         }
 
-        // --- 2. CÁMARA CON 20 EFECTOS YOUTUBER ---
         if (camMode !== 'off' && vCam.srcObject) {
             camFxTimer += 0.05;
             let cx = (camMode === 'full') ? 0 : camX;
@@ -471,7 +532,6 @@
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
 
-            // Capas visuales para efectos YouTuber
             if (camFx === 'alert') {
                 ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`;
                 ctx.fillRect(cx, cy, cw, ch);
@@ -576,7 +636,6 @@
         a.download = `CAPACITIUMX_FINAL.webm`; a.click();
     }
 
-    // ATAJO ESPACIO
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && isRecording) {
             e.preventDefault();
@@ -584,7 +643,6 @@
         }
     });
 
-    // ARRASTRE DE CÁMARA
     canvas.onmousedown = (e) => {
         const r = canvas.getBoundingClientRect();
         const x = (e.clientX - r.left) * (canvas.width / r.width);
@@ -600,7 +658,6 @@
     };
     window.onmouseup = () => dragging = false;
 
-    // Inicializar IA y renderizado
     initAI();
     render();
 </script>
