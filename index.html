@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V331 - THUMBNAIL STUDIO & CAMERA SHAPES</title>
+    <title>CAPACITIUMX V332 - FULL WORKING FX & THUMBNAIL STUDIO</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -72,7 +72,7 @@
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V331 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V332 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -91,12 +91,12 @@
             <button class="btn-c" onclick="setCamShape('circle')">⚪ Círculo Redondo</button>
         </div>
 
-        <!-- EDITOR DE MINIATURAS INTERACTIVO -->
+        <!-- EDITOR DE MINIATURAS INTERACTIVO CON FUENTE Y COLORES -->
         <div class="section-title">🖼️ EDITOR DE MINIATURAS YOUTUBE</div>
         <input type="text" id="thumb-text" class="input-text" placeholder="Texto Miniatura (Ej: ¡NUEVO TRUCO!)...">
         
         <div class="ctrl-row">
-            <span>Color:</span>
+            <span>Color Texto:</span>
             <input type="color" id="thumb-color" value="#ffeb3b" style="background:none; border:none; cursor:pointer; width:30px; height:25px;">
             <select id="thumb-font" class="select-custom">
                 <option value="Impact">Fuente: Impact (Youtuber)</option>
@@ -106,6 +106,11 @@
             </select>
         </div>
 
+        <div class="ctrl-row">
+            <span>Tamaño Letra:</span>
+            <input type="range" id="thumb-size" min="30" max="140" value="80">
+        </div>
+
         <div class="grid-buttons">
             <button class="btn-c" onclick="setThumbAlign('left')">⬅️ Izquierda</button>
             <button class="btn-c" onclick="setThumbAlign('center')">↔️ Centro</button>
@@ -113,9 +118,15 @@
             <button class="btn-c" onclick="toggleBlurBg()">🌫️ Blur Fondo</button>
         </div>
 
-        <div class="section-title">🏹 CONTROLES DE FLECHA CURVA</div>
+        <!-- FLECHA CURVA ROBUSTA Y MANIPULABLE -->
+        <div class="section-title">🏹 CONTROLES DE FLECHA ROBUSTA</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="toggleArrow(!showArrow)">👁️ Mostrar/Ocultar Flecha</button>
+            <button class="btn-c" onclick="toggleArrowFlip()">🪞 Voltear Flecha (Flip)</button>
+        </div>
+
+        <div class="ctrl-row">
+            <span>Color Flecha:</span>
             <input type="color" id="arrow-color" value="#ff0055" style="background:none; border:none; cursor:pointer; width:100%; height:25px;">
         </div>
 
@@ -128,8 +139,12 @@
             <input type="range" id="arrow-y" min="100" max="600" value="360">
         </div>
         <div class="ctrl-row">
-            <span>Rotación:</span>
+            <span>Rotación (360°):</span>
             <input type="range" id="arrow-rot" min="0" max="360" value="0">
+        </div>
+        <div class="ctrl-row">
+            <span>Grosor/Giga:</span>
+            <input type="range" id="arrow-size" min="10" max="40" value="22">
         </div>
 
         <div class="grid-buttons" style="margin-top:6px;">
@@ -232,7 +247,7 @@
             <button class="btn-c" onclick="setCamFx('unrealSet')">🎬 85. Unreal Engine Set</button>
         </div>
 
-        <div class="section-title">🎬 20 Transiciones PowerPoint (Fotos)</div>
+        <div class="section-title">🎬 20 TRANSICIONES DE FOTO / SLIDE</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setAnimMode('zoom')">🔍 1. Zoom</button>
             <button class="btn-c" onclick="setAnimMode('slide')">↔️ 2. Cortina</button>
@@ -340,6 +355,7 @@
     // CONFIGURACIÓN DE CÁMARA Y MINIATURA
     let camShape = 'rect'; // 'rect' o 'circle'
     let showArrow = false;
+    let arrowFlip = false;
     let thumbAlign = 'center';
     let isBlurBg = false;
 
@@ -347,6 +363,7 @@
     function setThumbAlign(align) { thumbAlign = align; }
     function toggleBlurBg() { isBlurBg = !isBlurBg; }
     function toggleArrow(val) { showArrow = val; }
+    function toggleArrowFlip() { arrowFlip = !arrowFlip; }
 
     function snapFrameForThumb() {
         const thumbCanvas = document.createElement('canvas');
@@ -367,11 +384,12 @@
         let textVal = document.getElementById('thumb-text').value.trim();
         let textColor = document.getElementById('thumb-color').value;
         let textFont = document.getElementById('thumb-font').value;
+        let textSize = document.getElementById('thumb-size').value;
 
         if (textVal) {
             context.save();
             context.fillStyle = textColor;
-            context.font = `900 80px ${textFont}`;
+            context.font = `900 ${textSize}px ${textFont}`;
             context.textAlign = thumbAlign;
             context.strokeStyle = "black";
             context.lineWidth = 12;
@@ -390,27 +408,30 @@
             let arrowY = parseInt(document.getElementById('arrow-y').value);
             let arrowRot = parseInt(document.getElementById('arrow-rot').value) * (Math.PI / 180);
             let arrowColor = document.getElementById('arrow-color').value;
+            let arrowThickness = parseInt(document.getElementById('arrow-size').value);
 
             context.save();
             context.translate(arrowX, arrowY);
             context.rotate(arrowRot);
+            if (arrowFlip) context.scale(-1, 1);
+
             context.strokeStyle = arrowColor;
-            context.lineWidth = 14;
+            context.fillStyle = arrowColor;
+            context.lineWidth = arrowThickness;
             context.shadowColor = "yellow";
             context.shadowBlur = 15;
 
-            // Dibujar Flecha Curva
+            // Cuerpo de la Flecha Curva
             context.beginPath();
-            context.moveTo(-100, 0);
-            context.quadraticCurveTo(0, -80, 100, 0);
+            context.moveTo(-120, 0);
+            context.quadraticCurveTo(0, -100, 120, 0);
             context.stroke();
 
-            // Punta de la Flecha
-            context.fillStyle = arrowColor;
+            // Punta Gigante
             context.beginPath();
-            context.moveTo(100, 0);
-            context.lineTo(70, -20);
-            context.lineTo(70, 20);
+            context.moveTo(120, 0);
+            context.lineTo(80, -35);
+            context.lineTo(80, 35);
             context.closePath();
             context.fill();
 
@@ -631,6 +652,22 @@
                 ctx.translate(cw / 2, ch / 2); ctx.scale(sz, sz); ctx.translate(-cw / 2, -ch / 2);
                 drawImageContain(img, cw, ch);
                 break;
+            case 'slide':
+                let px = (1 - Math.pow(1 - t, 3)) * cw - cw;
+                ctx.translate(px, 0); drawImageContain(img, cw, ch);
+                break;
+            case 'fade':
+                ctx.globalAlpha = t; drawImageContain(img, cw, ch);
+                break;
+            case 'pop':
+                let pScale = t < 0.8 ? t * 1.1 : 1;
+                ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale); ctx.translate(-cw / 2, -ch / 2);
+                drawImageContain(img, cw, ch);
+                break;
+            case 'drop':
+                let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
+                ctx.translate(0, py); drawImageContain(img, cw, ch);
+                break;
             default:
                 drawImageContain(img, cw, ch);
         }
@@ -666,23 +703,62 @@
 
             ctx.save();
 
-            // CLIP CÁMARA (RECTÁNGULO O CÍRCULO)
+            // RECORTE DE CÁMARA (RECTÁNGULO O CÍRCULO)
             if (camMode === 'mini' && camShape === 'circle') {
                 ctx.beginPath();
                 ctx.arc(cx + cw/2, cy + ch/2, Math.min(cw, ch)/2, 0, Math.PI * 2);
                 ctx.clip();
             }
 
-            // TRANSFORMACIONES COMPLETAS
+            // EJECUCIÓN DE TRANSFORMACIONES DE LOS 85 EFECTOS
             if (camFx === 'zoom' || camFx === 'punchIn') {
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(1.35, 1.35); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'boom' || camFx === 'shakeEffect') {
+            } else if (camFx === 'boom' || camFx === 'shakeEffect' || camFx === 'datamosh') {
                 cx += (Math.random() - 0.5) * 16; cy += (Math.random() - 0.5) * 16;
             } else if (camFx === 'mirror') {
                 ctx.translate(cx + cw, cy); ctx.scale(-1, 1); cx = 0; cy = 0;
+            } else if (camFx === 'dollyZoom') {
+                let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
+                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
+            }
+
+            // APLICACIÓN DE FILTROS AL CANVAS PROCESADO
+            if (camFx === 'freeze' || camFx === 'colorIsolation' || camFx === 'memeFreeze') {
+                ctx.filter = 'grayscale(1) contrast(1.4)';
+            } else if (camFx === 'vhs' || camFx === 'oldTv') {
+                ctx.filter = 'contrast(1.3) sepia(0.3)';
+            } else if (camFx === 'blurBg') {
+                ctx.filter = 'blur(4px)';
+            } else if (camFx === 'colorPop') {
+                ctx.filter = 'saturate(2.5) contrast(1.2)';
             }
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
+            ctx.filter = 'none';
+
+            // DIBUJO DE OVERLAYS Y EFECTOS EN VIVO
+            if (camFx === 'alert' || camFx === 'pulseRed') {
+                ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`; ctx.fillRect(cx, cy, cw, ch);
+            } else if (camFx === 'neon' || camFx === 'auraGlow') {
+                ctx.strokeStyle = `hsl(${(camFxTimer * 80) % 360}, 100%, 50%)`; ctx.lineWidth = 6; ctx.strokeRect(cx, cy, cw, ch);
+            } else if (camFx === 'cinema') {
+                ctx.fillStyle = 'black'; ctx.fillRect(cx, cy, cw, ch * 0.12); ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
+            } else if (camFx === 'strobe' || camFx === 'snapFlash') {
+                if (Math.sin(camFxTimer * 15) > 0) { ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.fillRect(cx, cy, cw, ch); }
+            } else if (camFx === 'laser') {
+                ctx.strokeStyle = 'red'; ctx.lineWidth = 6; ctx.shadowColor = 'red'; ctx.shadowBlur = 10; ctx.beginPath();
+                ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
+                ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1); ctx.stroke();
+            } else if (camFx === 'cyber' || camFx === 'hudOverlay') {
+                ctx.strokeStyle = "var(--neon)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, 50, 0, Math.PI * 2); ctx.stroke();
+                ctx.fillStyle = "var(--neon)"; ctx.font = "10px monospace"; ctx.fillText("TARGET_LOCKED // CAPACITIUMX_AI", cx + 15, cy + 25);
+            } else if (camFx === 'textMrBeast') {
+                let words = ["¡INCREMENTA!", "¡REACCIONA!", "¡MIRA ESTO!"];
+                let word = words[Math.floor(camFxTimer * 2) % words.length];
+                ctx.fillStyle = "#ffeb3b"; ctx.font = "900 30px Arial"; ctx.textAlign = "center";
+                ctx.strokeStyle = "black"; ctx.lineWidth = 6;
+                ctx.strokeText(word, cx + cw/2, cy + ch*0.85); ctx.fillText(word, cx + cw/2, cy + ch*0.85);
+            }
 
             if (camMode === 'mini') {
                 ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
@@ -699,7 +775,7 @@
             ctx.restore();
         }
 
-        // RENDERIZAR ELEMENTOS DE MINIATURAS SOBREPUESTOS
+        // RENDERIZAR ELEMENTOS DE MINIATURA SOBREPUESTOS AL FINAL
         drawThumbnailElements(ctx, canvas.width, canvas.height);
 
         requestAnimationFrame(render);
