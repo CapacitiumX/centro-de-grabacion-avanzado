@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V335 - ULTIMATE STUDIO & PRO MATTING</title>
+    <title>CAPACITIUMX V336 - ULTIMATE STUDIO & CLEAN MATTING</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -94,7 +94,7 @@
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V335 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V336 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -106,11 +106,11 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <!-- CONTROL DE LIMPIEZA DE MÁSCARA PARA EVITAR MANCHAS BLANCAS Y BURBUJAS -->
-        <div class="section-title">✂️ LIMPIEZA Y TOLERANCIA CÁMARA (SIN BURBUJAS)</div>
+        <!-- CONTROL REPARADO DE LIMPIEZA DE BORDES -->
+        <div class="section-title">✂️ LIMPIEZA Y BORDE LIMPIO IA</div>
         <div class="ctrl-row">
-            <span>Tolerancia IA:</span>
-            <input type="range" id="mask-threshold" min="0.1" max="0.9" step="0.02" value="0.45">
+            <span>Suavizado Borde:</span>
+            <input type="range" id="mask-blur" min="0" max="10" step="0.5" value="0">
         </div>
 
         <div class="section-title">📐 FORMA CÁMARA</div>
@@ -145,7 +145,7 @@
             <button class="btn-c" onclick="toggleBlurBg()">🌫️ Blur Fondo</button>
         </div>
 
-        <!-- PANEL DE FLECHA CÓNICA 3D RECURVADA -->
+        <!-- PANEL DE FLECHA CÓNICA 3D -->
         <div class="section-title">🏹 FLECHA CURVA CÓNICA 3D (ESTILO YOUTUBE)</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="toggleArrow(!showArrow)">👁️ Mostrar/Ocultar</button>
@@ -529,10 +529,10 @@
         requestAnimationFrame(processAIFrames);
     }
 
-    // PROCESAMIENTO BINARIO REFORZADO PARA ELIMINAR BURBUJAS Y PARPADEO EN EL ROSTRO
+    // NUEVO MOTOR DE PROCESAMIENTO LIMPIO DE CÁMARA (SIN ERRORES NEGATIVOS NI BLOQUES EN LA PIEL)
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
-        const thresh = parseFloat(document.getElementById('mask-threshold').value);
+        const blurAmount = parseFloat(document.getElementById('mask-blur').value);
 
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
@@ -542,30 +542,25 @@
         } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
+            // 1. Dibujar la cámara real en un buffer temporal recortado limpiamente por la máscara
+            const personBuffer = document.createElement('canvas');
+            personBuffer.width = procCanvas.width;
+            personBuffer.height = procCanvas.height;
+            const pCtx = personBuffer.getContext('2d');
+
+            // Dibujar la persona real
+            pCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
+
+            // Aplicar composición 'source-in' para conservar ÚNICAMENTE la persona según la máscara de IA
+            pCtx.globalCompositeOperation = 'destination-in';
+            if (blurAmount > 0) pCtx.filter = `blur(${blurAmount}px)`;
+            pCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+
+            // 2. Renderizar el Fondo Virtual de color/imagen primero
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = procCanvas.width; tempCanvas.height = procCanvas.height;
-            const tCtx = tempCanvas.getContext('2d');
-            tCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
-
-            const imgData = tCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
-            const data = imgData.data;
-            for (let i = 0; i < data.length; i += 4) {
-                // Corte Binario Estricto para evitar manchas grises/blancas
-                data[i + 3] = (data[i] / 255 >= thresh) ? 255 : 0;
-            }
-            tCtx.putImageData(imgData, 0, 0);
-
-            procCtx.save();
-            procCtx.globalCompositeOperation = 'destination-out';
-            procCtx.drawImage(tempCanvas, 0, 0, procCanvas.width, procCanvas.height);
-            procCtx.restore();
-
-            procCtx.save();
-            procCtx.globalCompositeOperation = 'destination-over';
-            procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
-            procCtx.restore();
+            // 3. Superponer a la persona recortada limpiamente arriba
+            procCtx.drawImage(personBuffer, 0, 0, procCanvas.width, procCanvas.height);
         }
         procCtx.restore();
     }
