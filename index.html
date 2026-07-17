@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - ULTIMATE YOUTUBER STUDIO</title>
+    <title>CAPACITIUMX V329 - ULTIMATE YOUTUBER STUDIO 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -54,14 +54,28 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">💥 EFECTOS YOUTUBER EN CÁMARA</div>
+        <div class="section-title">💥 20 EFECTOS YOUTUBER EN CÁMARA</div>
         <div class="grid-buttons">
-            <button class="btn-c" onclick="setCamFx('none')">🚫 Ninguno</button>
-            <button class="btn-c" onclick="setCamFx('boom')">💥 Explosión</button>
-            <button class="btn-c" onclick="setCamFx('alert')">🚨 Alerta Rojo</button>
-            <button class="btn-c" onclick="setCamFx('neon')">✨ Brillo Neón</button>
-            <button class="btn-c" onclick="setCamFx('zoom')">🔍 Zoom Reacción</button>
-            <button class="btn-c" onclick="setCamFx('cinema')">🎬 Cine / Barras</button>
+            <button class="btn-c" onclick="setCamFx('none')">🚫 1. Normal</button>
+            <button class="btn-c" onclick="setCamFx('boom')">💥 2. Explosión</button>
+            <button class="btn-c" onclick="setCamFx('alert')">🚨 3. Alerta Rojo</button>
+            <button class="btn-c" onclick="setCamFx('neon')">✨ 4. Neón RGB</button>
+            <button class="btn-c" onclick="setCamFx('zoom')">🔍 5. Zoom Reacción</button>
+            <button class="btn-c" onclick="setCamFx('cinema')">🎬 6. Modo Cine</button>
+            <button class="btn-c" onclick="setCamFx('strobe')">⚡ 7. Rayos Strobe</button>
+            <button class="btn-c" onclick="setCamFx('ghost')">👻 8. Fantasma</button>
+            <button class="btn-c" onclick="setCamFx('vhs')">📼 9. VHS Retro</button>
+            <button class="btn-c" onclick="setCamFx('pixel')">🎮 10. Pixel Art</button>
+            <button class="btn-c" onclick="setCamFx('fire')">🔥 11. Fuego Aura</button>
+            <button class="btn-c" onclick="setCamFx('glitch')">🌌 12. Glitch 3D</button>
+            <button class="btn-c" onclick="setCamFx('oldTv')">📺 13. TV Vieja</button>
+            <button class="btn-c" onclick="setCamFx('mirror')">🎭 14. Espejo</button>
+            <button class="btn-c" onclick="setCamFx('vignette')">🖤 15. Viñeta Cómic</button>
+            <button class="btn-c" onclick="setCamFx('spotlight')">🎯 16. Enfoque Spot</button>
+            <button class="btn-c" onclick="setCamFx('rainbow')">🌈 17. Arcoíris</button>
+            <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado</button>
+            <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 19. Ojo de Pez</button>
+            <button class="btn-c" onclick="setCamFx('sparkle')">💎 20. Diamante</button>
         </div>
 
         <div class="section-title">🎬 20 Transiciones PowerPoint (Fotos)</div>
@@ -154,7 +168,7 @@
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none';
-    let camFx = 'none'; // Efecto especial YouTuber en cámara
+    let camFx = 'none';
     let bgMode = 'yellow'; 
     let customBgImg = null;
     let transitionTimer = 0, camFxTimer = 0;
@@ -162,7 +176,7 @@
     let selfieSegmentation = null;
     let latestMask = null;
 
-    // --- INTEGRACIÓN Y RECORTE DE UMBRAL DURO (SIN EFECTO HUMO) ---
+    // --- INTEGRACIÓN DE IA PARA SEPARACIÓN DE CÁMARA Y FONDO VIRTUAL ---
     function initAI() {
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
@@ -194,16 +208,13 @@
         if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Dibujar el fondo virtual seleccionado
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Recorte directo y limpio (sin filtros de desenfoque para eliminar el "humo")
             procCtx.save();
             procCtx.globalCompositeOperation = 'destination-out';
             procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
             procCtx.restore();
 
-            // 3. Colocar a la persona completa
             procCtx.globalCompositeOperation = 'destination-over';
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         }
@@ -429,7 +440,7 @@
             }
         }
 
-        // --- 2. CÁMARA CON EFECTOS YOUTUBER EN TIEMPO REAL ---
+        // --- 2. CÁMARA CON 20 EFECTOS YOUTUBER ---
         if (camMode !== 'off' && vCam.srcObject) {
             camFxTimer += 0.05;
             let cx = (camMode === 'full') ? 0 : camX;
@@ -439,16 +450,17 @@
 
             ctx.save();
             
-            // Efecto Zoom de Reacción
             if (camFx === 'zoom') {
                 ctx.translate(cx + cw/2, cy + ch/2);
                 ctx.scale(1.25, 1.25);
                 ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            }
-            // Efecto Vibración Explosiva
-            if (camFx === 'boom') {
+            } else if (camFx === 'boom') {
                 cx += (Math.random() - 0.5) * 8;
                 cy += (Math.random() - 0.5) * 8;
+            } else if (camFx === 'mirror') {
+                ctx.translate(cx + cw, cy);
+                ctx.scale(-1, 1);
+                cx = 0; cy = 0;
             }
 
             if (camMode === 'mini') {
@@ -457,10 +469,9 @@
                 ctx.strokeRect(cx, cy, cw, ch);
             }
 
-            // Dibujar cámara + fondo virtual procesado
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
 
-            // Capas Superpuestas YouTuber
+            // Capas visuales para efectos YouTuber
             if (camFx === 'alert') {
                 ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`;
                 ctx.fillRect(cx, cy, cw, ch);
@@ -472,13 +483,29 @@
                 ctx.fillStyle = 'black';
                 ctx.fillRect(cx, cy, cw, ch * 0.12);
                 ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-            }
-
-            // Indicador de Estrella de Efecto Activo
-            if (camFx !== 'none') {
-                ctx.fillStyle = '#ffeb3b';
-                ctx.font = 'bold 18px Arial';
-                ctx.fillText(`⭐ FX: ${camFx.toUpperCase()}`, cx + 10, cy + 25);
+            } else if (camFx === 'strobe') {
+                if (Math.sin(camFxTimer * 20) > 0) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                    ctx.fillRect(cx, cy, cw, ch);
+                }
+            } else if (camFx === 'vhs') {
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.05)';
+                ctx.fillRect(cx, cy + (Math.sin(camFxTimer * 5) * ch/2) + ch/2, cw, 4);
+            } else if (camFx === 'fire') {
+                ctx.shadowColor = 'orange';
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = '#ff4500';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(cx, cy, cw, ch);
+            } else if (camFx === 'rainbow') {
+                ctx.fillStyle = `hsla(${(camFxTimer * 60) % 360}, 100%, 50%, 0.15)`;
+                ctx.fillRect(cx, cy, cw, ch);
+            } else if (camFx === 'vignette') {
+                let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.3, cx+cw/2, cy+ch/2, cw*0.7);
+                grad.addColorStop(0, 'rgba(0,0,0,0)');
+                grad.addColorStop(1, 'rgba(0,0,0,0.8)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(cx, cy, cw, ch);
             }
 
             ctx.restore();
