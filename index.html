@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - ULTIMATE EDITOR</title>
+    <title>CAPACITIUMX V329 - ULTIMATE STUDIO PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -12,7 +12,7 @@
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 330px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .sidebar { width: 340px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
         #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
@@ -31,7 +31,7 @@
 
         .footer { height: 110px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
         .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
-        .btn-pause { background: #555; color: white; padding: 12px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; display: none; }
+        .btn-pause { background: #ff9800; color: black; padding: 12px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
         .btn-next { background: #333; border: 1px solid var(--neon); color: var(--neon); padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .recording { animation: pulse 1s infinite; box-shadow: 0 0 20px var(--red); }
         @keyframes pulse { 50% { opacity: 0.5; } }
@@ -42,7 +42,7 @@
 <body>
 
 <header>
-    <div class="logo">CAPACITIUMX V329 - ULTIMATE EDITOR</div>
+    <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -54,23 +54,28 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">🎬 Animación PowerPoint (Aplica a foto actual)</div>
+        <div class="section-title">🎬 20 Transiciones PowerPoint (Aplica a Foto Actual)</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setAnimMode('zoom')">🔍 1. Zoom</button>
             <button class="btn-c" onclick="setAnimMode('slide')">↔️ 2. Cortina</button>
-            <button class="btn-c" onclick="setAnimMode('blinds')">🪟 3. Persiana</button>
+            <button class="btn-c" onclick="setAnimMode('blinds')">🪟 3. Persiana Horiz.</button>
             <button class="btn-c" onclick="setAnimMode('flip')">🔄 4. Giro 3D</button>
-            <button class="btn-c" onclick="setAnimMode('fade')">✨ 5. Fade In</button>
+            <button class="btn-c" onclick="setAnimMode('fade')">✨ 5. Desvanecer</button>
             <button class="btn-c" onclick="setAnimMode('pop')">💥 6. Explosión</button>
             <button class="btn-c" onclick="setAnimMode('drop')">⬇️ 7. Caída</button>
-            <button class="btn-c" onclick="setAnimMode('wipe')">↕️ 8. Barrido</button>
+            <button class="btn-c" onclick="setAnimMode('wipe')">↕️ 8. Barrido Arriba</button>
             <button class="btn-c" onclick="setAnimMode('spinZoom')">🌀 9. Spin Zoom</button>
             <button class="btn-c" onclick="setAnimMode('bounce')">⚽ 10. Rebote</button>
             <button class="btn-c" onclick="setAnimMode('scale')">📐 11. Escalado</button>
             <button class="btn-c" onclick="setAnimMode('windmill')">🎡 12. Molino</button>
             <button class="btn-c" onclick="setAnimMode('diagonal')">↗️ 13. Diagonal</button>
-            <button class="btn-c" onclick="setAnimMode('flash')">⚡ 14. Parpadeo</button>
-            <button class="btn-c" onclick="setAnimMode('none')">⏹️ 15. Estático</button>
+            <button class="btn-c" onclick="setAnimMode('flash')">⚡ 14. Flash</button>
+            <button class="btn-c" onclick="setAnimMode('vBlinds')">🏛️ 15. Persiana Vert.</button>
+            <button class="btn-c" onclick="setAnimMode('reveal')">👁️ 16. Revelar</button>
+            <button class="btn-c" onclick="setAnimMode('rise')">⬆️ 17. Elevar</button>
+            <button class="btn-c" onclick="setAnimMode('swing')">🔔 18. Balanceo</button>
+            <button class="btn-c" onclick="setAnimMode('dBlinds')">📐 19. Persiana Diag.</button>
+            <button class="btn-c" onclick="setAnimMode('none')">⏹️ 20. Estático</button>
         </div>
 
         <div class="section-title">🎨 Filtros para Foto / Flyer</div>
@@ -83,7 +88,7 @@
             <button class="btn-c" onclick="imgFilter='hue-rotate(180deg)'">Neón FX</button>
         </div>
 
-        <div class="section-title">🖼️ Fondo Virtual CÁMARA (IA)</div>
+        <div class="section-title">🖼️ Fondo Virtual CÁMARA (IA HD)</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setBgMode('yellow')">🟨 Amarillo</button>
             <button class="btn-c" onclick="setBgMode('blue')">🟦 Azul Sólido</button>
@@ -120,12 +125,12 @@
         <button class="btn-next" onclick="nextSlide()">SIGUIENTE FOTO ➡️</button>
         <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:12px 20px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
     </div>
-    <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR RÁPIDO SI TE EQUIVOCAS.</div>
+    <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR SI TE TRABAS AL HABLAR.</div>
 </div>
 
 <video id="v-cam" autoplay playsinline style="display:none"></video>
 <video id="v-bg" loop style="display:none" crossOrigin="anonymous"></video>
-<canvas id="canvas-cam-processed" width="640" height="480" style="display:none"></canvas>
+<canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
     const canvas = document.getElementById('canvas-render');
@@ -139,22 +144,24 @@
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none';
-    let bgMode = 'yellow'; // Por defecto amarillo sólido
+    let bgMode = 'yellow'; 
     let customBgImg = null;
     let transitionTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
     let selfieSegmentation = null;
     let latestMask = null;
 
-    // --- INTEGRACIÓN DE IA PARA SEPARACIÓN DE CÁMARA Y FONDO VIRTUAL ---
+    // --- INTEGRACIÓN Y OPTIMIZACIÓN DE IA DE BORDES HD ---
     function initAI() {
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
         });
-        selfieSegmentation.setOptions({ modelSelection: 1 });
+        
+        // modelSelection: 0 -> Optimizado para retratos/selfies con mejor definición en bordes de cabello
+        selfieSegmentation.setOptions({ modelSelection: 0 });
         selfieSegmentation.onResults(onResultsAI);
 
-        navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } }).then(stream => {
+        navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
             vCam.srcObject = stream;
             document.getElementById('status-mic').innerText = "ESTADO: IA LISTA";
             processAIFrames();
@@ -177,14 +184,17 @@
         if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Dibujar Fondo Virtual Elegido
+            // 1. Dibujar el fondo virtual elegido
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Aplicar Máscara de IA para recortar a la persona
+            // 2. Aplicar un suavizado leve a la máscara de IA para evitar bordes dentados en pelo/orejas
+            procCtx.save();
             procCtx.globalCompositeOperation = 'destination-out';
+            procCtx.filter = 'blur(3px)'; // Filtro de suavizado suave
             procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+            procCtx.restore();
 
-            // 3. Superponer la persona real limpia
+            // 3. Superponer el cuerpo real limpio sobre el fondo
             procCtx.globalCompositeOperation = 'destination-over';
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         }
@@ -226,7 +236,6 @@
         Array.from(e.target.files).forEach(file => {
             const url = URL.createObjectURL(file);
             const isVid = file.type.includes('video');
-            // Cada elemento guarda su propio modo de animación (por defecto 'zoom')
             const item = { type: isVid ? 'vid' : 'img', url, el: null, text: "", anim: 'zoom' };
             if (!isVid) { const img = new Image(); img.src = url; item.el = img; }
             library.push(item);
@@ -246,14 +255,12 @@
         }
     }
 
-    function setBgMode(mode) {
-        bgMode = mode;
-    }
+    function setBgMode(mode) { bgMode = mode; }
 
     function setAnimMode(anim) {
         if (curIdx !== -1) {
             library[curIdx].anim = anim;
-            transitionTimer = 0; // Reinicia animación para vista previa inmediata
+            transitionTimer = 0;
             updateList();
         }
     }
@@ -297,7 +304,7 @@
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
-    // --- 15 TRANSICIONES ANIMADAS ESTILO POWERPOINT ---
+    // --- 20 TRANSICIONES ANIMADAS ESTILO POWERPOINT ---
     function renderImageWithAnimation(img, animMode) {
         transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
@@ -318,18 +325,14 @@
                 break;
             case 'blinds':
                 let strips = 8, stripW = cw / strips, pW = stripW * t;
-                for (let i = 0; i < strips; i++) {
-                    ctx.drawImage(img, i * stripW, 0, pW, ch, i * stripW, 0, pW, ch);
-                }
+                for (let i = 0; i < strips; i++) { ctx.drawImage(img, i * stripW, 0, pW, ch, i * stripW, 0, pW, ch); }
                 break;
             case 'flip':
-                ctx.translate(cw / 2, ch / 2);
-                ctx.scale(Math.cos((1 - t) * Math.PI), 1);
+                ctx.translate(cw / 2, ch / 2); ctx.scale(Math.cos((1 - t) * Math.PI), 1);
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
                 break;
             case 'fade':
-                ctx.globalAlpha = t;
-                ctx.drawImage(img, 0, 0, cw, ch);
+                ctx.globalAlpha = t; ctx.drawImage(img, 0, 0, cw, ch);
                 break;
             case 'pop':
                 let pScale = t < 0.8 ? t * 1.1 : 1;
@@ -344,9 +347,7 @@
                 ctx.drawImage(img, 0, 0, cw, ch * t, 0, 0, cw, ch * t);
                 break;
             case 'spinZoom':
-                ctx.translate(cw / 2, ch / 2);
-                ctx.rotate((1 - t) * Math.PI);
-                ctx.scale(t, t);
+                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI); ctx.scale(t, t);
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
                 break;
             case 'bounce':
@@ -358,20 +359,36 @@
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
                 break;
             case 'windmill':
-                ctx.translate(cw / 2, ch / 2);
-                ctx.rotate((1 - t) * Math.PI * 2);
+                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI * 2);
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
                 break;
             case 'diagonal':
-                let dX = (1 - t) * -cw;
-                let dY = (1 - t) * -ch;
-                ctx.drawImage(img, dX, dY, cw, ch);
+                ctx.drawImage(img, (1 - t) * -cw, (1 - t) * -ch, cw, ch);
                 break;
             case 'flash':
                 ctx.globalAlpha = (Math.sin(transitionTimer * 10) > 0 || t === 1) ? 1 : 0.2;
                 ctx.drawImage(img, 0, 0, cw, ch);
                 break;
-            default: // static
+            case 'vBlinds':
+                let vStrips = 8, vH = ch / vStrips, pH = vH * t;
+                for (let i = 0; i < vStrips; i++) { ctx.drawImage(img, 0, i * vH, cw, pH, 0, i * vH, cw, pH); }
+                break;
+            case 'reveal':
+                let rW = cw * t, rH = ch * t;
+                ctx.drawImage(img, (cw - rW)/2, (ch - rH)/2, rW, rH, (cw - rW)/2, (ch - rH)/2, rW, rH);
+                break;
+            case 'rise':
+                ctx.drawImage(img, 0, (1 - t) * ch, cw, ch);
+                break;
+            case 'swing':
+                ctx.translate(cw / 2, 0); ctx.rotate(Math.sin(transitionTimer * 3) * (1 - t) * 0.2);
+                ctx.drawImage(img, -cw / 2, 0, cw, ch);
+                break;
+            case 'dBlinds':
+                ctx.save(); ctx.beginPath(); ctx.rect(0, 0, cw * t, ch * t); ctx.clip();
+                ctx.drawImage(img, 0, 0, cw, ch); ctx.restore();
+                break;
+            default:
                 ctx.drawImage(img, 0, 0, cw, ch);
         }
         ctx.restore();
@@ -411,7 +428,6 @@
                 ctx.lineWidth = 3;
                 ctx.strokeRect(cx, cy, cw, ch);
             }
-            // Dibujar el canvas procesado por la IA con la persona + fondo virtual
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
             ctx.restore();
         }
@@ -421,7 +437,6 @@
 
     async function startCapture() {
         const btn = document.getElementById('recBtn');
-        const pBtn = document.getElementById('pauseBtn');
         
         if (!isRecording) {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -451,19 +466,19 @@
             isRecording = true;
             btn.innerText = "⏹ TERMINAR";
             btn.classList.add('recording');
-            pBtn.style.display = "block";
             document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
         } else {
             recorder.stop();
             isRecording = false;
             btn.innerText = "🎙️ EMPEZAR GRABACIÓN";
             btn.classList.remove('recording');
-            pBtn.style.display = "none";
         }
     }
 
     function togglePause() {
         const pBtn = document.getElementById('pauseBtn');
+        if (!isRecording) return;
+        
         if (!isPaused) {
             recorder.pause();
             isPaused = true;
