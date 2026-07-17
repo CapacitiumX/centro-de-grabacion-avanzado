@@ -2,11 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V346 - ULTIMATE STUDIO</title>
+    <title>CAPACITIUMX V340 - STUDIO, 11 ANIMATED AVATARS & 10 AUTO-THUMBS</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        #paywall {
+            position: fixed; top:0; left:0; width: 100vw; height: 100vh;
+            background: rgba(5, 5, 5, 0.98); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 450px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
+        .pay-card h2 { color: var(--neon); margin-top: 0; }
+        .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 12px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; }
 
         header { background: #111; padding: 10px 20px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; }
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
@@ -53,26 +63,45 @@
 </head>
 <body>
 
+<div id="paywall">
+    <div class="pay-card">
+        <h2>🔒 ACTIVAR CAPACITIUMX PRO</h2>
+        <p style="font-size:12px; color:#ccc;">Para obtener acceso ilimitado de por vida al editor profesional por <b>$500 MXN</b>, realiza tu depósito o transferencia SPEI:</p>
+        
+        <div class="clabe-box">
+            📌 <b>BANCO / BANCO DIGITAL:</b> Spin by OXXO<br>
+            💳 <b>CLABE INTERBANCARIA:</b><br>
+            <span style="font-size:16px; color:var(--neon);">646180111800000000</span>
+        </div>
+        
+        <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
+
+        <input type="text" id="license-input" class="input-text" style="text-align:center; font-size:14px; margin-bottom:10px;" placeholder="Ingresa tu Clave de Licencia...">
+        <button class="btn-load" style="width:100%;" onclick="validateLicense()">DESBLOQUEAR AHORA</button>
+        <p id="lic-error; color:red; font-size:11px; margin-top:10px; display:none;">❌ Clave de licencia no válida.</p>
+    </div>
+</div>
+
 <div id="thumb-modal">
-    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES COMPLETAMENTE LIMPIAS)</h2>
+    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES)</h2>
     <p style="font-size: 11px; color: #ccc;">Haz clic en cualquier opción para descargarla en formato PNG:</p>
     <div class="thumb-grid-10">
-        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Portada Limpia Original</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Pro Outlines</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Inclinación + Flecha 3D</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Viñeta Cine Oscura</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Neon Grade</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Limpia HD (Sin Textos)</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Neón</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Clickbait / Flecha 3D</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Cine Dark Viñeta</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Glow</div></div>
         <div class="thumb-option" onclick="downloadAutoThumb(6)"><canvas id="thumb-c6"></canvas><div class="thumb-label">6. Enfoque Radial Zoom</div></div>
         <div class="thumb-option" onclick="downloadAutoThumb(7)"><canvas id="thumb-c7"></canvas><div class="thumb-label">7. Láser Rage Mode</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(8)"><canvas id="thumb-c8"></canvas><div class="thumb-label">8. Matrix Code Digital Overlay</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(8)"><canvas id="thumb-c8"></canvas><div class="thumb-label">8. Matrix Code Style</div></div>
         <div class="thumb-option" onclick="downloadAutoThumb(9)"><canvas id="thumb-c9"></canvas><div class="thumb-label">9. Drama B&N Contrast</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte Gold Border</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte 3D</div></div>
     </div>
     <button class="btn-load" style="margin-top:20px; width:220px; background:#ff3333; color:white;" onclick="closeThumbModal()">❌ CERRAR VENTANA</button>
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V346 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V340 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -101,7 +130,7 @@
 
         <div class="section-title">🖼️ ESTUDIO Y GENERADOR DE MINIATURAS</div>
         <button class="btn-load" style="background:#00ffff; color:black; font-weight:900;" onclick="generateAutoThumbnails()">✨ GENERAR 10 OPCIONES AUTO (IA)</button>
-        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Escribe tu título aquí personalizado...">
+        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Tu Texto Personalizado (O déjalo vacío)...">
         
         <div class="ctrl-row">
             <span>Color Texto:</span>
@@ -158,7 +187,7 @@
             <input type="range" id="arrow-length" min="100" max="400" value="220">
         </div>
 
-        <!-- BARRA DE AVATARES -->
+        <!-- BARRA DE AVATARES EXPANDIDA A 11 ANIMALES ANIMADOS -->
         <div class="section-title">🐾 ELIGE TU AVATAR INTERACTIVO ANIMADO</div>
         <select id="avatar-selector" class="select-custom" onchange="changeAvatar(this.value)">
             <option value="none">👤 Rostro Real (Sin Avatar)</option>
@@ -184,84 +213,84 @@
             <button class="btn-c" onclick="setCamFx('zoom')">🔍 5. Zoom Reacción</button>
             <button class="btn-c" onclick="setCamFx('cinema')">🎬 6. Modo Cine</button>
             <button class="btn-c" onclick="setCamFx('strobe')">⚡ 7. Rayos Strobe</button>
-            <button class="btn-c" onclick="setCamFx('vhs')">📼 8. VHS Retro</button>
-            <button class="btn-c" onclick="setCamFx('pixel')">🎮 9. Pixel Art</button>
-            <button class="btn-c" onclick="setCamFx('fire')">🔥 10. Fuego Aura</button>
-            <button class="btn-c" onclick="setCamFx('glitch')">🌌 11. Glitch 3D</button>
-            <button class="btn-c" onclick="setCamFx('oldTv')">📺 12. TV Vieja</button>
-            <button class="btn-c" onclick="setCamFx('mirror')">🎭 13. Espejo</button>
-            <button class="btn-c" onclick="setCamFx('vignette')">🖤 14. Viñeta Cómic</button>
-            <button class="btn-c" onclick="setCamFx('spotlight')">🎯 15. Enfoque Spot</button>
-            <button class="btn-c" onclick="setCamFx('rainbow')">🌈 16. Arcoíris</button>
-            <button class="btn-c" onclick="setCamFx('freeze')">❄️ 17. Congelado B&N</button>
-            <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 18. Ojo de Pez</button>
-            <button class="btn-c" onclick="setCamFx('sparkle')">💎 19. Diamante</button>
-            <button class="btn-c" onclick="setCamFx('laser')">🔴 20. Láser Rage</button>
-            <button class="btn-c" onclick="setCamFx('vortex')">🌀 21. Vortex Holo</button>
-            <button class="btn-c" onclick="setCamFx('cyber')">🤖 22. Cyberpunk</button>
-            <button class="btn-c" onclick="setCamFx('anime')">💥 23. Anime Lines</button>
-            <button class="btn-c" onclick="setCamFx('particles')">🎆 24. Partículas</button>
-            <button class="btn-c" onclick="setCamFx('magnify')">🔍 25. Lupa Deform</button>
-            <button class="btn-c" onclick="setCamFx('matrix')">🔲 26. Matrix Code</button>
-            <button class="btn-c" onclick="setCamFx('mirror4')">🪞 27. Espejo 4X</button>
-            <button class="btn-c" onclick="setCamFx('pulseRed')">💓 28. Latido Rojo</button>
-            <button class="btn-c" onclick="setCamFx('snapFlash')">📸 29. Foto Snap</button>
-            <button class="btn-c" onclick="setCamFx('punchIn')">🎯 30. Punch-In Fast</button>
-            <button class="btn-c" onclick="setCamFx('punchOut')">🔍 31. Punch-Out Zoom</button>
-            <button class="btn-c" onclick="setCamFx('textMrBeast')">🔤 32. Texto MrBeast</button>
-            <button class="btn-c" onclick="setCamFx('shakeEffect')">📳 33. Shake Vibración</button>
-            <button class="btn-c" onclick="setCamFx('lowerThird')">🏷️ 34. Lower Third</button>
-            <button class="btn-c" onclick="setCamFx('textPop')">🍿 35. Text Pop-Up</button>
-            <button class="btn-c" onclick="setCamFx('textGlow')">✨ 36. Text Neon Glow</button>
-            <button class="btn-c" onclick="setCamFx('typingText')">⌨️ 37. Typing Effect</button>
-            <button class="btn-c" onclick="setCamFx('kineticText')">🔀 38. Kinetic Typography</button>
-            <button class="btn-c" onclick="setCamFx('filmGrain')">🎞️ 39. Film Grain Retro</button>
-            <button class="btn-c" onclick="setCamFx('fauxShake')">📽️ 40. Faux Cam Shake</button>
-            <button class="btn-c" onclick="setCamFx('callout')">📌 41. Callout Gráfico</button>
-            <button class="btn-c" onclick="setCamFx('whipPan')">🌀 42. Whip Pan Latigo</button>
-            <button class="btn-c" onclick="setCamFx('textGlitch')">👾 43. Glitch de Texto</button>
-            <button class="btn-c" onclick="setCamFx('chromaFlash')">⚡ 44. Chroma Flash</button>
-            <button class="btn-c" onclick="setCamFx('speedRamp')">🏎️ 45. Speed Ramp FX</button>
-            <button class="btn-c" onclick="setCamFx('blurBg')">🌫️ 46. Blur Fondo Cam</button>
-            <button class="btn-c" onclick="setCamFx('colorPop')">🎨 47. Color Grade Pop</button>
-            <button class="btn-c" onclick="setCamFx('splitScreen')">📱 48. Split Screen 2X</button>
-            <button class="btn-c" onclick="setCamFx('motionBlur')">💨 49. Motion Blur FX</button>
-            <button class="btn-c" onclick="setCamFx('outroEnd')">🏁 50. Outro Template</button>
-            <button class="btn-c" onclick="setCamFx('bRoll')">🎞️ 51. B-Roll Overlay</button>
-            <button class="btn-c" onclick="setCamFx('jumpCutFx')">✂️ 52. Jump-Cut Fast</button>
-            <button class="btn-c" onclick="setCamFx('slideIn')">⬅️ 53. Slide In Graphic</button>
-            <button class="btn-c" onclick="setCamFx('jCutOverlay')">🎵 54. J-Cut Audio Visual</button>
-            <button class="btn-c" onclick="setCamFx('lCutOverlay')">🎬 55. L-Cut Audio Visual</button>
-            <button class="btn-c" onclick="setCamFx('greenKeying')">🟩 56. Chroma Key Pro</button>
-            <button class="btn-c" onclick="setCamFx('soundDuck')">🎙️ 57. Ducking Visual</button>
-            <button class="btn-c" onclick="setCamFx('memeFreeze')">🛑 58. Meme Freeze Frame</button>
-            <button class="btn-c" onclick="setCamFx('ultraVignette')">🕶️ 59. Ultra Vignette</button>
-            <button class="btn-c" onclick="setCamFx('parallax2D')">🏞️ 60. Parallax 2.5D</button>
-            <button class="btn-c" onclick="setCamFx('datamosh')">🫠 61. Datamoshing</button>
-            <button class="btn-c" onclick="setCamFx('matchCut')">🎯 62. Match Cut Pro</button>
-            <button class="btn-c" onclick="setCamFx('maskCut')">🚪 63. Corte Máscara</button>
-            <button class="btn-c" onclick="setCamFx('skyReplace')">🌌 64. Sky Replace</button>
-            <button class="btn-c" onclick="setCamFx('dynamicTrackText')">🎯 65. Dynamic Track</button>
-            <button class="btn-c" onclick="setCamFx('lumaKey')">💡 66. Luma Fade Key</button>
-            <button class="btn-c" onclick="setCamFx('textBehind')">👤 67. Text Behind Me</button>
-            <button class="btn-c" onclick="setCamFx('invisibleSplit')">👥 68. Clone Split Screen</button>
-            <button class="btn-c" onclick="setCamFx('forcedBlurRamp')">🏎️ 69. Blur Ramp FX</button>
-            <button class="btn-c" onclick="setCamFx('auraGlow')">✨ 70. Neon Aura Glow</button>
-            <button class="btn-c" onclick="setCamFx('hudOverlay')">🛸 71. HUD Sci-Fi AI</button>
-            <button class="btn-c" onclick="setCamFx('dollyZoom')">🌀 72. Dolly Zoom Vertigo</button>
-            <button class="btn-c" onclick="setCamFx('colorIsolation')">🎨 73. Color Isolation</button>
-            <button class="btn-c" onclick="setCamFx('track3DText')">📐 74. 3D Camera Text</button>
-            <button class="btn-c" onclick="setCamFx('deepfake')">🎭 75. Neural Deepfake</button>
-            <button class="btn-c" onclick="setCamFx('aiOutpaint')">🖼️ 76. AI Outpainting</button>
-            <button class="btn-c" onclick="setCamFx('lidarCloud')">🌐 77. LiDAR 3D Cloud</button>
-            <button class="btn-c" onclick="setCamFx('nerfAI')">🎥 78. Cinematic NeRF</button>
-            <button class="btn-c" onclick="setCamFx('cgiHdri')">🛸 79. CGI HDRI 3D</button>
-            <button class="btn-c" onclick="setCamFx('opticalMorph')">🫠 80. Optical Flow Morph</button>
-            <button class="btn-c" onclick="setCamFx('matteProj')">🧱 81. 3D Matte Proj</button>
-            <button class="btn-c" onclick="setCamFx('screenOcclude')">📱 82. Screen Replace Occl</button>
-            <button class="btn-c" onclick="setCamFx('hairRefine')">✂️ 83. Auto Roto Hair</button>
-            <button class="btn-c" onclick="setCamFx('unrealSet')">🎬 84. Unreal Engine Set</button>
-            <button class="btn-c" onclick="setCamFx('none')">🚫 85. Reset Efectos</button>
+            <button class="btn-c" onclick="setCamFx('ghost')">👻 8. Fantasma</button>
+            <button class="btn-c" onclick="setCamFx('vhs')">📼 9. VHS Retro</button>
+            <button class="btn-c" onclick="setCamFx('pixel')">🎮 10. Pixel Art</button>
+            <button class="btn-c" onclick="setCamFx('fire')">🔥 11. Fuego Aura</button>
+            <button class="btn-c" onclick="setCamFx('glitch')">🌌 12. Glitch 3D</button>
+            <button class="btn-c" onclick="setCamFx('oldTv')">📺 13. TV Vieja</button>
+            <button class="btn-c" onclick="setCamFx('mirror')">🎭 14. Espejo</button>
+            <button class="btn-c" onclick="setCamFx('vignette')">🖤 15. Viñeta Cómic</button>
+            <button class="btn-c" onclick="setCamFx('spotlight')">🎯 16. Enfoque Spot</button>
+            <button class="btn-c" onclick="setCamFx('rainbow')">🌈 17. Arcoíris</button>
+            <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado B&N</button>
+            <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 19. Ojo de Pez</button>
+            <button class="btn-c" onclick="setCamFx('sparkle')">💎 20. Diamante</button>
+            <button class="btn-c" onclick="setCamFx('laser')">🔴 21. Láser Rage</button>
+            <button class="btn-c" onclick="setCamFx('vortex')">🌀 22. Vortex Holo</button>
+            <button class="btn-c" onclick="setCamFx('cyber')">🤖 23. Cyberpunk</button>
+            <button class="btn-c" onclick="setCamFx('anime')">💥 24. Anime Lines</button>
+            <button class="btn-c" onclick="setCamFx('particles')">🎆 25. Partículas</button>
+            <button class="btn-c" onclick="setCamFx('magnify')">🔍 26. Lupa Deform</button>
+            <button class="btn-c" onclick="setCamFx('matrix')">🔲 27. Matrix Code</button>
+            <button class="btn-c" onclick="setCamFx('mirror4')">🪞 28. Espejo 4X</button>
+            <button class="btn-c" onclick="setCamFx('pulseRed')">💓 29. Latido Rojo</button>
+            <button class="btn-c" onclick="setCamFx('snapFlash')">📸 30. Foto Snap</button>
+            <button class="btn-c" onclick="setCamFx('punchIn')">🎯 31. Punch-In Fast</button>
+            <button class="btn-c" onclick="setCamFx('punchOut')">🔍 32. Punch-Out Zoom</button>
+            <button class="btn-c" onclick="setCamFx('textMrBeast')">🔤 33. Texto MrBeast</button>
+            <button class="btn-c" onclick="setCamFx('shakeEffect')">📳 34. Shake Vibración</button>
+            <button class="btn-c" onclick="setCamFx('lowerThird')">🏷️ 35. Lower Third</button>
+            <button class="btn-c" onclick="setCamFx('textPop')">🍿 36. Text Pop-Up</button>
+            <button class="btn-c" onclick="setCamFx('textGlow')">✨ 37. Text Neon Glow</button>
+            <button class="btn-c" onclick="setCamFx('typingText')">⌨️ 38. Typing Effect</button>
+            <button class="btn-c" onclick="setCamFx('kineticText')">🔀 39. Kinetic Typography</button>
+            <button class="btn-c" onclick="setCamFx('filmGrain')">🎞️ 40. Film Grain Retro</button>
+            <button class="btn-c" onclick="setCamFx('fauxShake')">📽️ 41. Faux Cam Shake</button>
+            <button class="btn-c" onclick="setCamFx('callout')">📌 42. Callout Gráfico</button>
+            <button class="btn-c" onclick="setCamFx('whipPan')">🌀 43. Whip Pan Latigo</button>
+            <button class="btn-c" onclick="setCamFx('textGlitch')">👾 44. Glitch de Texto</button>
+            <button class="btn-c" onclick="setCamFx('chromaFlash')">⚡ 45. Chroma Flash</button>
+            <button class="btn-c" onclick="setCamFx('speedRamp')">🏎️ 46. Speed Ramp FX</button>
+            <button class="btn-c" onclick="setCamFx('blurBg')">🌫️ 47. Blur Fondo Cam</button>
+            <button class="btn-c" onclick="setCamFx('colorPop')">🎨 48. Color Grade Pop</button>
+            <button class="btn-c" onclick="setCamFx('splitScreen')">📱 49. Split Screen 2X</button>
+            <button class="btn-c" onclick="setCamFx('motionBlur')">💨 50. Motion Blur FX</button>
+            <button class="btn-c" onclick="setCamFx('outroEnd')">🏁 51. Outro Template</button>
+            <button class="btn-c" onclick="setCamFx('bRoll')">🎞️ 52. B-Roll Overlay</button>
+            <button class="btn-c" onclick="setCamFx('jumpCutFx')">✂️ 53. Jump-Cut Fast</button>
+            <button class="btn-c" onclick="setCamFx('slideIn')">⬅️ 54. Slide In Graphic</button>
+            <button class="btn-c" onclick="setCamFx('jCutOverlay')">🎵 55. J-Cut Audio Visual</button>
+            <button class="btn-c" onclick="setCamFx('lCutOverlay')">🎬 56. L-Cut Audio Visual</button>
+            <button class="btn-c" onclick="setCamFx('greenKeying')">🟩 57. Chroma Key Pro</button>
+            <button class="btn-c" onclick="setCamFx('soundDuck')">🎙️ 58. Ducking Visual</button>
+            <button class="btn-c" onclick="setCamFx('memeFreeze')">🛑 59. Meme Freeze Frame</button>
+            <button class="btn-c" onclick="setCamFx('ultraVignette')">🕶️ 60. Ultra Vignette</button>
+            <button class="btn-c" onclick="setCamFx('parallax2D')">🏞️ 61. Parallax 2.5D</button>
+            <button class="btn-c" onclick="setCamFx('datamosh')">🫠 62. Datamoshing</button>
+            <button class="btn-c" onclick="setCamFx('matchCut')">🎯 63. Match Cut Pro</button>
+            <button class="btn-c" onclick="setCamFx('maskCut')">🚪 64. Corte Máscara</button>
+            <button class="btn-c" onclick="setCamFx('skyReplace')">🌌 65. Sky Replace</button>
+            <button class="btn-c" onclick="setCamFx('dynamicTrackText')">🎯 66. Dynamic Track</button>
+            <button class="btn-c" onclick="setCamFx('lumaKey')">💡 67. Luma Fade Key</button>
+            <button class="btn-c" onclick="setCamFx('textBehind')">👤 68. Text Behind Me</button>
+            <button class="btn-c" onclick="setCamFx('invisibleSplit')">👥 69. Clone Split Screen</button>
+            <button class="btn-c" onclick="setCamFx('forcedBlurRamp')">🏎️ 70. Blur Ramp FX</button>
+            <button class="btn-c" onclick="setCamFx('auraGlow')">✨ 71. Neon Aura Glow</button>
+            <button class="btn-c" onclick="setCamFx('hudOverlay')">🛸 72. HUD Sci-Fi AI</button>
+            <button class="btn-c" onclick="setCamFx('dollyZoom')">🌀 73. Dolly Zoom Vertigo</button>
+            <button class="btn-c" onclick="setCamFx('colorIsolation')">🎨 74. Color Isolation</button>
+            <button class="btn-c" onclick="setCamFx('track3DText')">📐 75. 3D Camera Text</button>
+            <button class="btn-c" onclick="setCamFx('deepfake')">🎭 76. Neural Deepfake</button>
+            <button class="btn-c" onclick="setCamFx('aiOutpaint')">🖼️ 77. AI Outpainting</button>
+            <button class="btn-c" onclick="setCamFx('lidarCloud')">🌐 78. LiDAR 3D Cloud</button>
+            <button class="btn-c" onclick="setCamFx('nerfAI')">🎥 79. Cinematic NeRF</button>
+            <button class="btn-c" onclick="setCamFx('cgiHdri')">🛸 80. CGI HDRI 3D</button>
+            <button class="btn-c" onclick="setCamFx('opticalMorph')">🫠 81. Optical Flow Morph</button>
+            <button class="btn-c" onclick="setCamFx('matteProj')">🧱 82. 3D Matte Proj</button>
+            <button class="btn-c" onclick="setCamFx('screenOcclude')">📱 83. Screen Replace Occl</button>
+            <button class="btn-c" onclick="setCamFx('hairRefine')">✂️ 84. Auto Roto Hair</button>
+            <button class="btn-c" onclick="setCamFx('unrealSet')">🎬 85. Unreal Engine Set</button>
         </div>
 
         <div class="section-title">🎬 20 TRANSICIONES DE FOTO / SLIDE</div>
@@ -306,6 +335,14 @@
     </aside>
 
     <main class="monitor-area">
+        <div class="console">
+            <span style="font-size: 9px; color: var(--neon); text-align: center;">MODO CÁMARA</span>
+            <button class="btn-c" onclick="camMode='full'">👤 YO GRANDE</button>
+            <button class="btn-c" onclick="camMode='mini'">🖼️ YO CHICO</button>
+            <button class="btn-c" onclick="camMode='off'">🚫 OCULTARME</button>
+            
+            <button class="btn-c" id="playBtn" style="margin-top:5px;" onclick="togglePlay()">▶ PLAY FONDO</button>
+        </div>
         <canvas id="canvas-render" width="1280" height="720"></canvas>
     </main>
 </div>
@@ -325,6 +362,23 @@
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
+    const MASTER_KEY = "CAPACITIUMX-MASTER-2026";
+
+    function validateLicense() {
+        const input = document.getElementById('license-input').value.trim();
+        const errorMsg = document.getElementById('lic-error');
+        if (input === MASTER_KEY || (input.startsWith("CAPX-") && input.length === 19)) {
+            localStorage.setItem('capX_activated', 'true');
+            document.getElementById('paywall').style.display = 'none';
+        } else {
+            errorMsg.style.display = 'block';
+        }
+    }
+
+    if (localStorage.getItem('capX_activated') === 'true') {
+        document.getElementById('paywall').style.display = 'none';
+    }
+
     const canvas = document.getElementById('canvas-render');
     const ctx = canvas.getContext('2d');
     const vCam = document.getElementById('v-cam');
@@ -588,36 +642,14 @@
         } else {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            const maskBuffer = document.createElement('canvas');
-            maskBuffer.width = procCanvas.width; maskBuffer.height = procCanvas.height;
-            const mCtx = maskBuffer.getContext('2d');
-            
-            mCtx.clearRect(0, 0, maskBuffer.width, maskBuffer.height);
-            mCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
-
-            const maskData = mCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
-            const pixels = maskData.data;
-
-            for (let i = 0; i < pixels.length; i += 4) {
-                let val = pixels[i];
-                if (val > 100) { 
-                    pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
-                    pixels[i+3] = 255; 
-                } else {
-                    pixels[i+3] = 0;   
-                }
-            }
-            mCtx.putImageData(maskData, 0, 0);
-
             const personCanvas = document.createElement('canvas');
-            personCanvas.width = procCanvas.width; personCanvas.height = procCanvas.height;
+            personCanvas.width = procCanvas.width;
+            personCanvas.height = procCanvas.height;
             const pCtx = personCanvas.getContext('2d');
-            
-            pCtx.clearRect(0, 0, personCanvas.width, personCanvas.height);
-            pCtx.drawImage(vCam, 0, 0, personCanvas.width, personCanvas.height);
 
+            pCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
             pCtx.globalCompositeOperation = 'destination-in';
-            pCtx.drawImage(maskBuffer, 0, 0, personCanvas.width, personCanvas.height);
+            pCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
 
             procCtx.drawImage(personCanvas, 0, 0, procCanvas.width, procCanvas.height);
         }
@@ -626,6 +658,7 @@
 
     function changeAvatar(val) { selectedAvatar = val; }
 
+    // DIBUJO DE LOS 11 AVATARES ANIMADOS REACTIVOS AL HABLA
     function drawAnimatedAvatar(context) {
         drawVirtualBackgroundToCtx(context, 0, 0, procCanvas.width, procCanvas.height);
         const cx = procCanvas.width / 2;
@@ -634,9 +667,10 @@
 
         context.save();
         
+        // Configurar colores según el animal seleccionado
         let baseColor = '#ffa500';
         let detailColor = '#ff9900';
-        let isCat = false, isDog = false, isCrocodile = false, isBear = false, isKoala = false, isRabbit = false, isLion = false, isFox = false, isPanda = false, isMonkey = false, isShark = false;
+        let isCat = false, isCrocodile = false, isBear = false, isKoala = false, isDog = false, isRabbit = false, isLion = false, isFox = false, isPanda = false, isMonkey = false, isShark = false;
 
         switch(selectedAvatar) {
             case 'cat': baseColor = '#ffa500'; detailColor = '#ff9900'; isCat = true; break;
@@ -652,6 +686,7 @@
             case 'shark': baseColor = '#90caf9'; detailColor = '#1565c0'; isShark = true; break;
         }
 
+        // 1. Dibujar orejas o rasgos traseros específicos
         context.fillStyle = detailColor;
         if (isCat || isLion || isFox) {
             context.beginPath(); context.moveTo(cx - r*0.8, cy - r*0.3); context.lineTo(cx - r*0.5, cy - r*1.3); context.lineTo(cx - r*0.1, cy - r*0.7); context.fill();
@@ -666,6 +701,7 @@
             context.beginPath(); context.moveTo(cx, cy - r*0.5); context.lineTo(cx - r*0.3, cy - r*1.5); context.lineTo(cx + r*0.3, cy - r*0.5); context.fill();
         }
 
+        // Melena del León
         if (isLion) {
             context.fillStyle = '#e65100';
             for (let a = 0; a < Math.PI * 2; a += 0.4) {
@@ -673,6 +709,7 @@
             }
         }
 
+        // 2. Cabeza Principal
         context.fillStyle = baseColor;
         context.beginPath();
         if (isCrocodile) {
@@ -682,24 +719,27 @@
         }
         context.fill();
 
+        // Parches de los ojos del Panda
         if (isPanda) {
             context.fillStyle = '#212121';
-            context.beginPath(); context.ellipse(cx - r*0.4, cy - r*0.1, r*0.25, r*0.35, -0.2, 0, Math.PI*2); context.fill();
-            context.beginPath(); context.ellipse(cx + r*0.4, cy - r*0.1, r*0.25, r*0.35, 0.2, 0, Math.PI*2); context.fill();
+            context.beginPath(); context.ellipse(cx - r*0.4, cy - r*0.1, r*0.25, r*0.35, 0.2, 0, Math.PI*2); context.fill();
+            context.beginPath(); context.ellipse(cx + r*0.4, cy - r*0.1, r*0.25, r*0.35, -0.2, 0, Math.PI*2); context.fill();
         }
 
+        // 3. Ojos del Avatar
         context.fillStyle = '#ffffff';
         context.beginPath();
-        context.arc(cx - r*0.4, cy - r*0.2, r*0.2, 0, Math.PI * 2);
-        context.arc(cx + r*0.4, cy - r*0.2, r*0.2, 0, Math.PI * 2);
+        context.arc(cx - r*0.4, cy - r*0.1, r*0.2, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.1, r*0.2, 0, Math.PI * 2);
         context.fill();
 
         context.fillStyle = '#000000';
         context.beginPath();
-        context.arc(cx - r*0.4, cy - r*0.2, r*0.09, 0, Math.PI * 2);
-        context.arc(cx + r*0.4, cy - r*0.2, r*0.09, 0, Math.PI * 2);
+        context.arc(cx - r*0.4, cy - r*0.1, r*0.09, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.1, r*0.09, 0, Math.PI * 2);
         context.fill();
 
+        // Hocico / Nariz del Oso/Koala/Perro
         if (isBear || isKoala || isDog || isFox || isMonkey) {
             context.fillStyle = isKoala ? '#37474f' : 'rgba(0,0,0,0.15)';
             context.beginPath(); context.arc(cx, cy + r*0.15, r*0.3, 0, Math.PI*2); context.fill();
@@ -707,6 +747,7 @@
             context.beginPath(); context.ellipse(cx, cy + r*0.05, r*0.12, r*0.08, 0, 0, Math.PI*2); context.fill();
         }
 
+        // 4. Boca Sincronizada y Reactiva con Gesticulación por Voz
         let talkH = Math.abs(Math.sin(camFxTimer * 8)) * 32 + 8;
         context.fillStyle = '#ff3366';
         context.beginPath();
@@ -718,6 +759,7 @@
         context.fill();
         context.strokeStyle = '#000000'; context.lineWidth = 4; context.stroke();
 
+        // Dientes del cocodrilo y tiburón
         if (isCrocodile || isShark) {
             context.fillStyle = '#ffffff';
             context.beginPath();
@@ -788,7 +830,7 @@
         }
     }
 
-    UXList = function() {
+    function updateList() {
         const list = document.getElementById('media-list');
         list.innerHTML = "";
         library.forEach((m, i) => {
@@ -808,7 +850,6 @@
             list.appendChild(d);
         });
     }
-    function updateList() { UXList(); }
 
     function selectMedia(i) {
         curIdx = i;
@@ -844,7 +885,7 @@
     }
 
     function renderImageWithAnimation(img, animMode) {
-        transitionTimer += 0.025;
+        transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
         const cw = canvas.width, ch = canvas.height;
 
@@ -861,78 +902,13 @@
                 let px = (1 - Math.pow(1 - t, 3)) * cw - cw;
                 ctx.translate(px, 0); drawImageContain(img, cw, ch);
                 break;
-            case 'blinds':
-                let strips = 8, stripW = cw / strips, pW = stripW * t;
-                for (let i = 0; i < strips; i++) {
-                    ctx.save(); ctx.beginPath(); ctx.rect(i * stripW, 0, pW, ch); ctx.clip();
-                    drawImageContain(img, cw, ch); ctx.restore();
-                }
-                break;
-            case 'flip':
-                ctx.translate(cw / 2, ch / 2); ctx.scale(Math.cos((1 - t) * Math.PI), 1); ctx.translate(-cw / 2, -ch / 2);
-                drawImageContain(img, cw, ch);
-                break;
             case 'fade':
                 ctx.globalAlpha = t; drawImageContain(img, cw, ch);
                 break;
             case 'pop':
-                let pScale = t < 0.8 ? t * 1.15 : 1;
+                let pScale = t < 0.8 ? t * 1.1 : 1;
                 ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale); ctx.translate(-cw / 2, -ch / 2);
                 drawImageContain(img, cw, ch);
-                break;
-            case 'drop':
-                let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
-                ctx.translate(0, py); drawImageContain(img, cw, ch);
-                break;
-            case 'wipe':
-                ctx.save(); ctx.beginPath(); ctx.rect(0, 0, cw, ch * t); ctx.clip();
-                drawImageContain(img, cw, ch); ctx.restore();
-                break;
-            case 'spinZoom':
-                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI); ctx.scale(t, t); ctx.translate(-cw / 2, -ch / 2);
-                drawImageContain(img, cw, ch);
-                break;
-            case 'bounce':
-                let bY = Math.abs(Math.sin(transitionTimer * 5) * (1 - t) * 120);
-                ctx.translate(0, -bY); drawImageContain(img, cw, ch);
-                break;
-            case 'scale':
-                ctx.translate(cw / 2, ch / 2); ctx.scale(t, t); ctx.translate(-cw / 2, -ch / 2);
-                drawImageContain(img, cw, ch);
-                break;
-            case 'windmill':
-                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI * 2); ctx.translate(-cw / 2, -ch / 2);
-                drawImageContain(img, cw, ch);
-                break;
-            case 'diagonal':
-                ctx.translate((1 - t) * -cw, (1 - t) * -ch); drawImageContain(img, cw, ch);
-                break;
-            case 'flash':
-                ctx.globalAlpha = (Math.sin(transitionTimer * 12) > 0 || t === 1) ? 1 : 0.2;
-                drawImageContain(img, cw, ch);
-                break;
-            case 'vBlinds':
-                let vStrips = 8, vH = ch / vStrips, pH = vH * t;
-                for (let i = 0; i < vStrips; i++) {
-                    ctx.save(); ctx.beginPath(); ctx.rect(0, i * vH, cw, pH); ctx.clip();
-                    drawImageContain(img, cw, ch); ctx.restore();
-                }
-                break;
-            case 'reveal':
-                let rW = cw * t, rH = ch * t;
-                ctx.save(); ctx.beginPath(); ctx.rect((cw - rW)/2, (ch - rH)/2, rW, rH); ctx.clip();
-                drawImageContain(img, cw, ch); ctx.restore();
-                break;
-            case 'rise':
-                ctx.translate(0, (1 - t) * ch); drawImageContain(img, cw, ch);
-                break;
-            case 'swing':
-                ctx.translate(cw / 2, 0); ctx.rotate(Math.sin(transitionTimer * 4) * (1 - t) * 0.2); ctx.translate(-cw / 2, 0);
-                drawImageContain(img, cw, ch);
-                break;
-            case 'dBlinds':
-                ctx.save(); ctx.beginPath(); ctx.rect(0, 0, cw * t, ch * t); ctx.clip();
-                drawImageContain(img, cw, ch); ctx.restore();
                 break;
             default:
                 drawImageContain(img, cw, ch);
@@ -977,47 +953,13 @@
 
             if (camFx === 'zoom' || camFx === 'punchIn') {
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(1.35, 1.35); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'punchOut') {
-                let pScale = 1.4 - (Math.min(camFxTimer, 1) * 0.4);
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(pScale, pScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
             } else if (camFx === 'boom' || camFx === 'shakeEffect') {
                 cx += (Math.random() - 0.5) * 16; cy += (Math.random() - 0.5) * 16;
             } else if (camFx === 'mirror') {
                 ctx.translate(cx + cw, cy); ctx.scale(-1, 1); cx = 0; cy = 0;
-            } else if (camFx === 'dollyZoom') {
-                let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'forcedBlurRamp' || camFx === 'speedRamp') {
-                let ramp = 1 + Math.abs(Math.sin(camFxTimer * 6)) * 0.4;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(ramp, ramp); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            }
-
-            if (camFx === 'freeze' || camFx === 'colorIsolation' || camFx === 'memeFreeze') {
-                ctx.filter = 'grayscale(1) contrast(1.4)';
-            } else if (camFx === 'vhs' || camFx === 'oldTv') {
-                ctx.filter = 'contrast(1.3) sepia(0.4)';
-            } else if (camFx === 'blurBg') {
-                ctx.filter = 'blur(5px)';
-            } else if (camFx === 'colorPop') {
-                ctx.filter = 'saturate(2.5) contrast(1.2)';
             }
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
-            ctx.filter = 'none';
-
-            if (camFx === 'alert' || camFx === 'pulseRed') {
-                ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`; ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'neon' || camFx === 'auraGlow') {
-                ctx.strokeStyle = `hsl(${(camFxTimer * 80) % 360}, 100%, 50%)`; ctx.lineWidth = 6; ctx.strokeRect(cx, cy, cw, ch);
-            } else if (camFx === 'cinema') {
-                ctx.fillStyle = 'black'; ctx.fillRect(cx, cy, cw, ch * 0.12); ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-            } else if (camFx === 'strobe' || camFx === 'snapFlash') {
-                if (Math.sin(camFxTimer * 15) > 0) { ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.fillRect(cx, cy, cw, ch); }
-            } else if (camFx === 'laser') {
-                ctx.strokeStyle = 'red'; ctx.lineWidth = 6; ctx.shadowColor = 'red'; ctx.shadowBlur = 10; ctx.beginPath();
-                ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
-                ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1); ctx.stroke();
-            }
 
             if (camMode === 'mini') {
                 ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
@@ -1039,7 +981,7 @@
         requestAnimationFrame(render);
     }
 
-    async startCapture() {
+    async function startCapture() {
         const btn = document.getElementById('recBtn');
         
         if (!isRecording) {
@@ -1070,6 +1012,7 @@
             isRecording = true;
             btn.innerText = "⏹ TERMINAR";
             btn.classList.add('recording');
+            document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
         } else {
             recorder.stop();
             isRecording = false;
@@ -1086,10 +1029,12 @@
             recorder.pause();
             isPaused = true;
             pBtn.innerText = "▶ REANUDAR";
+            document.getElementById('status-mic').innerText = "⏸ PAUSADO (CORTA AQUÍ)";
         } else {
             recorder.resume();
             isPaused = false;
             pBtn.innerText = "⏸ PAUSAR (CORTAR)";
+            document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
         }
     }
 
