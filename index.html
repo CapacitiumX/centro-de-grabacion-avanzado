@@ -1,1329 +1,765 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <title>CAPACITIUMX V329 - ULTIMATE STUDIO & AVATARS</title>
-
+    <title>CAPACITIUMX V329 - ULTIMATE STUDIO & 3D AVATARS</title>
+    <!-- MediaPipe Selfie Segmentation & Face Mesh -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
 
     <style>
-
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
-
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
         
-
-        /* PANTALLA DE BLOQUEO DE PAGO (PAYWALL) */
-
         #paywall {
-
             position: fixed; top:0; left:0; width: 100vw; height: 100vh;
-
             background: rgba(5, 5, 5, 0.98); z-index: 9999;
-
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-
             text-align: center; padding: 20px; box-sizing: border-box;
-
         }
-
         .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 450px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
-
         .pay-card h2 { color: var(--neon); margin-top: 0; }
-
         .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 12px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; }
 
-
-
         header { background: #111; padding: 10px 20px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; }
-
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
-
-
         .main { display: flex; flex: 1; overflow: hidden; }
-
         .sidebar { width: 340px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
-
         
-
         #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-
         .thumb-nav { padding: 6px; background: #222; border: 1px solid #444; font-size: 11px; cursor: pointer; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-
         .thumb-nav.active { border-color: var(--neon); background: #111; }
-
         .fx-tag { color: #ffeb3b; font-size: 9px; font-weight: bold; }
 
-
-
         .section-title { font-size: 10px; color: var(--neon); font-weight: bold; text-transform: uppercase; margin-top: 6px; }
-
         .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
-
-
         .monitor-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; position: relative; }
-
         #canvas-render { width: 95%; max-width: 850px; aspect-ratio: 16/9; border: 1px solid #333; background: #000; }
-
         
-
         .console { position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 6px; }
-
         .btn-c { background: rgba(0,0,0,0.85); border: 1px solid var(--neon); color: var(--neon); padding: 6px 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
 
-
-
         .footer { height: 110px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-
         .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
-
         .btn-pause { background: #ff9800; color: black; padding: 12px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
-
         .btn-next { background: #333; border: 1px solid var(--neon); color: var(--neon); padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 13px; }
-
         .recording { animation: pulse 1s infinite; box-shadow: 0 0 20px var(--red); }
-
         @keyframes pulse { 50% { opacity: 0.5; } }
-
         
-
         .input-text { background: #222; color: white; border: 1px solid var(--neon); padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; font-size: 11px; }
-
     </style>
-
 </head>
-
 <body>
 
-
-
 <div id="paywall">
-
     <div class="pay-card">
-
         <h2>🔒 ACTIVAR CAPACITIUMX PRO</h2>
-
         <p style="font-size:12px; color:#ccc;">Para obtener acceso ilimitado de por vida al editor profesional por <b>$500 MXN</b>, realiza tu depósito o transferencia SPEI:</p>
-
         
-
         <div class="clabe-box">
-
             📌 <b>BANCO / BANCO DIGITAL:</b> Spin by OXXO<br>
-
             💳 <b>CLABE INTERBANCARIA:</b><br>
-
             <span style="font-size:16px; color:var(--neon);">646180111800000000</span>
-
         </div>
-
         
-
         <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
 
-
-
         <input type="text" id="license-input" class="input-text" style="text-align:center; font-size:14px; margin-bottom:10px;" placeholder="Ingresa tu Clave de Licencia...">
-
         <button class="btn-load" style="width:100%;" onclick="validateLicense()">DESBLOQUEAR AHORA</button>
-
         <p id="lic-error" style="color:red; font-size:11px; margin-top:10px; display:none;">❌ Clave de licencia no válida.</p>
-
     </div>
-
 </div>
-
-
 
 <header>
-
     <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO</div>
-
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
-
 </header>
 
-
-
 <div class="main">
-
     <aside class="sidebar">
-
         <button class="btn-load" onclick="document.getElementById('file-in').click()">📥 SUBIR FOTOS / VIDEOS</button>
-
         <input type="file" id="file-in" multiple accept="image/*,video/*" style="display:none;" onchange="handleFiles(event)">
-
         
-
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
-
         <div id="media-list"></div>
 
-
-
-        <div class="section-title">🐾 AVATARES ANIMADOS CÁMARA</div>
-
+        <div class="section-title">🐾 AVATARES ANIMADOS CON MOVIMIENTO (ANIMOJI)</div>
         <div class="grid-buttons">
-
-            <button class="btn-c" onclick="setAvatar('none')">👤 Mi Persona</button>
-
-            <button class="btn-c" onclick="setAvatar('🐰')">🐰 Conejo</button>
-
-            <button class="btn-c" onclick="setAvatar('🐶')">🐶 Perro</button>
-
-            <button class="btn-c" onclick="setAvatar('🐱')">🐱 Gato</button>
-
-            <button class="btn-c" onclick="setAvatar('🦁')">🦁 León</button>
-
-            <button class="btn-c" onclick="setAvatar('🤖')">🤖 Robot</button>
-
+            <button class="btn-c" onclick="setAvatar('none')">👤 Mi Rostro Real</button>
+            <button class="btn-c" onclick="setAvatar('rabbit')">🐰 Conejo Animado</button>
+            <button class="btn-c" onclick="setAvatar('dog')">🐶 Perro Animado</button>
+            <button class="btn-c" onclick="setAvatar('cat')">🐱 Gato Animado</button>
+            <button class="btn-c" onclick="setAvatar('lion')">🦁 León Animado</button>
+            <button class="btn-c" onclick="setAvatar('robot')">🤖 Robot 3D</button>
         </div>
-
-
 
         <div class="section-title">💥 20 EFECTOS YOUTUBER EN CÁMARA</div>
-
         <div class="grid-buttons">
-
             <button class="btn-c" onclick="setCamFx('none')">🚫 1. Normal</button>
-
             <button class="btn-c" onclick="setCamFx('boom')">💥 2. Explosión</button>
-
             <button class="btn-c" onclick="setCamFx('alert')">🚨 3. Alerta Rojo</button>
-
             <button class="btn-c" onclick="setCamFx('neon')">✨ 4. Neón RGB</button>
-
             <button class="btn-c" onclick="setCamFx('zoom')">🔍 5. Zoom Reacción</button>
-
             <button class="btn-c" onclick="setCamFx('cinema')">🎬 6. Modo Cine</button>
-
             <button class="btn-c" onclick="setCamFx('strobe')">⚡ 7. Rayos Strobe</button>
-
             <button class="btn-c" onclick="setCamFx('ghost')">👻 8. Fantasma</button>
-
             <button class="btn-c" onclick="setCamFx('vhs')">📼 9. VHS Retro</button>
-
             <button class="btn-c" onclick="setCamFx('pixel')">🎮 10. Pixel Art</button>
-
             <button class="btn-c" onclick="setCamFx('fire')">🔥 11. Fuego Aura</button>
-
             <button class="btn-c" onclick="setCamFx('glitch')">🌌 12. Glitch 3D</button>
-
             <button class="btn-c" onclick="setCamFx('oldTv')">📺 13. TV Vieja</button>
-
             <button class="btn-c" onclick="setCamFx('mirror')">🎭 14. Espejo</button>
-
             <button class="btn-c" onclick="setCamFx('vignette')">🖤 15. Viñeta Cómic</button>
-
             <button class="btn-c" onclick="setCamFx('spotlight')">🎯 16. Enfoque Spot</button>
-
             <button class="btn-c" onclick="setCamFx('rainbow')">🌈 17. Arcoíris</button>
-
             <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado</button>
-
             <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 19. Ojo de Pez</button>
-
             <button class="btn-c" onclick="setCamFx('sparkle')">💎 20. Diamante</button>
-
         </div>
-
-
 
         <div class="section-title">🎬 20 Transiciones PowerPoint (Fotos)</div>
-
         <div class="grid-buttons">
-
             <button class="btn-c" onclick="setAnimMode('zoom')">🔍 1. Zoom</button>
-
             <button class="btn-c" onclick="setAnimMode('slide')">↔️ 2. Cortina</button>
-
             <button class="btn-c" onclick="setAnimMode('blinds')">🪟 3. Persiana Horiz.</button>
-
             <button class="btn-c" onclick="setAnimMode('flip')">🔄 4. Giro 3D</button>
-
             <button class="btn-c" onclick="setAnimMode('fade')">✨ 5. Desvanecer</button>
-
             <button class="btn-c" onclick="setAnimMode('pop')">💥 6. Explosión</button>
-
             <button class="btn-c" onclick="setAnimMode('drop')">⬇️ 7. Caída</button>
-
             <button class="btn-c" onclick="setAnimMode('wipe')">↕️ 8. Barrido Arriba</button>
-
             <button class="btn-c" onclick="setAnimMode('spinZoom')">🌀 9. Spin Zoom</button>
-
             <button class="btn-c" onclick="setAnimMode('bounce')">⚽ 10. Rebote</button>
-
             <button class="btn-c" onclick="setAnimMode('scale')">📐 11. Escalado</button>
-
             <button class="btn-c" onclick="setAnimMode('windmill')">🎡 12. Molino</button>
-
             <button class="btn-c" onclick="setAnimMode('diagonal')">↗️ 13. Diagonal</button>
-
             <button class="btn-c" onclick="setAnimMode('flash')">⚡ 14. Flash</button>
-
             <button class="btn-c" onclick="setAnimMode('vBlinds')">🏛️ 15. Persiana Vert.</button>
-
             <button class="btn-c" onclick="setAnimMode('reveal')">👁️ 16. Revelar</button>
-
             <button class="btn-c" onclick="setAnimMode('rise')">⬆️ 17. Elevar</button>
-
             <button class="btn-c" onclick="setAnimMode('swing')">🔔 18. Balanceo</button>
-
             <button class="btn-c" onclick="setAnimMode('dBlinds')">📐 19. Persiana Diag.</button>
-
             <button class="btn-c" onclick="setAnimMode('none')">⏹️ 20. Estático</button>
-
         </div>
-
-
 
         <div class="section-title">🎨 Filtros para Foto / Flyer</div>
-
         <div class="grid-buttons">
-
             <button class="btn-c" onclick="imgFilter='none'">Normal</button>
-
             <button class="btn-c" onclick="imgFilter='sepia(0.8)'">Sepia</button>
-
             <button class="btn-c" onclick="imgFilter='grayscale(1)'">B&N</button>
-
             <button class="btn-c" onclick="imgFilter='contrast(1.3) brightness(1.1)'">Piel Realce</button>
-
             <button class="btn-c" onclick="imgFilter='saturate(2)'">Saturado</button>
-
             <button class="btn-c" onclick="imgFilter='hue-rotate(180deg)'">Neón FX</button>
-
         </div>
-
-
 
         <div class="section-title">🖼️ Fondo Virtual CÁMARA (Corte Solido)</div>
-
         <div class="grid-buttons">
-
             <button class="btn-c" onclick="setBgMode('yellow')">🟨 Amarillo</button>
-
             <button class="btn-c" onclick="setBgMode('blue')">🟦 Azul Sólido</button>
-
             <button class="btn-c" onclick="setBgMode('orange')">🟧 Naranja</button>
-
             <button class="btn-c" onclick="setBgMode('green')">🟩 Verde Chroma</button>
-
             <button class="btn-c" onclick="setBgMode('red')">🟥 Rojo Sólido</button>
-
             <button class="btn-c" onclick="setBgMode('purple')">🟪 Púrpura</button>
-
             <button class="btn-c" onclick="setBgMode('dark')">⬛ Gris Estudio</button>
-
             <button class="btn-c" onclick="setBgMode('white')">⬜ Blanco</button>
-
             <button class="btn-c" onclick="setBgMode('office')">🏢 Oficina</button>
-
             <button class="btn-c" onclick="setBgMode('none')">🚫 Real / Sin IA</button>
-
         </div>
-
         <button class="btn-load" style="margin-top:4px;" onclick="document.getElementById('custom-bg-in').click()">🖼️ SUBIR FOTO PROPIA DE FONDO</button>
-
         <input type="file" id="custom-bg-in" accept="image/*" style="display:none;" onchange="handleCustomBg(event)">
-
     </aside>
 
-
-
     <main class="monitor-area">
-
         <div class="console">
-
             <span style="font-size: 9px; color: var(--neon); text-align: center;">MODO CÁMARA</span>
-
             <button class="btn-c" onclick="camMode='full'">👤 YO GRANDE</button>
-
             <button class="btn-c" onclick="camMode='mini'">🖼️ YO CHICO</button>
-
             <button class="btn-c" onclick="camMode='off'">🚫 OCULTARME</button>
-
             
-
             <button class="btn-c" id="playBtn" style="margin-top:5px;" onclick="togglePlay()">▶ PLAY FONDO</button>
-
         </div>
-
         <canvas id="canvas-render" width="1280" height="720"></canvas>
-
     </main>
-
 </div>
-
-
 
 <div class="footer">
-
     <div style="display:flex; gap:15px; align-items: center;">
-
         <button id="recBtn" class="btn-rec" onclick="startCapture()">🎙️ EMPEZAR GRABACIÓN</button>
-
         <button id="pauseBtn" class="btn-pause" onclick="togglePause()">⏸ PAUSAR (CORTAR)</button>
-
         <button class="btn-next" onclick="nextSlide()">SIGUIENTE FOTO ➡️</button>
-
         <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:12px 20px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
-
     </div>
-
     <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR SI TE TRABAS AL HABLAR.</div>
-
 </div>
 
-
-
 <video id="v-cam" autoplay playsinline style="display:none"></video>
-
 <video id="v-bg" loop style="display:none" crossOrigin="anonymous"></video>
-
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
-
-
 <script>
-
-    // --- LÓGICA DE LICENCIA Y ACCESO CÓDIGO MAESTRO ---
-
-    const MASTER_KEY = "CAPACITIUMX-MASTER-2026"; // TU CÓDIGO ÚNICO E INTRANSFERIBLE
-
-
+    const MASTER_KEY = "CAPACITIUMX-MASTER-2026";
 
     function validateLicense() {
-
         const input = document.getElementById('license-input').value.trim();
-
         const errorMsg = document.getElementById('lic-error');
-
-        
-
-        // Comprobar si es el código maestro tuyo o una clave válida generada
-
         if (input === MASTER_KEY || (input.startsWith("CAPX-") && input.length === 19)) {
-
             localStorage.setItem('capX_activated', 'true');
-
             document.getElementById('paywall').style.display = 'none';
-
         } else {
-
             errorMsg.style.display = 'block';
-
         }
-
     }
-
-
-
-    // Auto-activar si ya habías ingresado la clave previamente
 
     if (localStorage.getItem('capX_activated') === 'true') {
-
         document.getElementById('paywall').style.display = 'none';
-
     }
-
-
 
     const canvas = document.getElementById('canvas-render');
-
     const ctx = canvas.getContext('2d');
-
     const vCam = document.getElementById('v-cam');
-
     const vBg = document.getElementById('v-bg');
-
     const slideTextInput = document.getElementById('slide-text');
-
     
-
     const procCanvas = document.getElementById('canvas-cam-processed');
-
     const procCtx = procCanvas.getContext('2d');
 
-
-
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
-
     let imgFilter = 'none', camFx = 'none', currentAvatar = 'none';
-
     let bgMode = 'yellow'; 
-
     let customBgImg = null;
-
     let transitionTimer = 0, camFxTimer = 0;
-
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
-
     let selfieSegmentation = null;
-
+    let faceMesh = null;
     let latestMask = null;
-
-
+    let faceLandmarks = null;
 
     function initAI() {
-
         selfieSegmentation = new SelfieSegmentation({
-
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
-
         });
-
-        
-
         selfieSegmentation.setOptions({ modelSelection: 0 });
+        selfieSegmentation.onResults(results => { latestMask = results.segmentationMask; });
 
-        selfieSegmentation.onResults(onResultsAI);
-
-
+        faceMesh = new FaceMesh({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+        });
+        faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5 });
+        faceMesh.onResults(results => {
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                faceLandmarks = results.multiFaceLandmarks[0];
+            } else {
+                faceLandmarks = null;
+            }
+        });
 
         navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
-
             vCam.srcObject = stream;
-
             document.getElementById('status-mic').innerText = "ESTADO: IA LISTA";
-
             processAIFrames();
-
         });
-
     }
-
-
 
     async function processAIFrames() {
-
         if (vCam.readyState >= 2) {
-
             await selfieSegmentation.send({ image: vCam });
-
+            await faceMesh.send({ image: vCam });
+            renderProcessedCamera();
         }
-
         requestAnimationFrame(processAIFrames);
-
     }
 
-
-
-    function onResultsAI(results) {
-
-        latestMask = results.segmentationMask;
-
-        
-
+    function renderProcessedCamera() {
         procCtx.save();
-
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
-
-
-        if (currentAvatar !== 'none') {
-
-            // Render de Avatar en vez del cuerpo real
-
-            drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
-
-            procCtx.font = '280px Arial';
-
-            procCtx.textAlign = 'center';
-
-            procCtx.textBaseline = 'middle';
-
-            procCtx.fillText(currentAvatar, procCanvas.width / 2, procCanvas.height / 2 + 30);
-
-        } else if (bgMode === 'none') {
-
+        // Renderizado del Fondo Virtual / Cámara Real
+        if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
-
         } else {
-
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
+            if (latestMask) {
+                procCtx.save();
+                procCtx.globalCompositeOperation = 'destination-out';
+                procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+                procCtx.restore();
 
+                procCtx.globalCompositeOperation = 'destination-over';
+                procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
+            }
+        }
 
-
-            procCtx.save();
-
-            procCtx.globalCompositeOperation = 'destination-out';
-
-            procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
-
-            procCtx.restore();
-
-
-
-            procCtx.globalCompositeOperation = 'destination-over';
-
-            procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
-
+        // Renderizado del Avatar Animado en 2D Vectorial / Mímica Facial Dinámica
+        if (currentAvatar !== 'none' && faceLandmarks) {
+            drawDynamicAvatarHead(procCtx);
         }
 
         procCtx.restore();
-
     }
 
+    function drawDynamicAvatarHead(context) {
+        // Puntos Clave de Malla Facial (MediaPipe Landmarks):
+        // 1 = Nariz, 33 = Ojo Izquierdo, 263 = Ojo Derecho
+        // 13 = Labio Superior, 14 = Labio Inferior, 152 = Barbilla
+        const nose = faceLandmarks[1];
+        const leftEye = faceLandmarks[33];
+        const rightEye = faceLandmarks[263];
+        const topLip = faceLandmarks[13];
+        const bottomLip = faceLandmarks[14];
 
+        const cx = nose.x * procCanvas.width;
+        const cy = nose.y * procCanvas.height;
 
-    function setAvatar(emoji) { currentAvatar = emoji; }
+        const dx = (rightEye.x - leftEye.x) * procCanvas.width;
+        const dy = (rightEye.y - leftEye.y) * procCanvas.height;
+        const eyeDist = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx);
 
-    function setCamFx(fx) { camFx = fx; camFxTimer = 0; }
+        // Apertura de Boca Dinámica (Detección de Habla)
+        const mouthOpen = Math.abs(bottomLip.y - topLip.y) * procCanvas.height;
+        const mouthRatio = Math.min(Math.max((mouthOpen - 5) / 30, 0), 1);
 
-
-
-    function drawVirtualBackgroundToCtx(context, x, y, w, h) {
+        const radius = eyeDist * 1.8;
 
         context.save();
+        context.translate(cx, cy);
+        context.rotate(angle);
 
-        switch(bgMode) {
+        // Estilos según el Avatar Seleccionado
+        let headColor = '#ffcc00';
+        let earColor = '#e6b800';
 
-            case 'yellow': context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); break;
+        if (currentAvatar === 'rabbit') { headColor = '#ffffff'; earColor = '#ffb6c1'; }
+        else if (currentAvatar === 'dog') { headColor = '#c28544'; earColor = '#804a19'; }
+        else if (currentAvatar === 'cat') { headColor = '#ffa500'; earColor = '#cc8400'; }
+        else if (currentAvatar === 'lion') { headColor = '#e69900'; earColor = '#996600'; }
+        else if (currentAvatar === 'robot') { headColor = '#a6a6a6'; earColor = '#00ffff'; }
 
-            case 'blue': context.fillStyle = '#0044ff'; context.fillRect(x, y, w, h); break;
+        // 1. Dibujar Orejas
+        context.fillStyle = earColor;
+        if (currentAvatar === 'rabbit') {
+            context.beginPath();
+            context.ellipse(-radius * 0.5, -radius * 1.5, radius * 0.3, radius * 0.9, -0.1, 0, Math.PI * 2);
+            context.ellipse(radius * 0.5, -radius * 1.5, radius * 0.3, radius * 0.9, 0.1, 0, Math.PI * 2);
+            context.fill();
+        } else if (currentAvatar === 'cat' || currentAvatar === 'lion') {
+            context.beginPath();
+            context.moveTo(-radius * 0.9, -radius * 0.2);
+            context.lineTo(-radius * 0.5, -radius * 1.3);
+            context.lineTo(-radius * 0.1, -radius * 0.7);
+            context.fill();
 
-            case 'orange': context.fillStyle = '#ff6600'; context.fillRect(x, y, w, h); break;
-
-            case 'green': context.fillStyle = '#00b140'; context.fillRect(x, y, w, h); break;
-
-            case 'red': context.fillStyle = '#cc0000'; context.fillRect(x, y, w, h); break;
-
-            case 'purple': context.fillStyle = '#8800cc'; context.fillRect(x, y, w, h); break;
-
-            case 'dark': context.fillStyle = '#222222'; context.fillRect(x, y, w, h); break;
-
-            case 'white': context.fillStyle = '#ffffff'; context.fillRect(x, y, w, h); break;
-
-            case 'office':
-
-                let grad = context.createLinearGradient(x, y, x, y + h);
-
-                grad.addColorStop(0, '#2c3e50');
-
-                grad.addColorStop(0.7, '#34495e');
-
-                grad.addColorStop(1, '#111111');
-
-                context.fillStyle = grad;
-
-                context.fillRect(x, y, w, h);
-
-                context.fillStyle = '#4a3b32';
-
-                context.fillRect(x, y + h - (h*0.22), w, h*0.22);
-
-                break;
-
-            case 'custom':
-
-                if (customBgImg) context.drawImage(customBgImg, x, y, w, h);
-
-                else { context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); }
-
-                break;
-
-            default:
-
-                context.fillStyle = '#000000'; context.fillRect(x, y, w, h);
-
+            context.beginPath();
+            context.moveTo(radius * 0.9, -radius * 0.2);
+            context.lineTo(radius * 0.5, -radius * 1.3);
+            context.lineTo(radius * 0.1, -radius * 0.7);
+            context.fill();
         }
+
+        // 2. Dibujar Cabeza Principal
+        context.fillStyle = headColor;
+        context.beginPath();
+        context.arc(0, 0, radius, 0, Math.PI * 2);
+        context.fill();
+
+        // 3. Dibujar Ojos Sincronizados
+        context.fillStyle = '#ffffff';
+        context.beginPath();
+        context.arc(-radius * 0.4, -radius * 0.2, radius * 0.25, 0, Math.PI * 2);
+        context.arc(radius * 0.4, -radius * 0.2, radius * 0.25, 0, Math.PI * 2);
+        context.fill();
+
+        context.fillStyle = '#000000';
+        context.beginPath();
+        context.arc(-radius * 0.4, -radius * 0.2, radius * 0.12, 0, Math.PI * 2);
+        context.arc(radius * 0.4, -radius * 0.2, radius * 0.12, 0, Math.PI * 2);
+        context.fill();
+
+        // 4. Dibujar Boca Sincronizada con Voz (Abre y cierra en vivo)
+        context.fillStyle = '#ff3333';
+        context.beginPath();
+        const mouthH = (radius * 0.15) + (mouthRatio * radius * 0.5);
+        context.ellipse(0, radius * 0.4, radius * 0.3, mouthH, 0, 0, Math.PI * 2);
+        context.fill();
+        context.strokeStyle = '#000000';
+        context.lineWidth = 3;
+        context.stroke();
 
         context.restore();
-
     }
 
+    function setAvatar(type) { currentAvatar = type; }
+    function setCamFx(fx) { camFx = fx; camFxTimer = 0; }
 
+    function drawVirtualBackgroundToCtx(context, x, y, w, h) {
+        context.save();
+        switch(bgMode) {
+            case 'yellow': context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); break;
+            case 'blue': context.fillStyle = '#0044ff'; context.fillRect(x, y, w, h); break;
+            case 'orange': context.fillStyle = '#ff6600'; context.fillRect(x, y, w, h); break;
+            case 'green': context.fillStyle = '#00b140'; context.fillRect(x, y, w, h); break;
+            case 'red': context.fillStyle = '#cc0000'; context.fillRect(x, y, w, h); break;
+            case 'purple': context.fillStyle = '#8800cc'; context.fillRect(x, y, w, h); break;
+            case 'dark': context.fillStyle = '#222222'; context.fillRect(x, y, w, h); break;
+            case 'white': context.fillStyle = '#ffffff'; context.fillRect(x, y, w, h); break;
+            case 'office':
+                let grad = context.createLinearGradient(x, y, x, y + h);
+                grad.addColorStop(0, '#2c3e50');
+                grad.addColorStop(0.7, '#34495e');
+                grad.addColorStop(1, '#111111');
+                context.fillStyle = grad;
+                context.fillRect(x, y, w, h);
+                context.fillStyle = '#4a3b32';
+                context.fillRect(x, y + h - (h*0.22), w, h*0.22);
+                break;
+            case 'custom':
+                if (customBgImg) context.drawImage(customBgImg, x, y, w, h);
+                else { context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); }
+                break;
+            default:
+                context.fillStyle = '#000000'; context.fillRect(x, y, w, h);
+        }
+        context.restore();
+    }
 
     function handleFiles(e) {
-
         Array.from(e.target.files).forEach(file => {
-
             const url = URL.createObjectURL(file);
-
             const isVid = file.type.includes('video');
-
             const item = { type: isVid ? 'vid' : 'img', url, el: null, text: "", anim: 'zoom' };
-
             if (!isVid) { const img = new Image(); img.src = url; item.el = img; }
-
             library.push(item);
-
             updateList();
-
             if(curIdx === -1) selectMedia(0);
-
         });
-
     }
-
-
 
     function handleCustomBg(e) {
-
         if(e.target.files[0]) {
-
             const img = new Image();
-
             img.src = URL.createObjectURL(e.target.files[0]);
-
-            img.onload = () => {
-
-                customBgImg = img;
-
-                bgMode = 'custom';
-
-            };
-
+            img.onload = () => { customBgImg = img; bgMode = 'custom'; };
         }
-
     }
-
-
 
     function setBgMode(mode) { bgMode = mode; }
 
-
-
     function setAnimMode(anim) {
-
         if (curIdx !== -1) {
-
             library[curIdx].anim = anim;
-
             transitionTimer = 0;
-
             updateList();
-
         }
-
     }
-
-
 
     function updateList() {
-
         const list = document.getElementById('media-list');
-
         list.innerHTML = "";
-
         library.forEach((m, i) => {
-
             const d = document.createElement('div');
-
             d.className = `thumb-nav ${i === curIdx ? 'active' : ''}`;
-
             d.onclick = () => selectMedia(i);
-
             
-
             const label = document.createElement('span');
-
             label.innerText = `${i+1}. ${m.type === 'vid' ? '🎥' : '🖼️'} ${m.text.substring(0,10)}...`;
-
             
-
             const fxTag = document.createElement('span');
-
             fxTag.className = 'fx-tag';
-
             fxTag.innerText = m.type === 'img' ? `⭐ ${m.anim}` : '';
 
-
-
             d.appendChild(label);
-
             d.appendChild(fxTag);
-
             list.appendChild(d);
-
         });
-
     }
-
-
 
     function selectMedia(i) {
-
         curIdx = i;
-
         transitionTimer = 0;
-
         slideTextInput.value = library[i].text || "";
-
         if (library[i].type === 'vid') { vBg.src = library[i].url; vBg.play(); }
-
         updateList();
-
     }
-
-
 
     function nextSlide() {
-
         if (library.length > 0) {
-
             let nextIdx = (curIdx + 1) % library.length;
-
             selectMedia(nextIdx);
-
         }
-
     }
-
-
 
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
-
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
-
-
     function renderImageWithAnimation(img, animMode) {
-
         transitionTimer += 0.02;
-
         let t = Math.min(transitionTimer, 1);
-
         const cw = canvas.width, ch = canvas.height;
 
-
-
         ctx.save();
-
         ctx.filter = imgFilter;
 
-
-
         switch(animMode) {
-
             case 'zoom':
-
                 let sz = 1 + (Math.sin(transitionTimer * 0.5) * 0.08);
-
                 ctx.translate(cw / 2, ch / 2); ctx.scale(sz, sz);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'slide':
-
                 let px = (1 - Math.pow(1 - t, 3)) * cw - cw;
-
                 ctx.drawImage(img, px, 0, cw, ch);
-
                 break;
-
             case 'blinds':
-
                 let strips = 8, stripW = cw / strips, pW = stripW * t;
-
                 for (let i = 0; i < strips; i++) { ctx.drawImage(img, i * stripW, 0, pW, ch, i * stripW, 0, pW, ch); }
-
                 break;
-
             case 'flip':
-
                 ctx.translate(cw / 2, ch / 2); ctx.scale(Math.cos((1 - t) * Math.PI), 1);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'fade':
-
                 ctx.globalAlpha = t; ctx.drawImage(img, 0, 0, cw, ch);
-
                 break;
-
             case 'pop':
-
                 let pScale = t < 0.8 ? t * 1.1 : 1;
-
                 ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'drop':
-
                 let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
-
                 ctx.drawImage(img, 0, py, cw, ch);
-
                 break;
-
             case 'wipe':
-
                 ctx.drawImage(img, 0, 0, cw, ch * t, 0, 0, cw, ch * t);
-
                 break;
-
             case 'spinZoom':
-
                 ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI); ctx.scale(t, t);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'bounce':
-
                 let bY = Math.abs(Math.sin(transitionTimer * 4) * (1 - t) * 100);
-
                 ctx.drawImage(img, 0, -bY, cw, ch);
-
                 break;
-
             case 'scale':
-
                 ctx.translate(cw / 2, ch / 2); ctx.scale(t, t);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'windmill':
-
                 ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI * 2);
-
                 ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
                 break;
-
             case 'diagonal':
-
                 ctx.drawImage(img, (1 - t) * -cw, (1 - t) * -ch, cw, ch);
-
                 break;
-
             case 'flash':
-
                 ctx.globalAlpha = (Math.sin(transitionTimer * 10) > 0 || t === 1) ? 1 : 0.2;
-
                 ctx.drawImage(img, 0, 0, cw, ch);
-
                 break;
-
             case 'vBlinds':
-
                 let vStrips = 8, vH = ch / vStrips, pH = vH * t;
-
                 for (let i = 0; i < vStrips; i++) { ctx.drawImage(img, 0, i * vH, cw, pH, 0, i * vH, cw, pH); }
-
                 break;
-
             case 'reveal':
-
                 let rW = cw * t, rH = ch * t;
-
                 ctx.drawImage(img, (cw - rW)/2, (ch - rH)/2, rW, rH, (cw - rW)/2, (ch - rH)/2, rW, rH);
-
                 break;
-
             case 'rise':
-
                 ctx.drawImage(img, 0, (1 - t) * ch, cw, ch);
-
                 break;
-
             case 'swing':
-
                 ctx.translate(cw / 2, 0); ctx.rotate(Math.sin(transitionTimer * 3) * (1 - t) * 0.2);
-
                 ctx.drawImage(img, -cw / 2, 0, cw, ch);
-
                 break;
-
             case 'dBlinds':
-
                 ctx.save(); ctx.beginPath(); ctx.rect(0, 0, cw * t, ch * t); ctx.clip();
-
                 ctx.drawImage(img, 0, 0, cw, ch); ctx.restore();
-
                 break;
-
             default:
-
                 ctx.drawImage(img, 0, 0, cw, ch);
-
         }
-
         ctx.restore();
-
     }
 
-
-
     function render() {
-
         ctx.fillStyle = "black";
-
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         
-
         if (curIdx !== -1) {
-
             const m = library[curIdx];
-
             if (m.type === 'img' && m.el) {
-
                 renderImageWithAnimation(m.el, m.anim || 'zoom');
-
             } else if (m.type === 'vid') {
-
                 ctx.drawImage(vBg, 0, 0, canvas.width, canvas.height);
-
             }
-
             
-
             if(m.text) {
-
                 ctx.fillStyle = "yellow"; ctx.font = "bold 60px Impact"; ctx.textAlign = "center";
-
                 ctx.strokeStyle = "black"; ctx.lineWidth = 8;
-
                 ctx.strokeText(m.text.toUpperCase(), canvas.width/2, 650);
-
                 ctx.fillText(m.text.toUpperCase(), canvas.width/2, 650);
-
             }
-
         }
 
-
-
         if (camMode !== 'off' && vCam.srcObject) {
-
             camFxTimer += 0.05;
-
             let cx = (camMode === 'full') ? 0 : camX;
-
             let cy = (camMode === 'full') ? 0 : camY;
-
             let cw = (camMode === 'full') ? canvas.width : camW;
-
             let ch = (camMode === 'full') ? canvas.height : camH;
 
-
-
             ctx.save();
-
             
-
             if (camFx === 'zoom') {
-
                 ctx.translate(cx + cw/2, cy + ch/2);
-
                 ctx.scale(1.25, 1.25);
-
                 ctx.translate(-(cx + cw/2), -(cy + ch/2));
-
             } else if (camFx === 'boom') {
-
                 cx += (Math.random() - 0.5) * 8;
-
                 cy += (Math.random() - 0.5) * 8;
-
             } else if (camFx === 'mirror') {
-
                 ctx.translate(cx + cw, cy);
-
                 ctx.scale(-1, 1);
-
                 cx = 0; cy = 0;
-
             }
-
-
 
             if (camMode === 'mini') {
-
                 ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
-
                 ctx.lineWidth = (camFx === 'boom') ? 5 : 3;
-
                 ctx.strokeRect(cx, cy, cw, ch);
-
             }
-
-
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
 
-
-
             if (camFx === 'alert') {
-
                 ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`;
-
                 ctx.fillRect(cx, cy, cw, ch);
-
             } else if (camFx === 'neon') {
-
                 ctx.strokeStyle = `hsl(${(camFxTimer * 50) % 360}, 100%, 50%)`;
-
                 ctx.lineWidth = 6;
-
                 ctx.strokeRect(cx, cy, cw, ch);
-
             } else if (camFx === 'cinema') {
-
                 ctx.fillStyle = 'black';
-
                 ctx.fillRect(cx, cy, cw, ch * 0.12);
-
                 ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-
             } else if (camFx === 'strobe') {
-
                 if (Math.sin(camFxTimer * 20) > 0) {
-
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-
                     ctx.fillRect(cx, cy, cw, ch);
-
                 }
-
             } else if (camFx === 'vhs') {
-
                 ctx.fillStyle = 'rgba(0, 255, 0, 0.05)';
-
                 ctx.fillRect(cx, cy + (Math.sin(camFxTimer * 5) * ch/2) + ch/2, cw, 4);
-
             } else if (camFx === 'fire') {
-
                 ctx.shadowColor = 'orange';
-
                 ctx.shadowBlur = 20;
-
                 ctx.strokeStyle = '#ff4500';
-
                 ctx.lineWidth = 4;
-
                 ctx.strokeRect(cx, cy, cw, ch);
-
             } else if (camFx === 'rainbow') {
-
                 ctx.fillStyle = `hsla(${(camFxTimer * 60) % 360}, 100%, 50%, 0.15)`;
-
                 ctx.fillRect(cx, cy, cw, ch);
-
             } else if (camFx === 'vignette') {
-
                 let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.3, cx+cw/2, cy+ch/2, cw*0.7);
-
                 grad.addColorStop(0, 'rgba(0,0,0,0)');
-
                 grad.addColorStop(1, 'rgba(0,0,0,0.8)');
-
                 ctx.fillStyle = grad;
-
                 ctx.fillRect(cx, cy, cw, ch);
-
             }
-
-
 
             ctx.restore();
-
         }
-
-
 
         requestAnimationFrame(render);
-
     }
-
-
 
     async function startCapture() {
-
         const btn = document.getElementById('recBtn');
-
         
-
         if (!isRecording) {
-
             if (!audioCtx) audioCtx = new AudioContext();
-
             if (audioCtx.state === 'suspended') await audioCtx.resume();
 
-
-
             const micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-
             const canvasStream = canvas.captureStream(30);
-
             const destination = audioCtx.createMediaStreamDestination();
-
             audioCtx.createMediaStreamSource(micStream).connect(destination);
 
-
-
             if (curIdx !== -1 && library[curIdx].type === 'vid') {
-
                 const vidSource = audioCtx.createMediaElementSource(vBg);
-
                 vidSource.connect(destination);
-
                 vidSource.connect(audioCtx.destination);
-
             }
 
-
-
             const combined = new MediaStream([...canvasStream.getVideoTracks(), ...destination.stream.getAudioTracks()]);
-
             recorder = new MediaRecorder(combined, { mimeType: 'video/webm;codecs=vp9' });
-
             chunks = [];
-
             recorder.ondataavailable = e => chunks.push(e.data);
-
             recorder.onstop = () => {
-
                 finalBlob = new Blob(chunks, { type: 'video/webm' });
-
                 document.getElementById('dlBtn').style.display = "block";
-
             };
-
             
-
             recorder.start(); 
-
             isRecording = true;
-
             btn.innerText = "⏹ TERMINAR";
-
             btn.classList.add('recording');
-
             document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
-
         } else {
-
             recorder.stop();
-
             isRecording = false;
-
             btn.innerText = "🎙️ EMPEZAR GRABACIÓN";
-
             btn.classList.remove('recording');
-
         }
-
     }
-
-
 
     function togglePause() {
-
         const pBtn = document.getElementById('pauseBtn');
-
         if (!isRecording) return;
-
         
-
         if (!isPaused) {
-
             recorder.pause();
-
             isPaused = true;
-
             pBtn.innerText = "▶ REANUDAR";
-
             document.getElementById('status-mic').innerText = "⏸ PAUSADO (CORTA AQUÍ)";
-
         } else {
-
             recorder.resume();
-
             isPaused = false;
-
             pBtn.innerText = "⏸ PAUSAR (CORTAR)";
-
             document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
-
         }
-
     }
-
-
 
     function download() {
-
         const a = document.createElement('a'); a.href = URL.createObjectURL(finalBlob);
-
         a.download = `CAPACITIUMX_FINAL.webm`; a.click();
-
     }
 
-
-
     window.addEventListener('keydown', (e) => {
-
         if (e.code === 'Space' && isRecording) {
-
             e.preventDefault();
-
             togglePause();
-
         }
-
     });
 
-
-
     canvas.onmousedown = (e) => {
-
         const r = canvas.getBoundingClientRect();
-
         const x = (e.clientX - r.left) * (canvas.width / r.width);
-
         const y = (e.clientY - r.top) * (canvas.height / r.height);
-
         if(camMode === 'mini' && x > camX && x < camX + camW && y > camY && y < camY + camH) dragging = true;
-
     };
-
     window.onmousemove = (e) => {
-
         if(dragging) {
-
             const r = canvas.getBoundingClientRect();
-
             camX = (e.clientX - r.left) * (canvas.width / r.width) - camW/2;
-
             camY = (e.clientY - r.top) * (canvas.height / r.height) - camH/2;
-
         }
-
     };
-
     window.onmouseup = () => dragging = false;
 
-
-
     initAI();
-
     render();
-
 </script>
-
 </body>
-
 </html>
