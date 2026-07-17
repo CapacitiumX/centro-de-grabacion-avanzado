@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - FIXED EDITOR COMPLETO</title>
+    <title>CAPACITIUMX V329 - EDITOR ULTIMATE CON TRANSICIONES Y IA</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -11,10 +12,10 @@
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 310px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .sidebar { width: 330px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
-        #media-list { flex: 1; min-height: 100px; max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
         .thumb-nav { padding: 6px; background: #222; border: 1px solid #444; font-size: 11px; cursor: pointer; border-radius: 4px; }
         .thumb-nav.active { border-color: var(--neon); background: #111; }
 
@@ -39,8 +40,8 @@
 <body>
 
 <header>
-    <div class="logo">CAPACITIUMX V329 - FIXED EDITOR</div>
-    <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: LISTO</div>
+    <div class="logo">CAPACITIUMX V329 - ULTIMATE EDITOR</div>
+    <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
 <div class="main">
@@ -51,14 +52,23 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">🎬 Animación PowerPoint (Fotos)</div>
+        <div class="section-title">🎬 15 Transiciones PowerPoint (Fotos)</div>
         <div class="grid-buttons">
-            <button class="btn-c" onclick="animMode='zoom'">🔍 Zoom</button>
-            <button class="btn-c" onclick="animMode='slide'">↔️ Cortina</button>
-            <button class="btn-c" onclick="animMode='blinds'">🪟 Persiana</button>
-            <button class="btn-c" onclick="animMode='flip'">🔄 Giro 3D</button>
-            <button class="btn-c" onclick="animMode='fade'">✨ Fade In</button>
-            <button class="btn-c" onclick="animMode='none'">⏸️ Estático</button>
+            <button class="btn-c" onclick="animMode='zoom'">🔍 1. Zoom</button>
+            <button class="btn-c" onclick="animMode='slide'">↔️ 2. Cortina</button>
+            <button class="btn-c" onclick="animMode='blinds'">🪟 3. Persiana</button>
+            <button class="btn-c" onclick="animMode='flip'">🔄 4. Giro 3D</button>
+            <button class="btn-c" onclick="animMode='fade'">✨ 5. Fade In</button>
+            <button class="btn-c" onclick="animMode='pop'">💥 6. Explosión</button>
+            <button class="btn-c" onclick="animMode='drop'">⬇️ 7. Caída</button>
+            <button class="btn-c" onclick="animMode='wipe'">↕️ 8. Barrido</button>
+            <button class="btn-c" onclick="animMode='spinZoom'">🌀 9. Spin Zoom</button>
+            <button class="btn-c" onclick="animMode='bounce'">⚽ 10. Rebote</button>
+            <button class="btn-c" onclick="animMode='scale'">📐 11. Escalado</button>
+            <button class="btn-c" onclick="animMode='windmill'">🎡 12. Molino</button>
+            <button class="btn-c" onclick="animMode='diagonal'">↗️ 13. Diagonal</button>
+            <button class="btn-c" onclick="animMode='flash'">⚡ 14. Parpadeo</button>
+            <button class="btn-c" onclick="animMode='none'">⏹️ 15. Estático</button>
         </div>
 
         <div class="section-title">🎨 Filtros para Foto / Flyer</div>
@@ -71,14 +81,20 @@
             <button class="btn-c" onclick="imgFilter='hue-rotate(180deg)'">Neón FX</button>
         </div>
 
-        <div class="section-title">🖼️ Fondo Virtual para Cámara</div>
+        <div class="section-title">🖼️ Fondo Virtual CÁMARA (IA)</div>
         <div class="grid-buttons">
-            <button class="btn-c" onclick="setBgMode('office')">🏢 Oficina</button>
+            <button class="btn-c" onclick="setBgMode('yellow')">🟨 Amarillo</button>
             <button class="btn-c" onclick="setBgMode('blue')">🟦 Azul Sólido</button>
+            <button class="btn-c" onclick="setBgMode('orange')">🟧 Naranja</button>
             <button class="btn-c" onclick="setBgMode('green')">🟩 Verde Chroma</button>
+            <button class="btn-c" onclick="setBgMode('red')">🟥 Rojo Sólido</button>
+            <button class="btn-c" onclick="setBgMode('purple')">🟪 Púrpura</button>
             <button class="btn-c" onclick="setBgMode('dark')">⬛ Gris Estudio</button>
+            <button class="btn-c" onclick="setBgMode('white')">⬜ Blanco</button>
+            <button class="btn-c" onclick="setBgMode('office')">🏢 Oficina</button>
+            <button class="btn-c" onclick="setBgMode('none')">🚫 Real / Sin IA</button>
         </div>
-        <button class="btn-load" style="margin-top:4px;" onclick="document.getElementById('custom-bg-in').click()">🖼️ SUBIR MI FONDO PROPIO</button>
+        <button class="btn-load" style="margin-top:4px;" onclick="document.getElementById('custom-bg-in').click()">🖼️ SUBIR FOTO PROPIA DE FONDO</button>
         <input type="file" id="custom-bg-in" accept="image/*" style="display:none;" onchange="handleCustomBg(event)">
     </aside>
 
@@ -106,6 +122,7 @@
 
 <video id="v-cam" autoplay playsinline style="display:none"></video>
 <video id="v-bg" loop style="display:none" crossOrigin="anonymous"></video>
+<canvas id="canvas-cam-processed" width="640" height="480" style="display:none"></canvas>
 
 <script>
     const canvas = document.getElementById('canvas-render');
@@ -113,14 +130,95 @@
     const vCam = document.getElementById('v-cam');
     const vBg = document.getElementById('v-bg');
     const slideTextInput = document.getElementById('slide-text');
+    
+    const procCanvas = document.getElementById('canvas-cam-processed');
+    const procCtx = procCanvas.getContext('2d');
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none';
     let animMode = 'zoom';
-    let bgMode = 'dark'; 
+    let bgMode = 'yellow'; // Por defecto amarillo sólido
     let customBgImg = null;
     let transitionTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
+    let selfieSegmentation = null;
+    let latestMask = null;
+
+    // --- INTEGRACIÓN DE IA PARA SEPARACIÓN DE CÁMARA Y FONDO VIRTUAL ---
+    function initAI() {
+        selfieSegmentation = new SelfieSegmentation({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+        });
+        selfieSegmentation.setOptions({ modelSelection: 1 });
+        selfieSegmentation.onResults(onResultsAI);
+
+        navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } }).then(stream => {
+            vCam.srcObject = stream;
+            document.getElementById('status-mic').innerText = "ESTADO: IA LISTA";
+            processAIFrames();
+        });
+    }
+
+    async function processAIFrames() {
+        if (vCam.readyState >= 2) {
+            await selfieSegmentation.send({ image: vCam });
+        }
+        requestAnimationFrame(processAIFrames);
+    }
+
+    function onResultsAI(results) {
+        latestMask = results.segmentationMask;
+        
+        procCtx.save();
+        procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
+
+        if (bgMode === 'none') {
+            procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
+        } else {
+            // 1. Dibujar Fondo Virtual Elegido
+            drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
+
+            // 2. Aplicar Máscara de IA para recortar a la persona
+            procCtx.globalCompositeOperation = 'destination-out';
+            procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+
+            // 3. Superponer la persona real limpia
+            procCtx.globalCompositeOperation = 'destination-over';
+            procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
+        }
+        procCtx.restore();
+    }
+
+    function drawVirtualBackgroundToCtx(context, x, y, w, h) {
+        context.save();
+        switch(bgMode) {
+            case 'yellow': context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); break;
+            case 'blue': context.fillStyle = '#0044ff'; context.fillRect(x, y, w, h); break;
+            case 'orange': context.fillStyle = '#ff6600'; context.fillRect(x, y, w, h); break;
+            case 'green': context.fillStyle = '#00b140'; context.fillRect(x, y, w, h); break;
+            case 'red': context.fillStyle = '#cc0000'; context.fillRect(x, y, w, h); break;
+            case 'purple': context.fillStyle = '#8800cc'; context.fillRect(x, y, w, h); break;
+            case 'dark': context.fillStyle = '#222222'; context.fillRect(x, y, w, h); break;
+            case 'white': context.fillStyle = '#ffffff'; context.fillRect(x, y, w, h); break;
+            case 'office':
+                let grad = context.createLinearGradient(x, y, x, y + h);
+                grad.addColorStop(0, '#2c3e50');
+                grad.addColorStop(0.7, '#34495e');
+                grad.addColorStop(1, '#111111');
+                context.fillStyle = grad;
+                context.fillRect(x, y, w, h);
+                context.fillStyle = '#4a3b32';
+                context.fillRect(x, y + h - (h*0.22), w, h*0.22);
+                break;
+            case 'custom':
+                if (customBgImg) context.drawImage(customBgImg, x, y, w, h);
+                else { context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); }
+                break;
+            default:
+                context.fillStyle = '#000000'; context.fillRect(x, y, w, h);
+        }
+        context.restore();
+    }
 
     function handleFiles(e) {
         Array.from(e.target.files).forEach(file => {
@@ -172,82 +270,83 @@
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
-    navigator.mediaDevices.getUserMedia({ video: true }).then(s => vCam.srcObject = s);
-
-    function drawVirtualBackground(x, y, w, h) {
-        ctx.save();
-        if (bgMode === 'blue') {
-            ctx.fillStyle = '#003366';
-            ctx.fillRect(x, y, w, h);
-        } else if (bgMode === 'green') {
-            ctx.fillStyle = '#00b140';
-            ctx.fillRect(x, y, w, h);
-        } else if (bgMode === 'dark') {
-            ctx.fillStyle = '#1e1e24';
-            ctx.fillRect(x, y, w, h);
-        } else if (bgMode === 'office') {
-            let grad = ctx.createLinearGradient(x, y, x, y + h);
-            grad.addColorStop(0, '#2c3e50');
-            grad.addColorStop(0.75, '#34495e');
-            grad.addColorStop(1, '#111111');
-            ctx.fillStyle = grad;
-            ctx.fillRect(x, y, w, h);
-            
-            ctx.fillStyle = '#4a3b32';
-            ctx.fillRect(x, y + h - (h*0.22), w, h*0.22);
-            ctx.fillStyle = '#ffffff';
-            ctx.globalAlpha = 0.05;
-            ctx.fillRect(x, y, w, h*0.3);
-        } else if (bgMode === 'custom' && customBgImg) {
-            ctx.drawImage(customBgImg, x, y, w, h);
-        } else {
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(x, y, w, h);
-        }
-        ctx.restore();
-    }
-
+    // --- 15 TRANSICIONES ANIMADAS ESTILO POWERPOINT ---
     function renderImageWithAnimation(img) {
         transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
+        const cw = canvas.width, ch = canvas.height;
 
         ctx.save();
         ctx.filter = imgFilter;
 
-        const cw = canvas.width, ch = canvas.height;
-
-        if (animMode === 'zoom') {
-            let scale = 1 + (Math.sin(transitionTimer * 0.5) * 0.08);
-            ctx.translate(cw / 2, ch / 2);
-            ctx.scale(scale, scale);
-            ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
-        } else if (animMode === 'slide') {
-            let posX = (1 - Math.pow(1 - t, 3)) * cw - cw;
-            ctx.drawImage(img, posX, 0, cw, ch);
-
-        } else if (animMode === 'blinds') {
-            let strips = 8;
-            let stripW = cw / strips;
-            let progressW = stripW * t;
-            for (let i = 0; i < strips; i++) {
-                ctx.drawImage(img, i * stripW, 0, progressW, ch, i * stripW, 0, progressW, ch);
-            }
-
-        } else if (animMode === 'flip') {
-            ctx.translate(cw / 2, ch / 2);
-            let scaleX = Math.cos((1 - t) * Math.PI);
-            ctx.scale(scaleX, 1);
-            ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-
-        } else if (animMode === 'fade') {
-            ctx.globalAlpha = t;
-            ctx.drawImage(img, 0, 0, cw, ch);
-
-        } else {
-            ctx.drawImage(img, 0, 0, cw, ch);
+        switch(animMode) {
+            case 'zoom':
+                let sz = 1 + (Math.sin(transitionTimer * 0.5) * 0.08);
+                ctx.translate(cw / 2, ch / 2); ctx.scale(sz, sz);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'slide':
+                let px = (1 - Math.pow(1 - t, 3)) * cw - cw;
+                ctx.drawImage(img, px, 0, cw, ch);
+                break;
+            case 'blinds':
+                let strips = 8, stripW = cw / strips, pW = stripW * t;
+                for (let i = 0; i < strips; i++) {
+                    ctx.drawImage(img, i * stripW, 0, pW, ch, i * stripW, 0, pW, ch);
+                }
+                break;
+            case 'flip':
+                ctx.translate(cw / 2, ch / 2);
+                ctx.scale(Math.cos((1 - t) * Math.PI), 1);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'fade':
+                ctx.globalAlpha = t;
+                ctx.drawImage(img, 0, 0, cw, ch);
+                break;
+            case 'pop':
+                let pScale = t < 0.8 ? t * 1.1 : 1;
+                ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'drop':
+                let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
+                ctx.drawImage(img, 0, py, cw, ch);
+                break;
+            case 'wipe':
+                ctx.drawImage(img, 0, 0, cw, ch * t, 0, 0, cw, ch * t);
+                break;
+            case 'spinZoom':
+                ctx.translate(cw / 2, ch / 2);
+                ctx.rotate((1 - t) * Math.PI);
+                ctx.scale(t, t);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'bounce':
+                let bY = Math.abs(Math.sin(transitionTimer * 4) * (1 - t) * 100);
+                ctx.drawImage(img, 0, -bY, cw, ch);
+                break;
+            case 'scale':
+                ctx.translate(cw / 2, ch / 2); ctx.scale(t, t);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'windmill':
+                ctx.translate(cw / 2, ch / 2);
+                ctx.rotate((1 - t) * Math.PI * 2);
+                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                break;
+            case 'diagonal':
+                let dX = (1 - t) * -cw;
+                let dY = (1 - t) * -ch;
+                ctx.drawImage(img, dX, dY, cw, ch);
+                break;
+            case 'flash':
+                ctx.globalAlpha = (Math.sin(transitionTimer * 10) > 0 || t === 1) ? 1 : 0.2;
+                ctx.drawImage(img, 0, 0, cw, ch);
+                break;
+            default: // static
+                ctx.drawImage(img, 0, 0, cw, ch);
         }
-
         ctx.restore();
     }
 
@@ -258,7 +357,6 @@
         // --- 1. SLIDE (FOTO / VIDEO) ---
         if (curIdx !== -1) {
             const m = library[curIdx];
-            
             if (m.type === 'img' && m.el) {
                 renderImageWithAnimation(m.el);
             } else if (m.type === 'vid') {
@@ -273,24 +371,21 @@
             }
         }
 
-        // --- 2. CÁMARA CON FONDO VIRTUAL TOTALMENTE SÓLIDO ---
+        // --- 2. CÁMARA CON FONDO VIRTUAL PROCESADO POR IA ---
         if (camMode !== 'off' && vCam.srcObject) {
             let cx = (camMode === 'full') ? 0 : camX;
             let cy = (camMode === 'full') ? 0 : camY;
             let cw = (camMode === 'full') ? canvas.width : camW;
             let ch = (camMode === 'full') ? canvas.height : camH;
 
-            // Dibujar el Fondo Virtual Sólido
-            drawVirtualBackground(cx, cy, cw, ch);
-
-            // Dibujar la cámara sobre el fondo
             ctx.save();
             if (camMode === 'mini') {
                 ctx.strokeStyle = "#00ff00"; 
                 ctx.lineWidth = 3;
                 ctx.strokeRect(cx, cy, cw, ch);
             }
-            ctx.drawImage(vCam, cx, cy, cw, ch);
+            // Dibujar el canvas procesado por la IA con la persona + fondo virtual
+            ctx.drawImage(procCanvas, cx, cy, cw, ch);
             ctx.restore();
         }
 
@@ -360,7 +455,7 @@
         a.download = `CAPACITIUMX_FINAL.webm`; a.click();
     }
 
-    // ATAJO DE TECLADO: Presiona 'ESPACIO' para pausar/reanudar rápido si te equivocas al hablar
+    // ATAJO ESPACIO
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && isRecording) {
             e.preventDefault();
@@ -368,7 +463,7 @@
         }
     });
 
-    // Arrastre libre de la ventana de la cámara
+    // ARRASTRE DE CÁMARA
     canvas.onmousedown = (e) => {
         const r = canvas.getBoundingClientRect();
         const x = (e.clientX - r.left) * (canvas.width / r.width);
@@ -384,6 +479,8 @@
     };
     window.onmouseup = () => dragging = false;
 
+    // Inicializar IA y renderizado
+    initAI();
     render();
 </script>
 </body>
