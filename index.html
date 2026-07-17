@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CAPACITIUMX V329 - ULTIMATE STUDIO & LIVE AVATARS</title>
-    <!-- Librerías de IA para Segmentación y Face Tracking -->
+    <!-- Librerías de MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
     <style>
@@ -45,7 +45,7 @@
         .footer { height: 110px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
         .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
         .btn-pause { background: #ff9800; color: black; padding: 12px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
-        .btn-next { background: #333; border: 1px solid var(--neon); color: var(--neon); padding: 12px 20px; font-weight: bold; cursor: border-radius: 8px; font-size: 13px; }
+        .btn-next { background: #333; border: 1px solid var(--neon); color: var(--neon); padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .recording { animation: pulse 1s infinite; box-shadow: 0 0 20px var(--red); }
         @keyframes pulse { 50% { opacity: 0.5; } }
         
@@ -74,7 +74,7 @@
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO & AVATARS</div>
+    <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO & LIVE AVATARS</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA DE RASTREO...</div>
 </header>
 
@@ -191,7 +191,6 @@
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
-    // --- LÓGICA DE LICENCIA ---
     const MASTER_KEY = "CAPACITIUMX-MASTER-2026";
 
     function validateLicense() {
@@ -225,21 +224,18 @@
     let transitionTimer = 0, camFxTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
     
-    // IAs de MediaPipe
     let selfieSegmentation = null;
     let faceMesh = null;
     let latestMask = null;
     let faceLandmarks = null;
 
     function initAI() {
-        // AI Segmentación Fondo
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
         });
         selfieSegmentation.setOptions({ modelSelection: 0 });
         selfieSegmentation.onResults(results => { latestMask = results.segmentationMask; });
 
-        // AI Face Mesh (Rastreo Facial para Avatares en Tiempo Real)
         faceMesh = new FaceMesh({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
         });
@@ -277,10 +273,8 @@
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
-        // 1. Dibujar el fondo seleccionado
         if (bgMode !== 'none') {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
-            // Máscara recorte de la persona
             if (latestMask) {
                 procCtx.save();
                 procCtx.globalCompositeOperation = 'destination-out';
@@ -294,7 +288,7 @@
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         }
 
-        // 2. Aplicar Máscara AR / Avatar Interactiva si está activa
+        // Renderizado del Avatar sobre el rostro rastreado
         if (currentAvatar !== 'none' && faceLandmarks) {
             renderARAvatar(procCtx, faceLandmarks, currentAvatar, procCanvas.width, procCanvas.height);
         }
@@ -302,19 +296,15 @@
         procCtx.restore();
     }
 
-    // FUNCIÓN DE REALIDAD AUMENTADA QUE SIGUE TU ROSTRO EN TIEMPO REAL
     function renderARAvatar(ctxAR, landmarks, type, w, h) {
-        // Puntos Clave de la Cara (MediaPipe Indices)
+        // Puntos faciales mapeados a resolucion canvas
         const nose = { x: landmarks[1].x * w, y: landmarks[1].y * h };
         const leftEye = { x: landmarks[33].x * w, y: landmarks[33].y * h };
         const rightEye = { x: landmarks[263].x * w, y: landmarks[263].y * h };
         const mouthTop = { x: landmarks[13].x * w, y: landmarks[13].y * h };
         const mouthBottom = { x: landmarks[14].x * w, y: landmarks[14].y * h };
-        const chin = { x: landmarks[152].x * w, y: landmarks[152].y * h };
-        const forehead = { x: landmarks[10].x * w, y: landmarks[10].y * h };
 
-        // Ancho y alto estimado del rostro
-        const faceWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y) * 2.2;
+        const faceWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y) * 2.3;
         const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
         const mouthOpen = Math.hypot(mouthBottom.x - mouthTop.x, mouthBottom.y - mouthTop.y);
 
@@ -325,49 +315,27 @@
         ctxAR.textAlign = 'center';
         ctxAR.textBaseline = 'middle';
 
-        switch(type) {
-            case 'dog':
-                // Orejas y Hocico de Perro adaptables
-                ctxAR.font = `${faceWidth * 0.8}px Arial`;
-                ctxAR.fillText('🐶', 0, -faceWidth * 0.1);
-                if (mouthOpen > 15) {
-                    ctxAR.font = `${faceWidth * 0.4}px Arial`;
-                    ctxAR.fillText('👅', 0, faceWidth * 0.3); // Lengua cuando abres la boca
-                }
-                break;
-            case 'cat':
-                ctxAR.font = `${faceWidth * 0.8}px Arial`;
-                ctxAR.fillText('🐱', 0, -faceWidth * 0.05);
-                break;
-            case 'robot':
-                ctxAR.font = `${faceWidth * 0.85}px Arial`;
-                ctxAR.fillText('🤖', 0, -faceWidth * 0.05);
-                break;
-            case 'lion':
-                ctxAR.font = `${faceWidth * 0.9}px Arial`;
-                ctxAR.fillText('🦁', 0, -faceWidth * 0.05);
-                break;
-            case 'rabbit':
-                ctxAR.font = `${faceWidth * 0.85}px Arial`;
-                ctxAR.fillText('🐰', 0, -faceWidth * 0.2);
-                break;
-            case 'bear':
-                ctxAR.font = `${faceWidth * 0.85}px Arial`;
-                ctxAR.fillText('🐻', 0, -faceWidth * 0.1);
-                break;
-            case 'alien':
-                ctxAR.font = `${faceWidth * 0.85}px Arial`;
-                ctxAR.fillText('👽', 0, -faceWidth * 0.05);
-                break;
-            case 'skull':
-                ctxAR.font = `${faceWidth * 0.8}px Arial`;
-                ctxAR.fillText('💀', 0, 0);
-                break;
-            case 'cyber':
-                // Gafas Cyberpunk ajustadas directamente a los ojos
-                ctxAR.font = `${faceWidth * 0.6}px Arial`;
-                ctxAR.fillText('🕶️', 0, -faceWidth * 0.15);
-                break;
+        const mapAvatar = {
+            'dog': '🐶',
+            'cat': '🐱',
+            'robot': '🤖',
+            'lion': '🦁',
+            'rabbit': '🐰',
+            'bear': '🐻',
+            'alien': '👽',
+            'skull': '💀',
+            'cyber': '🕶️'
+        };
+
+        const emoji = mapAvatar[type] || '👤';
+
+        ctxAR.font = `${faceWidth * 0.9}px Arial`;
+        ctxAR.fillText(emoji, 0, -faceWidth * 0.05);
+
+        // Reacción al abrir la boca (ejemplo: saca la lengua en perro)
+        if (type === 'dog' && mouthOpen > 18) {
+            ctxAR.font = `${faceWidth * 0.45}px Arial`;
+            ctxAR.fillText('👅', 0, faceWidth * 0.35);
         }
 
         ctxAR.restore();
