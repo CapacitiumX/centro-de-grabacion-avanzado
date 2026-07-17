@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V334 - ULTIMATE STUDIO & 3D ARROW</title>
+    <title>CAPACITIUMX V335 - ULTIMATE STUDIO & PRO MATTING</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -94,7 +94,7 @@
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V334 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V335 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -106,10 +106,11 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">✂️ RECORTE ROSTRO Y LUZ</div>
+        <!-- CONTROL DE LIMPIEZA DE MÁSCARA PARA EVITAR MANCHAS BLANCAS Y BURBUJAS -->
+        <div class="section-title">✂️ LIMPIEZA Y TOLERANCIA CÁMARA (SIN BURBUJAS)</div>
         <div class="ctrl-row">
             <span>Tolerancia IA:</span>
-            <input type="range" id="mask-threshold" min="0.1" max="0.9" step="0.05" value="0.55">
+            <input type="range" id="mask-threshold" min="0.1" max="0.9" step="0.02" value="0.45">
         </div>
 
         <div class="section-title">📐 FORMA CÁMARA</div>
@@ -144,7 +145,7 @@
             <button class="btn-c" onclick="toggleBlurBg()">🌫️ Blur Fondo</button>
         </div>
 
-        <!-- PANEL DE FLECHA CÓNICA 3D RECURVADA (ESTILO IMAGEN) -->
+        <!-- PANEL DE FLECHA CÓNICA 3D RECURVADA -->
         <div class="section-title">🏹 FLECHA CURVA CÓNICA 3D (ESTILO YOUTUBE)</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="toggleArrow(!showArrow)">👁️ Mostrar/Ocultar</button>
@@ -377,7 +378,6 @@
     let latestMask = null;
     let useCatAvatar = false;
 
-    // CONFIGURACIÓN DE CÁMARA Y MINIATURA
     let camShape = 'rect';
     let showArrow = true;
     let arrowFlip = false;
@@ -436,34 +436,30 @@
 
     function closeThumbModal() { document.getElementById('thumb-modal').style.display = 'none'; }
 
-    // RENDERIZADO DE LA FLECHA CURVA CÓNICA 3D EXACTA A LA FOTO
     function drawCustom3DArrow(context, x, y, rot, color, thickness, length, isFlipped) {
         context.save();
         context.translate(x, y);
         context.rotate(rot);
         if (isFlipped) context.scale(-1, 1);
 
-        // Sombras y resplandor 3D
         context.shadowColor = "rgba(0, 0, 0, 0.6)";
         context.shadowBlur = 18;
         context.shadowOffsetX = 8;
         context.shadowOffsetY = 8;
 
-        // Trazado de Flecha Cónica Curva (Se ensancha hacia la cabeza)
         context.beginPath();
-        context.moveTo(-length, -5); // Cola delgada
-        context.quadraticCurveTo(-length * 0.4, -thickness * 0.8, 0, -thickness * 0.5); // Borde superior en curva
-        context.lineTo(0, -thickness * 1.1); // Saliente superior cabeza de flecha
-        context.lineTo(length * 0.45, 0); // Punta principal de la flecha
-        context.lineTo(0, thickness * 1.1); // Saliente inferior cabeza
-        context.lineTo(0, thickness * 0.5); // Borde interno inferior
-        context.quadraticCurveTo(-length * 0.4, thickness * 0.2, -length, 5); // Curva inferior cerrando a cola delgada
+        context.moveTo(-length, -5);
+        context.quadraticCurveTo(-length * 0.4, -thickness * 0.8, 0, -thickness * 0.5);
+        context.lineTo(0, -thickness * 1.1);
+        context.lineTo(length * 0.45, 0);
+        context.lineTo(0, thickness * 1.1);
+        context.lineTo(0, thickness * 0.5);
+        context.quadraticCurveTo(-length * 0.4, thickness * 0.2, -length, 5);
         context.closePath();
 
-        // Relleno principal con Degradado 3D (Gloss)
         let grad = context.createLinearGradient(-length, -thickness, length * 0.5, thickness);
         grad.addColorStop(0, color);
-        grad.addColorStop(0.5, '#ffffff'); // Brillo metálico central
+        grad.addColorStop(0.5, '#ffffff');
         grad.addColorStop(1, color);
         
         context.fillStyle = grad;
@@ -533,6 +529,7 @@
         requestAnimationFrame(processAIFrames);
     }
 
+    // PROCESAMIENTO BINARIO REFORZADO PARA ELIMINAR BURBUJAS Y PARPADEO EN EL ROSTRO
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
         const thresh = parseFloat(document.getElementById('mask-threshold').value);
@@ -555,6 +552,7 @@
             const imgData = tCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
             const data = imgData.data;
             for (let i = 0; i < data.length; i += 4) {
+                // Corte Binario Estricto para evitar manchas grises/blancas
                 data[i + 3] = (data[i] / 255 >= thresh) ? 255 : 0;
             }
             tCtx.putImageData(imgData, 0, 0);
