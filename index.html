@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - EDITOR ULTIMATE CON TRANSICIONES Y IA</title>
+    <title>CAPACITIUMX V329 - ULTIMATE EDITOR</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -16,8 +16,9 @@
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
         #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-        .thumb-nav { padding: 6px; background: #222; border: 1px solid #444; font-size: 11px; cursor: pointer; border-radius: 4px; }
+        .thumb-nav { padding: 6px; background: #222; border: 1px solid #444; font-size: 11px; cursor: pointer; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
         .thumb-nav.active { border-color: var(--neon); background: #111; }
+        .fx-tag { color: #ffeb3b; font-size: 9px; font-weight: bold; }
 
         .section-title { font-size: 10px; color: var(--neon); font-weight: bold; text-transform: uppercase; margin-top: 6px; }
         .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
@@ -29,8 +30,9 @@
         .btn-c { background: rgba(0,0,0,0.85); border: 1px solid var(--neon); color: var(--neon); padding: 6px 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
 
         .footer { height: 110px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-        .btn-rec { background: var(--red); color: white; padding: 10px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
-        .btn-pause { background: #555; color: white; padding: 8px 16px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; display: none; font-size: 12px; }
+        .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
+        .btn-pause { background: #555; color: white; padding: 12px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; display: none; }
+        .btn-next { background: #333; border: 1px solid var(--neon); color: var(--neon); padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .recording { animation: pulse 1s infinite; box-shadow: 0 0 20px var(--red); }
         @keyframes pulse { 50% { opacity: 0.5; } }
         
@@ -52,23 +54,23 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">🎬 15 Transiciones PowerPoint (Fotos)</div>
+        <div class="section-title">🎬 Animación PowerPoint (Aplica a foto actual)</div>
         <div class="grid-buttons">
-            <button class="btn-c" onclick="animMode='zoom'">🔍 1. Zoom</button>
-            <button class="btn-c" onclick="animMode='slide'">↔️ 2. Cortina</button>
-            <button class="btn-c" onclick="animMode='blinds'">🪟 3. Persiana</button>
-            <button class="btn-c" onclick="animMode='flip'">🔄 4. Giro 3D</button>
-            <button class="btn-c" onclick="animMode='fade'">✨ 5. Fade In</button>
-            <button class="btn-c" onclick="animMode='pop'">💥 6. Explosión</button>
-            <button class="btn-c" onclick="animMode='drop'">⬇️ 7. Caída</button>
-            <button class="btn-c" onclick="animMode='wipe'">↕️ 8. Barrido</button>
-            <button class="btn-c" onclick="animMode='spinZoom'">🌀 9. Spin Zoom</button>
-            <button class="btn-c" onclick="animMode='bounce'">⚽ 10. Rebote</button>
-            <button class="btn-c" onclick="animMode='scale'">📐 11. Escalado</button>
-            <button class="btn-c" onclick="animMode='windmill'">🎡 12. Molino</button>
-            <button class="btn-c" onclick="animMode='diagonal'">↗️ 13. Diagonal</button>
-            <button class="btn-c" onclick="animMode='flash'">⚡ 14. Parpadeo</button>
-            <button class="btn-c" onclick="animMode='none'">⏹️ 15. Estático</button>
+            <button class="btn-c" onclick="setAnimMode('zoom')">🔍 1. Zoom</button>
+            <button class="btn-c" onclick="setAnimMode('slide')">↔️ 2. Cortina</button>
+            <button class="btn-c" onclick="setAnimMode('blinds')">🪟 3. Persiana</button>
+            <button class="btn-c" onclick="setAnimMode('flip')">🔄 4. Giro 3D</button>
+            <button class="btn-c" onclick="setAnimMode('fade')">✨ 5. Fade In</button>
+            <button class="btn-c" onclick="setAnimMode('pop')">💥 6. Explosión</button>
+            <button class="btn-c" onclick="setAnimMode('drop')">⬇️ 7. Caída</button>
+            <button class="btn-c" onclick="setAnimMode('wipe')">↕️ 8. Barrido</button>
+            <button class="btn-c" onclick="setAnimMode('spinZoom')">🌀 9. Spin Zoom</button>
+            <button class="btn-c" onclick="setAnimMode('bounce')">⚽ 10. Rebote</button>
+            <button class="btn-c" onclick="setAnimMode('scale')">📐 11. Escalado</button>
+            <button class="btn-c" onclick="setAnimMode('windmill')">🎡 12. Molino</button>
+            <button class="btn-c" onclick="setAnimMode('diagonal')">↗️ 13. Diagonal</button>
+            <button class="btn-c" onclick="setAnimMode('flash')">⚡ 14. Parpadeo</button>
+            <button class="btn-c" onclick="setAnimMode('none')">⏹️ 15. Estático</button>
         </div>
 
         <div class="section-title">🎨 Filtros para Foto / Flyer</div>
@@ -112,10 +114,11 @@
 </div>
 
 <div class="footer">
-    <div style="display:flex; gap:15px;">
+    <div style="display:flex; gap:15px; align-items: center;">
         <button id="recBtn" class="btn-rec" onclick="startCapture()">🎙️ EMPEZAR GRABACIÓN</button>
         <button id="pauseBtn" class="btn-pause" onclick="togglePause()">⏸ PAUSAR (CORTAR)</button>
-        <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:10px 20px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
+        <button class="btn-next" onclick="nextSlide()">SIGUIENTE FOTO ➡️</button>
+        <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:12px 20px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
     </div>
     <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR RÁPIDO SI TE EQUIVOCAS.</div>
 </div>
@@ -136,7 +139,6 @@
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none';
-    let animMode = 'zoom';
     let bgMode = 'yellow'; // Por defecto amarillo sólido
     let customBgImg = null;
     let transitionTimer = 0;
@@ -224,7 +226,8 @@
         Array.from(e.target.files).forEach(file => {
             const url = URL.createObjectURL(file);
             const isVid = file.type.includes('video');
-            const item = { type: isVid ? 'vid' : 'img', url, el: null, text: "" };
+            // Cada elemento guarda su propio modo de animación (por defecto 'zoom')
+            const item = { type: isVid ? 'vid' : 'img', url, el: null, text: "", anim: 'zoom' };
             if (!isVid) { const img = new Image(); img.src = url; item.el = img; }
             library.push(item);
             updateList();
@@ -247,14 +250,31 @@
         bgMode = mode;
     }
 
+    function setAnimMode(anim) {
+        if (curIdx !== -1) {
+            library[curIdx].anim = anim;
+            transitionTimer = 0; // Reinicia animación para vista previa inmediata
+            updateList();
+        }
+    }
+
     function updateList() {
         const list = document.getElementById('media-list');
         list.innerHTML = "";
         library.forEach((m, i) => {
             const d = document.createElement('div');
             d.className = `thumb-nav ${i === curIdx ? 'active' : ''}`;
-            d.innerText = `${i+1}. ${m.type === 'vid' ? '🎥' : '🖼️'} ${m.text.substring(0,10)}...`;
             d.onclick = () => selectMedia(i);
+            
+            const label = document.createElement('span');
+            label.innerText = `${i+1}. ${m.type === 'vid' ? '🎥' : '🖼️'} ${m.text.substring(0,10)}...`;
+            
+            const fxTag = document.createElement('span');
+            fxTag.className = 'fx-tag';
+            fxTag.innerText = m.type === 'img' ? `⭐ ${m.anim}` : '';
+
+            d.appendChild(label);
+            d.appendChild(fxTag);
             list.appendChild(d);
         });
     }
@@ -267,11 +287,18 @@
         updateList();
     }
 
+    function nextSlide() {
+        if (library.length > 0) {
+            let nextIdx = (curIdx + 1) % library.length;
+            selectMedia(nextIdx);
+        }
+    }
+
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
     // --- 15 TRANSICIONES ANIMADAS ESTILO POWERPOINT ---
-    function renderImageWithAnimation(img) {
+    function renderImageWithAnimation(img, animMode) {
         transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
         const cw = canvas.width, ch = canvas.height;
@@ -358,7 +385,7 @@
         if (curIdx !== -1) {
             const m = library[curIdx];
             if (m.type === 'img' && m.el) {
-                renderImageWithAnimation(m.el);
+                renderImageWithAnimation(m.el, m.anim || 'zoom');
             } else if (m.type === 'vid') {
                 ctx.drawImage(vBg, 0, 0, canvas.width, canvas.height);
             }
