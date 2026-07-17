@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - EDITOR PROFESIONAL CON EFECTOS</title>
+    <title>CAPACITIUMX V329 - EDITOR VIRTUAL</title>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -11,42 +11,65 @@
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 280px; background: #000; border-right: 1px solid #333; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-load { background: var(--neon); color: black; padding: 12px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; }
+        .sidebar { width: 300px; background: #000; border-right: 1px solid #333; padding: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
-        #media-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        #media-list { flex: 1; min-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
         .thumb-nav { padding: 8px; background: #222; border: 1px solid #444; font-size: 11px; cursor: pointer; border-radius: 4px; }
         .thumb-nav.active { border-color: var(--neon); background: #111; }
+
+        .section-title { font-size: 10px; color: var(--neon); font-weight: bold; text-transform: uppercase; margin-top: 8px; }
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
         .monitor-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; position: relative; }
         #canvas-render { width: 95%; max-width: 850px; aspect-ratio: 16/9; border: 1px solid #333; background: #000; }
         
-        .console { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .btn-c { background: rgba(0,0,0,0.8); border: 1px solid var(--neon); color: var(--neon); padding: 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
+        .console { position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 6px; }
+        .btn-c { background: rgba(0,0,0,0.85); border: 1px solid var(--neon); color: var(--neon); padding: 6px 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
 
-        .footer { height: 160px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
-        .btn-rec { background: var(--red); color: white; padding: 15px 35px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 14px; }
-        .btn-pause { background: #555; color: white; padding: 10px 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; display: none; }
+        .footer { height: 120px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
+        .btn-pause { background: #555; color: white; padding: 8px 16px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; display: none; font-size: 12px; }
         .recording { animation: pulse 1s infinite; box-shadow: 0 0 20px var(--red); }
         @keyframes pulse { 50% { opacity: 0.5; } }
         
-        .input-text { background: #222; color: white; border: 1px solid var(--neon); padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .input-text { background: #222; color: white; border: 1px solid var(--neon); padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">CAPACITIUMX V329 - FIXED EDITOR</div>
+    <div class="logo">CAPACITIUMX V329 - STUDIO & FONDIOS VIRTUALES</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: LISTO</div>
 </header>
 
 <div class="main">
     <aside class="sidebar">
-        <button class="btn-load" onclick="document.getElementById('file-in').click()">📥 SUBIR FOTOS/VIDEOS</button>
+        <button class="btn-load" onclick="document.getElementById('file-in').click()">📥 SUBIR FOTOS/VIDEOS DE DIAPOSITIVA</button>
         <input type="file" id="file-in" multiple accept="image/*,video/*" style="display:none;" onchange="handleFiles(event)">
-        <hr style="border: 0.5px solid #333; width: 100%;">
-        <input type="text" id="slide-text" class="input-text" placeholder="Texto para este clip..." oninput="updateCurrentText()">
+        
+        <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
+
+        <!-- EFECTOS PARA FOTOS/FLYERS -->
+        <div class="section-title">✨ Filtro para Foto / Flyer</div>
+        <div class="grid-buttons">
+            <button class="btn-c" onclick="imgFilter='none'">Normal</button>
+            <button class="btn-c" onclick="imgFilter='sepia(0.8)'">Sepia</button>
+            <button class="btn-c" onclick="imgFilter='grayscale(1)'">B&N</button>
+            <button class="btn-c" onclick="imgFilter='contrast(1.3)'">Piel Realce</button>
+        </div>
+
+        <!-- FONDOS VIRTUALES CÁMARA -->
+        <div class="section-title">🖼️ Fondo Virtual para Cámara</div>
+        <div class="grid-buttons">
+            <button class="btn-c" onclick="setBgMode('office')">🏢 Oficina</button>
+            <button class="btn-c" onclick="setBgMode('blue')">🟦 Azul Sólido</button>
+            <button class="btn-c" onclick="setBgMode('green')">🟩 Verde Chroma</button>
+            <button class="btn-c" onclick="setBgMode('dark')">⬛ Gris Estudio</button>
+        </div>
+        <button class="btn-load" style="margin-top:4px;" onclick="document.getElementById('custom-bg-in').click()">🖼️ SUBIR MI FONDO PROPIO</button>
+        <input type="file" id="custom-bg-in" accept="image/*" style="display:none;" onchange="handleCustomBg(event)">
     </aside>
 
     <main class="monitor-area">
@@ -56,12 +79,6 @@
             <button class="btn-c" onclick="camMode='mini'">🖼️ YO CHICO</button>
             <button class="btn-c" onclick="camMode='off'">🚫 OCULTARME</button>
             
-            <span style="font-size: 9px; color: var(--neon); text-align: center; margin-top: 5px;">FILTROS CÁMARA</span>
-            <button class="btn-c" onclick="camFilter='none'">✨ NORMAL</button>
-            <button class="btn-c" onclick="camFilter='sepia(0.8)'">📜 SEPIA</button>
-            <button class="btn-c" onclick="camFilter='grayscale(1)'">🎬 B&N</button>
-            <button class="btn-c" onclick="camFilter='contrast(1.4) hue-rotate(90deg)'">🧪 NEÓN</button>
-
             <button class="btn-c" id="playBtn" style="margin-top:5px;" onclick="togglePlay()">▶ PLAY FONDO</button>
         </div>
         <canvas id="canvas-render" width="1280" height="720"></canvas>
@@ -72,9 +89,9 @@
     <div style="display:flex; gap:15px;">
         <button id="recBtn" class="btn-rec" onclick="startCapture()">🎙️ EMPEZAR GRABACIÓN</button>
         <button id="pauseBtn" class="btn-pause" onclick="togglePause()">⏸ PAUSAR (CORTAR)</button>
-        <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:15px 30px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
+        <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:12px 25px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
     </div>
-    <div style="color:#666; font-size:10px;">USA 'PAUSA' SI TE EQUIVOCAS, ACOMODA TODO Y SIGUE GRABANDO.</div>
+    <div style="color:#666; font-size:10px;">SELECCIONA TUS EFECTOS Y FONDOS EN CUALQUIER MOMENTO DE LA GRABACIÓN.</div>
 </div>
 
 <video id="v-cam" autoplay playsinline style="display:none"></video>
@@ -88,8 +105,10 @@
     const slideTextInput = document.getElementById('slide-text');
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
-    let camFilter = 'none'; // Estado de filtros de cámara
-    let zoomProgress = 0;   // Controla el zoom dinámico de las fotos
+    let imgFilter = 'none';
+    let bgMode = 'dark'; 
+    let customBgImg = null;
+    let zoomProgress = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
 
     function handleFiles(e) {
@@ -102,6 +121,21 @@
             updateList();
             if(curIdx === -1) selectMedia(0);
         });
+    }
+
+    function handleCustomBg(e) {
+        if(e.target.files[0]) {
+            const img = new Image();
+            img.src = URL.createObjectURL(e.target.files[0]);
+            img.onload = () => {
+                customBgImg = img;
+                bgMode = 'custom';
+            };
+        }
+    }
+
+    function setBgMode(mode) {
+        bgMode = mode;
     }
 
     function updateList() {
@@ -118,7 +152,7 @@
 
     function selectMedia(i) {
         curIdx = i;
-        zoomProgress = 0; // Reinicia el zoom al cambiar de diapositiva
+        zoomProgress = 0;
         slideTextInput.value = library[i].text || "";
         if (library[i].type === 'vid') { vBg.src = library[i].url; vBg.play(); }
         updateList();
@@ -129,20 +163,52 @@
 
     navigator.mediaDevices.getUserMedia({ video: true }).then(s => vCam.srcObject = s);
 
+    function drawVirtualBackground(x, y, w, h) {
+        ctx.save();
+        if (bgMode === 'blue') {
+            ctx.fillStyle = '#003366';
+            ctx.fillRect(x, y, w, h);
+        } else if (bgMode === 'green') {
+            ctx.fillStyle = '#00b140';
+            ctx.fillRect(x, y, w, h);
+        } else if (bgMode === 'dark') {
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(x, y, w, h);
+        } else if (bgMode === 'office') {
+            // Simulación visual estilo Oficina/Escritorio
+            let grad = ctx.createLinearGradient(x, y, x, y + h);
+            grad.addColorStop(0, '#2c3e50');
+            grad.addColorStop(0.7, '#34495e');
+            grad.addColorStop(1, '#111111');
+            ctx.fillStyle = grad;
+            ctx.fillRect(x, y, w, h);
+            
+            // Línea simulación de escritorio
+            ctx.fillStyle = '#4a3b32';
+            ctx.fillRect(x, y + h - (h*0.2), w, h*0.2);
+        } else if (bgMode === 'custom' && customBgImg) {
+            ctx.drawImage(customBgImg, x, y, w, h);
+        } else {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x, y, w, h);
+        }
+        ctx.restore();
+    }
+
     function render() {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // --- 1. RENDERIZADO DE FONDO (FOTO O VIDEO) ---
+        // --- 1. RENDER DE DIAPOSITIVA (FOTO O VIDEO) ---
         if (curIdx !== -1) {
             const m = library[curIdx];
             
             if (m.type === 'img' && m.el) {
-                // EFECTO ZOOM DINÁMICO (Ken Burns)
-                zoomProgress += 0.0008; // Velocidad del zoom suave
-                const scale = 1 + (Math.sin(zoomProgress) * 0.15); // Hace zoom de 1x a 1.15x suavemente
+                zoomProgress += 0.0006;
+                const scale = 1 + (Math.sin(zoomProgress) * 0.1);
                 
                 ctx.save();
+                ctx.filter = imgFilter; // Filtros para las fotos/flyers subidos
                 ctx.translate(canvas.width / 2, canvas.height / 2);
                 ctx.scale(scale, scale);
                 ctx.drawImage(m.el, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
@@ -152,7 +218,6 @@
                 ctx.drawImage(vBg, 0, 0, canvas.width, canvas.height);
             }
             
-            // Texto superior/inferior sobre el slide
             if(m.text) {
                 ctx.fillStyle = "yellow"; ctx.font = "bold 60px Impact"; ctx.textAlign = "center";
                 ctx.strokeStyle = "black"; ctx.lineWidth = 8;
@@ -161,20 +226,26 @@
             }
         }
 
-        // --- 2. RENDERIZADO DE CÁMARA + FILTROS ---
+        // --- 2. CÁMARA Y FONDO VIRTUAL ---
         if (camMode !== 'off' && vCam.srcObject) {
-            ctx.save();
-            // Aplica los filtros CSS al contexto del Canvas
-            ctx.filter = camFilter;
+            let cx = (camMode === 'full') ? 0 : camX;
+            let cy = (camMode === 'full') ? 0 : camY;
+            let cw = (camMode === 'full') ? canvas.width : camW;
+            let ch = (camMode === 'full') ? canvas.height : camH;
 
-            if (camMode === 'full') {
-                ctx.drawImage(vCam, 0, 0, canvas.width, canvas.height);
-            } else {
-                ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 4;
-                ctx.strokeRect(camX, camY, camW, camH);
-                ctx.drawImage(vCam, camX, camY, camW, camH);
+            // Dibujar primero el fondo virtual seleccionado
+            drawVirtualBackground(cx, cy, cw, ch);
+
+            // Dibujar la cámara encima
+            ctx.save();
+            if (camMode === 'mini') {
+                ctx.strokeStyle = "#00ff00"; 
+                ctx.lineWidth = 3;
+                ctx.strokeRect(cx, cy, cw, ch);
             }
-            ctx.restore(); // Limpia los filtros para no afectar al resto del canvas
+            ctx.globalAlpha = 0.92; // Ligera transparencia opcional para integrarlo al fondo
+            ctx.drawImage(vCam, cx, cy, cw, ch);
+            ctx.restore();
         }
 
         requestAnimationFrame(render);
@@ -243,7 +314,7 @@
         a.download = `CAPACITIUMX_FINAL.webm`; a.click();
     }
 
-    // Arrastre
+    // Arrastre cámara
     canvas.onmousedown = (e) => {
         const r = canvas.getBoundingClientRect();
         const x = (e.clientX - r.left) * (canvas.width / r.width);
