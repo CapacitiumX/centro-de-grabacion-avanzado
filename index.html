@@ -2,15 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - ULTIMATE STUDIO & 3D AVATARS</title>
-    <!-- MediaPipe Selfie Segmentation & Face Mesh -->
+    <title>CAPACITIUMX V329 - ULTIMATE STUDIO PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
-
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
+        /* PANTALLA DE BLOQUEO DE PAGO (PAYWALL) */
         #paywall {
             position: fixed; top:0; left:0; width: 100vw; height: 100vh;
             background: rgba(5, 5, 5, 0.98); z-index: 9999;
@@ -25,7 +23,7 @@
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 340px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .sidebar { width: 350px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
         #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
@@ -40,7 +38,7 @@
         #canvas-render { width: 95%; max-width: 850px; aspect-ratio: 16/9; border: 1px solid #333; background: #000; }
         
         .console { position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 6px; }
-        .btn-c { background: rgba(0,0,0,0.85); border: 1px solid var(--neon); color: var(--neon); padding: 6px 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
+        .btn-c { background: rgba(0,0,0,0.85); border: 1px solid var(--neon); color: var(--neon); padding: 6px 8px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; text-align: left; }
 
         .footer { height: 110px; background: #111; border-top: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
         .btn-rec { background: var(--red); color: white; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 8px; font-size: 13px; }
@@ -86,17 +84,7 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">🐾 AVATARES ANIMADOS CON MOVIMIENTO (ANIMOJI)</div>
-        <div class="grid-buttons">
-            <button class="btn-c" onclick="setAvatar('none')">👤 Mi Rostro Real</button>
-            <button class="btn-c" onclick="setAvatar('rabbit')">🐰 Conejo Animado</button>
-            <button class="btn-c" onclick="setAvatar('dog')">🐶 Perro Animado</button>
-            <button class="btn-c" onclick="setAvatar('cat')">🐱 Gato Animado</button>
-            <button class="btn-c" onclick="setAvatar('lion')">🦁 León Animado</button>
-            <button class="btn-c" onclick="setAvatar('robot')">🤖 Robot 3D</button>
-        </div>
-
-        <div class="section-title">💥 20 EFECTOS YOUTUBER EN CÁMARA</div>
+        <div class="section-title">💥 30 EFECTOS YOUTUBER AVANZADOS</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setCamFx('none')">🚫 1. Normal</button>
             <button class="btn-c" onclick="setCamFx('boom')">💥 2. Explosión</button>
@@ -118,6 +106,18 @@
             <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado</button>
             <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 19. Ojo de Pez</button>
             <button class="btn-c" onclick="setCamFx('sparkle')">💎 20. Diamante</button>
+            <!-- NUEVOS EFECTOS AÑADIDOS -->
+            <button class="btn-c" onclick="setCamFx('laser')">🔴 21. Láser Rage</button>
+            <button class="btn-c" onclick="setCamFx('vortex')">🌀 22. Vortex Holo</button>
+            <button class="btn-c" onclick="setCamFx('cyber')">🤖 23. Cyberpunk</button>
+            <button class="btn-c" onclick="setCamFx('anime')">💥 24. Anime Lines</button>
+            <button class="btn-c" onclick="setCamFx('particles')">🎆 25. Partículas</button>
+            <button class="btn-c" onclick="setCamFx('magnify')">🔍 26. Lupa Deform</button>
+            <button class="btn-c" onclick="setCamFx('matrix')">🔲 27. Matrix Code</button>
+
+            <button class="btn-c" onclick="setCamFx('mirror4')">🪞 28. Espejo 4X</button>
+            <button class="btn-c" onclick="setCamFx('pulseRed')">💓 29. Latido Rojo</button>
+            <button class="btn-c" onclick="setCamFx('snapFlash')">📸 30. Foto Snap</button>
         </div>
 
         <div class="section-title">🎬 20 Transiciones PowerPoint (Fotos)</div>
@@ -226,34 +226,21 @@
     const procCtx = procCanvas.getContext('2d');
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
-    let imgFilter = 'none', camFx = 'none', currentAvatar = 'none';
+    let imgFilter = 'none', camFx = 'none';
     let bgMode = 'yellow'; 
     let customBgImg = null;
     let transitionTimer = 0, camFxTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
     let selfieSegmentation = null;
-    let faceMesh = null;
     let latestMask = null;
-    let faceLandmarks = null;
 
     function initAI() {
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
         });
+        
         selfieSegmentation.setOptions({ modelSelection: 0 });
-        selfieSegmentation.onResults(results => { latestMask = results.segmentationMask; });
-
-        faceMesh = new FaceMesh({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-        });
-        faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5 });
-        faceMesh.onResults(results => {
-            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-                faceLandmarks = results.multiFaceLandmarks[0];
-            } else {
-                faceLandmarks = null;
-            }
-        });
+        selfieSegmentation.onResults(onResultsAI);
 
         navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
             vCam.srcObject = stream;
@@ -265,132 +252,32 @@
     async function processAIFrames() {
         if (vCam.readyState >= 2) {
             await selfieSegmentation.send({ image: vCam });
-            await faceMesh.send({ image: vCam });
-            renderProcessedCamera();
         }
         requestAnimationFrame(processAIFrames);
     }
 
-    function renderProcessedCamera() {
+    function onResultsAI(results) {
+        latestMask = results.segmentationMask;
+        
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
-        // Renderizado del Fondo Virtual / Cámara Real
         if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
-            if (latestMask) {
-                procCtx.save();
-                procCtx.globalCompositeOperation = 'destination-out';
-                procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
-                procCtx.restore();
 
-                procCtx.globalCompositeOperation = 'destination-over';
-                procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
-            }
+            procCtx.save();
+            procCtx.globalCompositeOperation = 'destination-out';
+            procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+            procCtx.restore();
+
+            procCtx.globalCompositeOperation = 'destination-over';
+            procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         }
-
-        // Renderizado del Avatar Animado en 2D Vectorial / Mímica Facial Dinámica
-        if (currentAvatar !== 'none' && faceLandmarks) {
-            drawDynamicAvatarHead(procCtx);
-        }
-
         procCtx.restore();
     }
 
-    function drawDynamicAvatarHead(context) {
-        // Puntos Clave de Malla Facial (MediaPipe Landmarks):
-        // 1 = Nariz, 33 = Ojo Izquierdo, 263 = Ojo Derecho
-        // 13 = Labio Superior, 14 = Labio Inferior, 152 = Barbilla
-        const nose = faceLandmarks[1];
-        const leftEye = faceLandmarks[33];
-        const rightEye = faceLandmarks[263];
-        const topLip = faceLandmarks[13];
-        const bottomLip = faceLandmarks[14];
-
-        const cx = nose.x * procCanvas.width;
-        const cy = nose.y * procCanvas.height;
-
-        const dx = (rightEye.x - leftEye.x) * procCanvas.width;
-        const dy = (rightEye.y - leftEye.y) * procCanvas.height;
-        const eyeDist = Math.sqrt(dx * dx + dy * dy);
-        const angle = Math.atan2(dy, dx);
-
-        // Apertura de Boca Dinámica (Detección de Habla)
-        const mouthOpen = Math.abs(bottomLip.y - topLip.y) * procCanvas.height;
-        const mouthRatio = Math.min(Math.max((mouthOpen - 5) / 30, 0), 1);
-
-        const radius = eyeDist * 1.8;
-
-        context.save();
-        context.translate(cx, cy);
-        context.rotate(angle);
-
-        // Estilos según el Avatar Seleccionado
-        let headColor = '#ffcc00';
-        let earColor = '#e6b800';
-
-        if (currentAvatar === 'rabbit') { headColor = '#ffffff'; earColor = '#ffb6c1'; }
-        else if (currentAvatar === 'dog') { headColor = '#c28544'; earColor = '#804a19'; }
-        else if (currentAvatar === 'cat') { headColor = '#ffa500'; earColor = '#cc8400'; }
-        else if (currentAvatar === 'lion') { headColor = '#e69900'; earColor = '#996600'; }
-        else if (currentAvatar === 'robot') { headColor = '#a6a6a6'; earColor = '#00ffff'; }
-
-        // 1. Dibujar Orejas
-        context.fillStyle = earColor;
-        if (currentAvatar === 'rabbit') {
-            context.beginPath();
-            context.ellipse(-radius * 0.5, -radius * 1.5, radius * 0.3, radius * 0.9, -0.1, 0, Math.PI * 2);
-            context.ellipse(radius * 0.5, -radius * 1.5, radius * 0.3, radius * 0.9, 0.1, 0, Math.PI * 2);
-            context.fill();
-        } else if (currentAvatar === 'cat' || currentAvatar === 'lion') {
-            context.beginPath();
-            context.moveTo(-radius * 0.9, -radius * 0.2);
-            context.lineTo(-radius * 0.5, -radius * 1.3);
-            context.lineTo(-radius * 0.1, -radius * 0.7);
-            context.fill();
-
-            context.beginPath();
-            context.moveTo(radius * 0.9, -radius * 0.2);
-            context.lineTo(radius * 0.5, -radius * 1.3);
-            context.lineTo(radius * 0.1, -radius * 0.7);
-            context.fill();
-        }
-
-        // 2. Dibujar Cabeza Principal
-        context.fillStyle = headColor;
-        context.beginPath();
-        context.arc(0, 0, radius, 0, Math.PI * 2);
-        context.fill();
-
-        // 3. Dibujar Ojos Sincronizados
-        context.fillStyle = '#ffffff';
-        context.beginPath();
-        context.arc(-radius * 0.4, -radius * 0.2, radius * 0.25, 0, Math.PI * 2);
-        context.arc(radius * 0.4, -radius * 0.2, radius * 0.25, 0, Math.PI * 2);
-        context.fill();
-
-        context.fillStyle = '#000000';
-        context.beginPath();
-        context.arc(-radius * 0.4, -radius * 0.2, radius * 0.12, 0, Math.PI * 2);
-        context.arc(radius * 0.4, -radius * 0.2, radius * 0.12, 0, Math.PI * 2);
-        context.fill();
-
-        // 4. Dibujar Boca Sincronizada con Voz (Abre y cierra en vivo)
-        context.fillStyle = '#ff3333';
-        context.beginPath();
-        const mouthH = (radius * 0.15) + (mouthRatio * radius * 0.5);
-        context.ellipse(0, radius * 0.4, radius * 0.3, mouthH, 0, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = '#000000';
-        context.lineWidth = 3;
-        context.stroke();
-
-        context.restore();
-    }
-
-    function setAvatar(type) { currentAvatar = type; }
     function setCamFx(fx) { camFx = fx; camFxTimer = 0; }
 
     function drawVirtualBackgroundToCtx(context, x, y, w, h) {
@@ -632,6 +519,7 @@
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
 
+            // --- LÓGICA DE LOS 30 EFECTOS ---
             if (camFx === 'alert') {
                 ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`;
                 ctx.fillRect(cx, cy, cw, ch);
@@ -652,10 +540,8 @@
                 ctx.fillStyle = 'rgba(0, 255, 0, 0.05)';
                 ctx.fillRect(cx, cy + (Math.sin(camFxTimer * 5) * ch/2) + ch/2, cw, 4);
             } else if (camFx === 'fire') {
-                ctx.shadowColor = 'orange';
-                ctx.shadowBlur = 20;
-                ctx.strokeStyle = '#ff4500';
-                ctx.lineWidth = 4;
+                ctx.shadowColor = 'orange'; ctx.shadowBlur = 20;
+                ctx.strokeStyle = '#ff4500'; ctx.lineWidth = 4;
                 ctx.strokeRect(cx, cy, cw, ch);
             } else if (camFx === 'rainbow') {
                 ctx.fillStyle = `hsla(${(camFxTimer * 60) % 360}, 100%, 50%, 0.15)`;
@@ -664,8 +550,68 @@
                 let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.3, cx+cw/2, cy+ch/2, cw*0.7);
                 grad.addColorStop(0, 'rgba(0,0,0,0)');
                 grad.addColorStop(1, 'rgba(0,0,0,0.8)');
-                ctx.fillStyle = grad;
+                ctx.fillStyle = grad; ctx.fillRect(cx, cy, cw, ch);
+            } 
+            // --- NUEVOS EFECTOS DE IMPACTO YOUTUBER ---
+            else if (camFx === 'laser') {
+                ctx.shadowColor = 'red'; ctx.shadowBlur = 15;
+                ctx.strokeStyle = 'red'; ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
+                ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1);
+                ctx.stroke();
+            } else if (camFx === 'vortex') {
+                ctx.save();
+                ctx.translate(cx + cw/2, cy + ch/2);
+                ctx.rotate(camFxTimer * 2);
+                ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(0, 0, cw*0.25, 0, Math.PI*1.5); ctx.stroke();
+                ctx.restore();
+            } else if (camFx === 'cyber') {
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.15)'; ctx.fillRect(cx, cy, cw, ch);
+                ctx.fillStyle = 'yellow'; ctx.font = '10px monospace';
+                ctx.fillText("TARGET_LOCKED // 99.8%", cx + 10, cy + 20);
+            } else if (camFx === 'anime') {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; ctx.lineWidth = 2;
+                for(let i=0; i<8; i++){
+                    let angle = (i/8) * Math.PI * 2;
+                    ctx.beginPath();
+                    ctx.moveTo(cx + cw/2 + Math.cos(angle)*cw*0.2, cy + ch/2 + Math.sin(angle)*ch*0.2);
+                    ctx.lineTo(cx + cw/2 + Math.cos(angle)*cw*0.7, cy + ch/2 + Math.sin(angle)*ch*0.7);
+                    ctx.stroke();
+                }
+            } else if (camFx === 'particles') {
+                ctx.fillStyle = '#00ff00';
+                for(let i=0; i<6; i++){
+                    let px = cx + (Math.sin(camFxTimer + i) * 0.4 + 0.5) * cw;
+                    let py = cy + (Math.cos(camFxTimer * 1.5 + i) * 0.4 + 0.5) * ch;
+                    ctx.fillRect(px, py, 4, 4);
+                }
+            } else if (camFx === 'magnify') {
+                ctx.save();
+                ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, cw*0.25, 0, Math.PI*2);
+                ctx.clip();
+                ctx.drawImage(procCanvas, cx - cw*0.1, cy - ch*0.1, cw*1.2, ch*1.2);
+                ctx.restore();
+            } else if (camFx === 'matrix') {
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
                 ctx.fillRect(cx, cy, cw, ch);
+                ctx.fillStyle = '#00ff00'; ctx.font = '12px monospace';
+                ctx.fillText("10101010101", cx + 10, cy + (camFxTimer*50)%ch);
+            } else if (camFx === 'mirror4') {
+                ctx.drawImage(procCanvas, cx, cy, cw/2, ch/2);
+                ctx.drawImage(procCanvas, cx + cw/2, cy, cw/2, ch/2);
+                ctx.drawImage(procCanvas, cx, cy + ch/2, cw/2, ch/2);
+                ctx.drawImage(procCanvas, cx + cw/2, cy + ch/2, cw/2, ch/2);
+            } else if (camFx === 'pulseRed') {
+                let scale = 1 + Math.sin(camFxTimer * 6) * 0.05;
+                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(scale, scale);
+                ctx.translate(-(cx + cw/2), -(cy + ch/2));
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.15)'; ctx.fillRect(cx, cy, cw, ch);
+            } else if (camFx === 'snapFlash') {
+                if(camFxTimer < 0.3) {
+                    ctx.fillStyle = 'white'; ctx.fillRect(cx, cy, cw, ch);
+                }
             }
 
             ctx.restore();
