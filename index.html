@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V332 - FULL WORKING FX & THUMBNAIL STUDIO</title>
+    <title>CAPACITIUMX V334 - ULTIMATE STUDIO & 3D ARROW</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -48,6 +48,16 @@
         .ctrl-row { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #ccc; }
         .ctrl-row input[type="range"] { flex: 1; }
         .select-custom { background: #222; color: white; border: 1px solid var(--neon); padding: 4px; font-size: 10px; border-radius: 4px; width: 100%; }
+
+        #thumb-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9); z-index: 10000; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+        }
+        .thumb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 900px; width: 100%; }
+        .thumb-option { border: 2px solid #444; border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; }
+        .thumb-option:hover { border-color: var(--neon); transform: scale(1.02); }
+        .thumb-option canvas { width: 100%; aspect-ratio: 16/9; display: block; }
     </style>
 </head>
 <body>
@@ -71,8 +81,20 @@
     </div>
 </div>
 
+<div id="thumb-modal">
+    <h2 style="color:var(--neon); margin-bottom: 5px;">🤖 ELIGE TU MINIATURA GENERADA CON IA</h2>
+    <p style="font-size: 12px; color: #ccc; margin-bottom: 15px;">Selecciona la plantilla que más te guste para descargarla en formato PNG:</p>
+    <div class="thumb-grid">
+        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas></div>
+    </div>
+    <button class="btn-load" style="margin-top:20px; width:200px; background:#ff3333; color:white;" onclick="closeThumbModal()">❌ CERRAR</button>
+</div>
+
 <header>
-    <div class="logo">CAPACITIUMX V332 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V334 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -84,25 +106,29 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <!-- CONFIGURACIÓN DE FORMA DE CÁMARA -->
-        <div class="section-title">📐 FORMA DE MI CÁMARA</div>
+        <div class="section-title">✂️ RECORTE ROSTRO Y LUZ</div>
+        <div class="ctrl-row">
+            <span>Tolerancia IA:</span>
+            <input type="range" id="mask-threshold" min="0.1" max="0.9" step="0.05" value="0.55">
+        </div>
+
+        <div class="section-title">📐 FORMA CÁMARA</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setCamShape('rect')">🔲 Rectángulo</button>
             <button class="btn-c" onclick="setCamShape('circle')">⚪ Círculo Redondo</button>
         </div>
 
-        <!-- EDITOR DE MINIATURAS INTERACTIVO CON FUENTE Y COLORES -->
-        <div class="section-title">🖼️ EDITOR DE MINIATURAS YOUTUBE</div>
-        <input type="text" id="thumb-text" class="input-text" placeholder="Texto Miniatura (Ej: ¡NUEVO TRUCO!)...">
+        <div class="section-title">🖼️ ESTUDIO DE MINIATURAS</div>
+        <button class="btn-load" style="background:#00ffff; color:black; font-weight:900;" onclick="generateAutoThumbnails()">✨ GENERAR 4 OPCIONES AUTO (IA)</button>
+        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Texto Manual (Ej: ¡COMPLEJO MEXICANO!)...">
         
         <div class="ctrl-row">
             <span>Color Texto:</span>
             <input type="color" id="thumb-color" value="#ffeb3b" style="background:none; border:none; cursor:pointer; width:30px; height:25px;">
             <select id="thumb-font" class="select-custom">
-                <option value="Impact">Fuente: Impact (Youtuber)</option>
-                <option value="Arial Black">Fuente: Arial Black</option>
-                <option value="Trebuchet MS">Fuente: Trebuchet MS</option>
-                <option value="Courier New">Fuente: Courier New</option>
+                <option value="Impact">Impact (Youtuber)</option>
+                <option value="Arial Black">Arial Black</option>
+                <option value="Trebuchet MS">Trebuchet MS</option>
             </select>
         </div>
 
@@ -112,44 +138,43 @@
         </div>
 
         <div class="grid-buttons">
-            <button class="btn-c" onclick="setThumbAlign('left')">⬅️ Izquierda</button>
+            <button class="btn-c" onclick="setThumbAlign('left')">⬅️ Izq</button>
             <button class="btn-c" onclick="setThumbAlign('center')">↔️ Centro</button>
-            <button class="btn-c" onclick="setThumbAlign('right')">➡️ Derecha</button>
+            <button class="btn-c" onclick="setThumbAlign('right')">➡️ Der</button>
             <button class="btn-c" onclick="toggleBlurBg()">🌫️ Blur Fondo</button>
         </div>
 
-        <!-- FLECHA CURVA ROBUSTA Y MANIPULABLE -->
-        <div class="section-title">🏹 CONTROLES DE FLECHA ROBUSTA</div>
+        <!-- PANEL DE FLECHA CÓNICA 3D RECURVADA (ESTILO IMAGEN) -->
+        <div class="section-title">🏹 FLECHA CURVA CÓNICA 3D (ESTILO YOUTUBE)</div>
         <div class="grid-buttons">
-            <button class="btn-c" onclick="toggleArrow(!showArrow)">👁️ Mostrar/Ocultar Flecha</button>
-            <button class="btn-c" onclick="toggleArrowFlip()">🪞 Voltear Flecha (Flip)</button>
+            <button class="btn-c" onclick="toggleArrow(!showArrow)">👁️ Mostrar/Ocultar</button>
+            <button class="btn-c" onclick="toggleArrowFlip()">🪞 Voltear Espejo</button>
         </div>
 
         <div class="ctrl-row">
             <span>Color Flecha:</span>
-            <input type="color" id="arrow-color" value="#ff0055" style="background:none; border:none; cursor:pointer; width:100%; height:25px;">
+            <input type="color" id="arrow-color" value="#00ff00" style="background:none; border:none; cursor:pointer; width:100%; height:25px;">
         </div>
 
         <div class="ctrl-row">
             <span>Posición X:</span>
-            <input type="range" id="arrow-x" min="100" max="1100" value="640">
+            <input type="range" id="arrow-x" min="100" max="1100" value="380">
         </div>
         <div class="ctrl-row">
             <span>Posición Y:</span>
-            <input type="range" id="arrow-y" min="100" max="600" value="360">
+            <input type="range" id="arrow-y" min="100" max="600" value="380">
         </div>
         <div class="ctrl-row">
-            <span>Rotación (360°):</span>
-            <input type="range" id="arrow-rot" min="0" max="360" value="0">
+            <span>Rotación:</span>
+            <input type="range" id="arrow-rot" min="0" max="360" value="30">
         </div>
         <div class="ctrl-row">
-            <span>Grosor/Giga:</span>
-            <input type="range" id="arrow-size" min="10" max="40" value="22">
+            <span>Ancho / Grosor:</span>
+            <input type="range" id="arrow-thickness" min="20" max="90" value="45">
         </div>
-
-        <div class="grid-buttons" style="margin-top:6px;">
-            <button class="btn-thumb" onclick="snapFrameForThumb()">📸 Capturar Foto</button>
-            <button class="btn-thumb" onclick="downloadThumbnail()">📥 Descargar PNG</button>
+        <div class="ctrl-row">
+            <span>Longitud Cola:</span>
+            <input type="range" id="arrow-length" min="100" max="400" value="220">
         </div>
 
         <div class="section-title">🐱 AVATAR GATO ANIMADO</div>
@@ -306,7 +331,7 @@
         <button id="recBtn" class="btn-rec" onclick="startCapture()">🎙️ EMPEZAR GRABACIÓN</button>
         <button id="pauseBtn" class="btn-pause" onclick="togglePause()">⏸ PAUSAR (CORTAR)</button>
         <button class="btn-next" onclick="nextSlide()">SIGUIENTE FOTO ➡️</button>
-        <button id="dlBtn" style="display:none; background:var(--neon); color:black; padding:12px 20px; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
+        <button id="dlBtn" style="display:none; background:var(--neon); color:black; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
     </div>
     <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR SI TE TRABAS AL HABLAR.</div>
 </div>
@@ -344,7 +369,7 @@
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none', camFx = 'none';
-    let bgMode = 'yellow'; 
+    let bgMode = 'purple'; 
     let customBgImg = null;
     let transitionTimer = 0, camFxTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
@@ -353,8 +378,8 @@
     let useCatAvatar = false;
 
     // CONFIGURACIÓN DE CÁMARA Y MINIATURA
-    let camShape = 'rect'; // 'rect' o 'circle'
-    let showArrow = false;
+    let camShape = 'rect';
+    let showArrow = true;
     let arrowFlip = false;
     let thumbAlign = 'center';
     let isBlurBg = false;
@@ -365,20 +390,91 @@
     function toggleArrow(val) { showArrow = val; }
     function toggleArrowFlip() { arrowFlip = !arrowFlip; }
 
-    function snapFrameForThumb() {
-        const thumbCanvas = document.createElement('canvas');
-        thumbCanvas.width = 1280; thumbCanvas.height = 720;
-        const tCtx = thumbCanvas.getContext('2d');
-        tCtx.drawImage(canvas, 0, 0, 1280, 720);
-        drawThumbnailElements(tCtx, 1280, 720);
+    function generateAutoThumbnails() {
+        document.getElementById('thumb-modal').style.display = 'flex';
+        for (let i = 1; i <= 4; i++) {
+            const c = document.getElementById(`thumb-c${i}`);
+            c.width = 1280; c.height = 720;
+            const tCtx = c.getContext('2d');
+            tCtx.drawImage(canvas, 0, 0, 1280, 720);
 
+            let txt = document.getElementById('thumb-text').value.trim() || "COMPLEJO MEXICANO";
+
+            if (i === 1) {
+                tCtx.fillStyle = "rgba(0,0,0,0.3)"; tCtx.fillRect(0,0,1280,720);
+                tCtx.strokeStyle = "var(--neon)"; tCtx.lineWidth = 20; tCtx.strokeRect(0,0,1280,720);
+                tCtx.fillStyle = "#ffeb3b"; tCtx.font = "900 90px Impact"; tCtx.textAlign = "center";
+                tCtx.strokeStyle = "black"; tCtx.lineWidth = 14;
+                tCtx.strokeText(txt.toUpperCase(), 640, 640); tCtx.fillText(txt.toUpperCase(), 640, 640);
+            } else if (i === 2) {
+                drawCustom3DArrow(tCtx, 380, 380, 30 * (Math.PI/180), "#ff0055", 50, 220, false);
+                tCtx.fillStyle = "#ffffff"; tCtx.font = "900 80px Impact"; tCtx.textAlign = "left";
+                tCtx.strokeStyle = "black"; tCtx.lineWidth = 12;
+                tCtx.strokeText(txt.toUpperCase(), 80, 640); tCtx.fillText(txt.toUpperCase(), 80, 640);
+            } else if (i === 3) {
+                let grad = tCtx.createRadialGradient(640,360,100, 640,360,700);
+                grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(0,0,0,0.85)');
+                tCtx.fillStyle = grad; tCtx.fillRect(0,0,1280,720);
+                tCtx.fillStyle = "#00ffff"; tCtx.font = "900 85px Arial Black"; tCtx.textAlign = "center";
+                tCtx.strokeStyle = "black"; tCtx.lineWidth = 10;
+                tCtx.strokeText(txt.toUpperCase(), 640, 140); tCtx.fillText(txt.toUpperCase(), 640, 140);
+            } else if (i === 4) {
+                tCtx.shadowColor = "#00ff00"; tCtx.shadowBlur = 25;
+                tCtx.fillStyle = "#ffffff"; tCtx.font = "900 80px Impact"; tCtx.textAlign = "center";
+                tCtx.fillText(txt.toUpperCase(), 640, 640);
+            }
+        }
+    }
+
+    function downloadAutoThumb(idx) {
+        const c = document.getElementById(`thumb-c${idx}`);
         const a = document.createElement('a');
-        a.href = thumbCanvas.toDataURL('image/png');
-        a.download = 'CAPACITIUMX_THUMBNAIL.png';
+        a.href = c.toDataURL('image/png');
+        a.download = `CAPACITIUMX_THUMBNAIL_AUTO_${idx}.png`;
         a.click();
     }
 
-    function downloadThumbnail() { snapFrameForThumb(); }
+    function closeThumbModal() { document.getElementById('thumb-modal').style.display = 'none'; }
+
+    // RENDERIZADO DE LA FLECHA CURVA CÓNICA 3D EXACTA A LA FOTO
+    function drawCustom3DArrow(context, x, y, rot, color, thickness, length, isFlipped) {
+        context.save();
+        context.translate(x, y);
+        context.rotate(rot);
+        if (isFlipped) context.scale(-1, 1);
+
+        // Sombras y resplandor 3D
+        context.shadowColor = "rgba(0, 0, 0, 0.6)";
+        context.shadowBlur = 18;
+        context.shadowOffsetX = 8;
+        context.shadowOffsetY = 8;
+
+        // Trazado de Flecha Cónica Curva (Se ensancha hacia la cabeza)
+        context.beginPath();
+        context.moveTo(-length, -5); // Cola delgada
+        context.quadraticCurveTo(-length * 0.4, -thickness * 0.8, 0, -thickness * 0.5); // Borde superior en curva
+        context.lineTo(0, -thickness * 1.1); // Saliente superior cabeza de flecha
+        context.lineTo(length * 0.45, 0); // Punta principal de la flecha
+        context.lineTo(0, thickness * 1.1); // Saliente inferior cabeza
+        context.lineTo(0, thickness * 0.5); // Borde interno inferior
+        context.quadraticCurveTo(-length * 0.4, thickness * 0.2, -length, 5); // Curva inferior cerrando a cola delgada
+        context.closePath();
+
+        // Relleno principal con Degradado 3D (Gloss)
+        let grad = context.createLinearGradient(-length, -thickness, length * 0.5, thickness);
+        grad.addColorStop(0, color);
+        grad.addColorStop(0.5, '#ffffff'); // Brillo metálico central
+        grad.addColorStop(1, color);
+        
+        context.fillStyle = grad;
+        context.fill();
+
+        context.strokeStyle = "rgba(0, 0, 0, 0.4)";
+        context.lineWidth = 3;
+        context.stroke();
+
+        context.restore();
+    }
 
     function drawThumbnailElements(context, w, h) {
         let textVal = document.getElementById('thumb-text').value.trim();
@@ -408,34 +504,10 @@
             let arrowY = parseInt(document.getElementById('arrow-y').value);
             let arrowRot = parseInt(document.getElementById('arrow-rot').value) * (Math.PI / 180);
             let arrowColor = document.getElementById('arrow-color').value;
-            let arrowThickness = parseInt(document.getElementById('arrow-size').value);
+            let arrowThickness = parseInt(document.getElementById('arrow-thickness').value);
+            let arrowLength = parseInt(document.getElementById('arrow-length').value);
 
-            context.save();
-            context.translate(arrowX, arrowY);
-            context.rotate(arrowRot);
-            if (arrowFlip) context.scale(-1, 1);
-
-            context.strokeStyle = arrowColor;
-            context.fillStyle = arrowColor;
-            context.lineWidth = arrowThickness;
-            context.shadowColor = "yellow";
-            context.shadowBlur = 15;
-
-            // Cuerpo de la Flecha Curva
-            context.beginPath();
-            context.moveTo(-120, 0);
-            context.quadraticCurveTo(0, -100, 120, 0);
-            context.stroke();
-
-            // Punta Gigante
-            context.beginPath();
-            context.moveTo(120, 0);
-            context.lineTo(80, -35);
-            context.lineTo(80, 35);
-            context.closePath();
-            context.fill();
-
-            context.restore();
+            drawCustom3DArrow(context, arrowX, arrowY, arrowRot, arrowColor, arrowThickness, arrowLength, arrowFlip);
         }
     }
 
@@ -463,7 +535,8 @@
 
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
-        
+        const thresh = parseFloat(document.getElementById('mask-threshold').value);
+
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
@@ -474,10 +547,21 @@
         } else {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = procCanvas.width; tempCanvas.height = procCanvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+            tCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+
+            const imgData = tCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                data[i + 3] = (data[i] / 255 >= thresh) ? 255 : 0;
+            }
+            tCtx.putImageData(imgData, 0, 0);
+
             procCtx.save();
             procCtx.globalCompositeOperation = 'destination-out';
-            procCtx.filter = 'blur(1px)';
-            procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+            procCtx.drawImage(tempCanvas, 0, 0, procCanvas.width, procCanvas.height);
             procCtx.restore();
 
             procCtx.save();
@@ -546,7 +630,7 @@
                 break;
             case 'custom':
                 if (customBgImg) context.drawImage(customBgImg, x, y, w, h);
-                else { context.fillStyle = '#ffcc00'; context.fillRect(x, y, w, h); }
+                else { context.fillStyle = '#8800cc'; context.fillRect(x, y, w, h); }
                 break;
             default:
                 context.fillStyle = '#000000'; context.fillRect(x, y, w, h);
@@ -664,10 +748,6 @@
                 ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale); ctx.translate(-cw / 2, -ch / 2);
                 drawImageContain(img, cw, ch);
                 break;
-            case 'drop':
-                let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
-                ctx.translate(0, py); drawImageContain(img, cw, ch);
-                break;
             default:
                 drawImageContain(img, cw, ch);
         }
@@ -703,62 +783,21 @@
 
             ctx.save();
 
-            // RECORTE DE CÁMARA (RECTÁNGULO O CÍRCULO)
             if (camMode === 'mini' && camShape === 'circle') {
                 ctx.beginPath();
                 ctx.arc(cx + cw/2, cy + ch/2, Math.min(cw, ch)/2, 0, Math.PI * 2);
                 ctx.clip();
             }
 
-            // EJECUCIÓN DE TRANSFORMACIONES DE LOS 85 EFECTOS
             if (camFx === 'zoom' || camFx === 'punchIn') {
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(1.35, 1.35); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'boom' || camFx === 'shakeEffect' || camFx === 'datamosh') {
+            } else if (camFx === 'boom' || camFx === 'shakeEffect') {
                 cx += (Math.random() - 0.5) * 16; cy += (Math.random() - 0.5) * 16;
             } else if (camFx === 'mirror') {
                 ctx.translate(cx + cw, cy); ctx.scale(-1, 1); cx = 0; cy = 0;
-            } else if (camFx === 'dollyZoom') {
-                let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            }
-
-            // APLICACIÓN DE FILTROS AL CANVAS PROCESADO
-            if (camFx === 'freeze' || camFx === 'colorIsolation' || camFx === 'memeFreeze') {
-                ctx.filter = 'grayscale(1) contrast(1.4)';
-            } else if (camFx === 'vhs' || camFx === 'oldTv') {
-                ctx.filter = 'contrast(1.3) sepia(0.3)';
-            } else if (camFx === 'blurBg') {
-                ctx.filter = 'blur(4px)';
-            } else if (camFx === 'colorPop') {
-                ctx.filter = 'saturate(2.5) contrast(1.2)';
             }
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
-            ctx.filter = 'none';
-
-            // DIBUJO DE OVERLAYS Y EFECTOS EN VIVO
-            if (camFx === 'alert' || camFx === 'pulseRed') {
-                ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`; ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'neon' || camFx === 'auraGlow') {
-                ctx.strokeStyle = `hsl(${(camFxTimer * 80) % 360}, 100%, 50%)`; ctx.lineWidth = 6; ctx.strokeRect(cx, cy, cw, ch);
-            } else if (camFx === 'cinema') {
-                ctx.fillStyle = 'black'; ctx.fillRect(cx, cy, cw, ch * 0.12); ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-            } else if (camFx === 'strobe' || camFx === 'snapFlash') {
-                if (Math.sin(camFxTimer * 15) > 0) { ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.fillRect(cx, cy, cw, ch); }
-            } else if (camFx === 'laser') {
-                ctx.strokeStyle = 'red'; ctx.lineWidth = 6; ctx.shadowColor = 'red'; ctx.shadowBlur = 10; ctx.beginPath();
-                ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
-                ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1); ctx.stroke();
-            } else if (camFx === 'cyber' || camFx === 'hudOverlay') {
-                ctx.strokeStyle = "var(--neon)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, 50, 0, Math.PI * 2); ctx.stroke();
-                ctx.fillStyle = "var(--neon)"; ctx.font = "10px monospace"; ctx.fillText("TARGET_LOCKED // CAPACITIUMX_AI", cx + 15, cy + 25);
-            } else if (camFx === 'textMrBeast') {
-                let words = ["¡INCREMENTA!", "¡REACCIONA!", "¡MIRA ESTO!"];
-                let word = words[Math.floor(camFxTimer * 2) % words.length];
-                ctx.fillStyle = "#ffeb3b"; ctx.font = "900 30px Arial"; ctx.textAlign = "center";
-                ctx.strokeStyle = "black"; ctx.lineWidth = 6;
-                ctx.strokeText(word, cx + cw/2, cy + ch*0.85); ctx.fillText(word, cx + cw/2, cy + ch*0.85);
-            }
 
             if (camMode === 'mini') {
                 ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
@@ -775,7 +814,6 @@
             ctx.restore();
         }
 
-        // RENDERIZAR ELEMENTOS DE MINIATURA SOBREPUESTOS AL FINAL
         drawThumbnailElements(ctx, canvas.width, canvas.height);
 
         requestAnimationFrame(render);
