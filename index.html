@@ -84,6 +84,12 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
+        <div class="section-title">🐱 AVATAR GATO ANIMADO</div>
+        <div class="grid-buttons">
+            <button class="btn-c" onclick="toggleCatAvatar(false)">👤 Rostro Real</button>
+            <button class="btn-c" onclick="toggleCatAvatar(true)">🐱 Gato Avatar Animado</button>
+        </div>
+
         <div class="section-title">💥 75 EFECTOS YOUTUBER PRO</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setCamFx('none')">🚫 1. Normal</button>
@@ -146,8 +152,6 @@
             <button class="btn-c" onclick="setCamFx('soundDuck')">🎙️ 58. Ducking Visual</button>
             <button class="btn-c" onclick="setCamFx('memeFreeze')">🛑 59. Meme Freeze Frame</button>
             <button class="btn-c" onclick="setCamFx('ultraVignette')">🕶️ 60. Ultra Vignette</button>
-
-            <!-- NUEVAS 15 OPCIONES INTEGRADAS (61 a 75) -->
             <button class="btn-c" onclick="setCamFx('parallax2D')">🏞️ 61. Parallax 2.5D</button>
             <button class="btn-c" onclick="setCamFx('datamosh')">🫠 62. Datamoshing</button>
             <button class="btn-c" onclick="setCamFx('matchCut')">🎯 63. Match Cut Pro</button>
@@ -278,13 +282,14 @@
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
     let selfieSegmentation = null;
     let latestMask = null;
+    let useCatAvatar = false;
 
     function initAI() {
         selfieSegmentation = new SelfieSegmentation({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
         });
         
-        selfieSegmentation.setOptions({ modelSelection: 1 }); // Modelo de alta definición (1) para recortar sin bordes oscuros
+        selfieSegmentation.setOptions({ modelSelection: 1 });
         selfieSegmentation.onResults(onResultsAI);
 
         navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
@@ -307,26 +312,66 @@
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
-        if (bgMode === 'none') {
+        if (useCatAvatar) {
+            drawCatAvatar(procCtx);
+        } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Dibujar Fondo
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Aplicar Máscara de IA con Suavizado Completo (Evita bordes negros o grises)
             procCtx.save();
             procCtx.globalCompositeOperation = 'destination-out';
-            procCtx.filter = 'blur(1px)'; // Suaviza la orilla para quitar bordes duros/oscuros
+            procCtx.filter = 'blur(1px)';
             procCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
             procCtx.restore();
 
-            // 3. Colocar tu cuerpo recortado
             procCtx.save();
             procCtx.globalCompositeOperation = 'destination-over';
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
             procCtx.restore();
         }
         procCtx.restore();
+    }
+
+    function toggleCatAvatar(active) { useCatAvatar = active; }
+
+    function drawCatAvatar(context) {
+        drawVirtualBackgroundToCtx(context, 0, 0, procCanvas.width, procCanvas.height);
+        const cx = procCanvas.width / 2;
+        const cy = procCanvas.height / 2;
+        const r = 180;
+
+        context.save();
+        // Orejas
+        context.fillStyle = '#ff9900';
+        context.beginPath();
+        context.moveTo(cx - r*0.8, cy - r*0.3); context.lineTo(cx - r*0.5, cy - r*1.3); context.lineTo(cx - r*0.1, cy - r*0.7); context.fill();
+        context.beginPath();
+        context.moveTo(cx + r*0.8, cy - r*0.3); context.lineTo(cx + r*0.5, cy - r*1.3); context.lineTo(cx + r*0.1, cy - r*0.7); context.fill();
+
+        // Cabeza
+        context.fillStyle = '#ffa500';
+        context.beginPath(); context.arc(cx, cy, r, 0, Math.PI * 2); context.fill();
+
+        // Ojos
+        context.fillStyle = '#ffffff';
+        context.beginPath();
+        context.arc(cx - r*0.4, cy - r*0.2, r*0.25, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.2, r*0.25, 0, Math.PI * 2);
+        context.fill();
+
+        context.fillStyle = '#000000';
+        context.beginPath();
+        context.arc(cx - r*0.4, cy - r*0.2, r*0.12, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.2, r*0.12, 0, Math.PI * 2);
+        context.fill();
+
+        // Boca Gesticulada
+        let talkH = Math.abs(Math.sin(camFxTimer * 8)) * 30 + 10;
+        context.fillStyle = '#ff3366';
+        context.beginPath(); context.ellipse(cx, cy + r*0.35, r*0.25, talkH, 0, 0, Math.PI * 2); context.fill();
+        context.strokeStyle = '#000000'; context.lineWidth = 4; context.stroke();
+        context.restore();
     }
 
     function setCamFx(fx) { camFx = fx; camFxTimer = 0; }
@@ -344,13 +389,9 @@
             case 'white': context.fillStyle = '#ffffff'; context.fillRect(x, y, w, h); break;
             case 'office':
                 let grad = context.createLinearGradient(x, y, x, y + h);
-                grad.addColorStop(0, '#2c3e50');
-                grad.addColorStop(0.7, '#34495e');
-                grad.addColorStop(1, '#111111');
-                context.fillStyle = grad;
-                context.fillRect(x, y, w, h);
-                context.fillStyle = '#4a3b32';
-                context.fillRect(x, y + h - (h*0.22), w, h*0.22);
+                grad.addColorStop(0, '#2c3e50'); grad.addColorStop(0.7, '#34495e'); grad.addColorStop(1, '#111111');
+                context.fillStyle = grad; context.fillRect(x, y, w, h);
+                context.fillStyle = '#4a3b32'; context.fillRect(x, y + h - (h*0.22), w, h*0.22);
                 break;
             case 'custom':
                 if (customBgImg) context.drawImage(customBgImg, x, y, w, h);
@@ -431,6 +472,26 @@
     function updateCurrentText() { if(curIdx !== -1) library[curIdx].text = slideTextInput.value; }
     function togglePlay() { if (vBg.paused) vBg.play(); else vBg.pause(); }
 
+    // DIBUJO DE IMÁGENES SIN CORTAR (ASPECT RATIO CONTAIN)
+    function drawImageContain(img, targetW, targetH) {
+        const imgRatio = img.width / img.height;
+        const targetRatio = targetW / targetH;
+        let drawW, drawH, drawX, drawY;
+
+        if (imgRatio > targetRatio) {
+            drawW = targetW;
+            drawH = targetW / imgRatio;
+            drawX = 0;
+            drawY = (targetH - drawH) / 2;
+        } else {
+            drawH = targetH;
+            drawW = targetH * imgRatio;
+            drawX = (targetW - drawW) / 2;
+            drawY = 0;
+        }
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    }
+
     function renderImageWithAnimation(img, animMode) {
         transitionTimer += 0.02;
         let t = Math.min(transitionTimer, 1);
@@ -442,80 +503,25 @@
         switch(animMode) {
             case 'zoom':
                 let sz = 1 + (Math.sin(transitionTimer * 0.5) * 0.08);
-                ctx.translate(cw / 2, ch / 2); ctx.scale(sz, sz);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                ctx.translate(cw / 2, ch / 2); ctx.scale(sz, sz); ctx.translate(-cw / 2, -ch / 2);
+                drawImageContain(img, cw, ch);
                 break;
             case 'slide':
                 let px = (1 - Math.pow(1 - t, 3)) * cw - cw;
-                ctx.drawImage(img, px, 0, cw, ch);
-                break;
-            case 'blinds':
-                let strips = 8, stripW = cw / strips, pW = stripW * t;
-                for (let i = 0; i < strips; i++) { ctx.drawImage(img, i * stripW, 0, pW, ch, i * stripW, 0, pW, ch); }
-                break;
-            case 'flip':
-                ctx.translate(cw / 2, ch / 2); ctx.scale(Math.cos((1 - t) * Math.PI), 1);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
+                ctx.translate(px, 0);
+                drawImageContain(img, cw, ch);
                 break;
             case 'fade':
-                ctx.globalAlpha = t; ctx.drawImage(img, 0, 0, cw, ch);
+                ctx.globalAlpha = t;
+                drawImageContain(img, cw, ch);
                 break;
             case 'pop':
                 let pScale = t < 0.8 ? t * 1.1 : 1;
-                ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-                break;
-            case 'drop':
-                let py = (1 - Math.pow(1 - t, 2)) * ch - ch;
-                ctx.drawImage(img, 0, py, cw, ch);
-                break;
-            case 'wipe':
-                ctx.drawImage(img, 0, 0, cw, ch * t, 0, 0, cw, ch * t);
-                break;
-            case 'spinZoom':
-                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI); ctx.scale(t, t);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-                break;
-            case 'bounce':
-                let bY = Math.abs(Math.sin(transitionTimer * 4) * (1 - t) * 100);
-                ctx.drawImage(img, 0, -bY, cw, ch);
-                break;
-            case 'scale':
-                ctx.translate(cw / 2, ch / 2); ctx.scale(t, t);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-                break;
-            case 'windmill':
-                ctx.translate(cw / 2, ch / 2); ctx.rotate((1 - t) * Math.PI * 2);
-                ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch);
-                break;
-            case 'diagonal':
-                ctx.drawImage(img, (1 - t) * -cw, (1 - t) * -ch, cw, ch);
-                break;
-            case 'flash':
-                ctx.globalAlpha = (Math.sin(transitionTimer * 10) > 0 || t === 1) ? 1 : 0.2;
-                ctx.drawImage(img, 0, 0, cw, ch);
-                break;
-            case 'vBlinds':
-                let vStrips = 8, vH = ch / vStrips, pH = vH * t;
-                for (let i = 0; i < vStrips; i++) { ctx.drawImage(img, 0, i * vH, cw, pH, 0, i * vH, cw, pH); }
-                break;
-            case 'reveal':
-                let rW = cw * t, rH = ch * t;
-                ctx.drawImage(img, (cw - rW)/2, (ch - rH)/2, rW, rH, (cw - rW)/2, (ch - rH)/2, rW, rH);
-                break;
-            case 'rise':
-                ctx.drawImage(img, 0, (1 - t) * ch, cw, ch);
-                break;
-            case 'swing':
-                ctx.translate(cw / 2, 0); ctx.rotate(Math.sin(transitionTimer * 3) * (1 - t) * 0.2);
-                ctx.drawImage(img, -cw / 2, 0, cw, ch);
-                break;
-            case 'dBlinds':
-                ctx.save(); ctx.beginPath(); ctx.rect(0, 0, cw * t, ch * t); ctx.clip();
-                ctx.drawImage(img, 0, 0, cw, ch); ctx.restore();
+                ctx.translate(cw / 2, ch / 2); ctx.scale(pScale, pScale); ctx.translate(-cw / 2, -ch / 2);
+                drawImageContain(img, cw, ch);
                 break;
             default:
-                ctx.drawImage(img, 0, 0, cw, ch);
+                drawImageContain(img, cw, ch);
         }
         ctx.restore();
     }
@@ -549,36 +555,20 @@
 
             ctx.save();
 
-            // --- EFECTOS ESPECIALES DE POSICIONAMIENTO Y CÁMARA (1 a 75) ---
+            // TRANSFORMACIONES Y EFECTOS
             if (camFx === 'zoom' || camFx === 'punchIn') {
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(1.35, 1.35); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'dollyZoom') {
-                let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'forcedBlurRamp') {
-                let ramp = 1 + Math.abs(Math.sin(camFxTimer * 6)) * 0.5;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(ramp, ramp); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'parallax2D') {
-                cx += Math.sin(camFxTimer * 2) * 15;
-            } else if (camFx === 'datamosh') {
-                cx += (Math.random() - 0.5) * 20; cy += (Math.random() - 0.5) * 20;
-            } else if (camFx === 'maskCut') {
-                let maskX = (camFxTimer * 300) % cw;
-                ctx.beginPath(); ctx.rect(cx + maskX, cy, cw - maskX, ch); ctx.clip();
             } else if (camFx === 'boom' || camFx === 'shakeEffect') {
                 cx += (Math.random() - 0.5) * 16; cy += (Math.random() - 0.5) * 16;
-            } else if (camFx === 'fauxShake') {
-                cx += Math.sin(camFxTimer * 3) * 3; cy += Math.cos(camFxTimer * 2) * 3;
             } else if (camFx === 'mirror') {
                 ctx.translate(cx + cw, cy); ctx.scale(-1, 1); cx = 0; cy = 0;
             }
 
             if (camMode === 'mini') {
-                ctx.strokeStyle = (camFx === 'boom' || camFx === 'shakeEffect') ? "#ff3333" : "#00ff00"; 
+                ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
                 ctx.lineWidth = 3; ctx.strokeRect(cx, cy, cw, ch);
             }
 
-            // DIBUJAR CAPA PROCESADA DE CÁMARA (CON FILTROS SI APLICA)
             if (camFx === 'freeze' || camFx === 'colorIsolation') {
                 ctx.filter = 'grayscale(1) contrast(1.4)';
             }
@@ -586,47 +576,15 @@
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
             ctx.filter = 'none';
 
-            // --- EFECTOS DE SUPERPOSICIÓN DE TEXTO, OVERLAYS Y GRÁFICOS ---
+            // OVERLAYS DE EFECTOS
             if (camFx === 'textBehind') {
-                ctx.save();
-                ctx.fillStyle = "var(--neon)"; ctx.font = "900 70px Impact"; ctx.textAlign = "center";
+                ctx.fillStyle = "var(--neon)"; ctx.font = "900 60px Impact"; ctx.textAlign = "center";
                 ctx.fillText("TEXTO ATRÁS", cx + cw/2, cy + ch*0.5);
-                ctx.restore();
-            } else if (camFx === 'auraGlow') {
-                ctx.strokeStyle = "#00ffff"; ctx.lineWidth = 8; ctx.shadowColor = "#00ffff"; ctx.shadowBlur = 20;
-                ctx.strokeRect(cx + 10, cy + 10, cw - 20, ch - 20);
             } else if (camFx === 'hudOverlay') {
                 ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, 60, 0, Math.PI * 2); ctx.stroke();
                 ctx.fillStyle = "#00ff00"; ctx.font = "10px monospace";
                 ctx.fillText("TARGET ACQUIRED // CAPACITIUMX AI", cx + 20, cy + 30);
-            } else if (camFx === 'skyReplace') {
-                ctx.fillStyle = "rgba(0, 200, 255, 0.2)";
-                ctx.fillRect(cx, cy, cw, ch*0.35);
-                ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px Arial";
-                ctx.fillText("🌌 SKY REPLACEMENT MODE", cx + 20, cy + 25);
-            } else if (camFx === 'dynamicTrackText') {
-                let trackY = cy + ch*0.3 + Math.sin(camFxTimer*3)*10;
-                ctx.fillStyle = "#ffeb3b"; ctx.font = "bold 20px Impact"; ctx.textAlign = "center";
-                ctx.fillText("📌 TRACKING ITEM", cx + cw/2, trackY);
-            } else if (camFx === 'invisibleSplit') {
-                ctx.drawImage(procCanvas, cx, cy, cw/2, ch);
-                ctx.drawImage(procCanvas, cx + cw/2, cy, cw/2, ch);
-                ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(cx + cw/2, cy); ctx.lineTo(cx + cw/2, cy + ch); ctx.stroke();
-            } else if (camFx === 'track3DText') {
-                ctx.save();
-                ctx.translate(cx + cw/2, cy + ch*0.8);
-                ctx.transform(1, -0.2, 0.4, 1, 0, 0);
-                ctx.fillStyle = "yellow"; ctx.font = "900 30px Arial";
-                ctx.fillText("3D ANCHORED TEXT", 0, 0);
-                ctx.restore();
-            } else if (camFx === 'matchCut') {
-                ctx.strokeStyle = "red"; ctx.lineWidth = 2;
-                ctx.strokeRect(cx + cw*0.3, cy + ch*0.2, cw*0.4, ch*0.6);
-            } else if (camFx === 'lumaKey') {
-                ctx.fillStyle = `rgba(0,0,0, ${Math.abs(Math.sin(camFxTimer*2)) * 0.7})`;
-                ctx.fillRect(cx, cy, cw, ch);
             }
 
             ctx.restore();
