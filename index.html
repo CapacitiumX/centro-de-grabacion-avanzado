@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V342 - ULTIMATE STUDIO & PERFECT MATTING</title>
+    <title>CAPACITIUMX V343 - PRO STUDIO & PERFECT MATTING</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -83,25 +83,25 @@
 </div>
 
 <div id="thumb-modal">
-    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES)</h2>
+    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES COMPLETAMENTE LIMPIAS)</h2>
     <p style="font-size: 11px; color: #ccc;">Haz clic en cualquier opción para descargarla en formato PNG:</p>
     <div class="thumb-grid-10">
-        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Limpia HD (Sin Textos)</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Neón</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Clickbait / Flecha 3D</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Cine Dark Viñeta</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Glow</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(6)"><canvas id="thumb-c6"></canvas><div class="thumb-label">6. Enfoque Radial Zoom</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(7)"><canvas id="thumb-c7"></canvas><div class="thumb-label">7. Láser Rage Mode</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(8)"><canvas id="thumb-c8"></canvas><div class="thumb-label">8. Matrix Code Style</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(9)"><canvas id="thumb-c9"></canvas><div class="thumb-label">9. Drama B&N Contrast</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte 3D</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Limpia HD (Sin Textos Preestablecidos)</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Pro Outlines</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Inclinación Reacción + Flecha 3D</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Viñeta Cine Dramática Oscura</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Neon Acento Color</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(6)"><canvas id="thumb-c6"></canvas><div class="thumb-label">6. Enfoque Velocidad Radial</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(7)"><canvas id="thumb-c7"></canvas><div class="thumb-label">7. Láser Memes Rage Mode</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(8)"><canvas id="thumb-c8"></canvas><div class="thumb-label">8. Matrix Code Digital Overlay</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(9)"><canvas id="thumb-c9"></canvas><div class="thumb-label">9. Drama B&N Alto Contraste</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte Border Oro</div></div>
     </div>
     <button class="btn-load" style="margin-top:20px; width:220px; background:#ff3333; color:white;" onclick="closeThumbModal()">❌ CERRAR VENTANA</button>
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V342 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V343 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -130,7 +130,7 @@
 
         <div class="section-title">🖼️ ESTUDIO Y GENERADOR DE MINIATURAS</div>
         <button class="btn-load" style="background:#00ffff; color:black; font-weight:900;" onclick="generateAutoThumbnails()">✨ GENERAR 10 OPCIONES AUTO (IA)</button>
-        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Tu Texto Personalizado (O déjalo vacío)...">
+        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Escribe tu título aquí (o déjalo en blanco)...">
         
         <div class="ctrl-row">
             <span>Color Texto:</span>
@@ -390,7 +390,7 @@
 
     let library = [], curIdx = -1, camMode = 'mini', camX = 930, camY = 50, camW = 300, camH = 225, dragging = false;
     let imgFilter = 'none', camFx = 'none';
-    let bgMode = 'office'; 
+    let bgMode = 'purple'; 
     let customBgImg = null;
     let transitionTimer = 0, camFxTimer = 0;
     let recorder, chunks = [], isRecording = false, isPaused = false, audioCtx, finalBlob;
@@ -466,7 +466,7 @@
         document.getElementById('arrow-color').value = p.arrowColor || "#00ff00";
         showArrow = p.showArrow;
         camFx = p.camFx || "none";
-        bgMode = p.bgMode || "office";
+        bgMode = p.bgMode || "purple";
 
         alert(`📂 Proyecto "${p.name}" cargado correctamente.`);
     }
@@ -629,7 +629,7 @@
         requestAnimationFrame(processAIFrames);
     }
 
-    // NUEVA FUNCIÓN DE COMPOSICIÓN AL 100% PERFECTO SIN DUPLICADOS NI SOMBRAS A UN LADO
+    // NUEVO MOTOR INTEGRAL CON ELIMINACIÓN DE HALOS COMPUESTA POR FILTRADO BINARIO DURO
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
 
@@ -641,26 +641,38 @@
         } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Renderizar el Fondo Virtual (Oficina, Fotos o Colores)
+            // 1. Renderizar el fondo virtual (Oficina, Fotos o Colores)
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Crear un buffer aislado en memoria de exactamente 1280x720
+            // 2. Crear un buffer temporal para binarizar estrictamente el canal alpha de la máscara
+            const maskBuffer = document.createElement('canvas');
+            maskBuffer.width = procCanvas.width; maskBuffer.height = procCanvas.height;
+            const mCtx = maskBuffer.getContext('2d');
+            mCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
+
+            const maskData = mCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
+            const pixels = maskData.data;
+            for (let i = 0; i < pixels.length; i += 4) {
+                // Si la confianza es mayor al 35%, forzar el pixel a sólido (255), de lo contrario borrar (0)
+                let alpha = (pixels[i] / 255 >= 0.35) ? 255 : 0;
+                pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
+                pixels[i+3] = alpha;
+            }
+            mCtx.putImageData(maskData, 0, 0);
+
+            // 3. Crear el lienzo de la persona recortado
             const personCanvas = document.createElement('canvas');
-            personCanvas.width = procCanvas.width;
-            personCanvas.height = procCanvas.height;
+            personCanvas.width = procCanvas.width; personCanvas.height = procCanvas.height;
             const pCtx = personCanvas.getContext('2d');
 
-            // Limpieza estricta del buffer
-            pCtx.clearRect(0, 0, personCanvas.width, personCanvas.height);
-
-            // Dibujar la cámara del usuario exactamente en (0, 0)
+            // Dibujar tu video de cámara real
             pCtx.drawImage(vCam, 0, 0, personCanvas.width, personCanvas.height);
 
-            // Aplicar la máscara usando 'destination-in' estrictamente sincronizada en (0, 0)
+            // Cortar geométricamente con la máscara binarizada en la orilla exacta
             pCtx.globalCompositeOperation = 'destination-in';
-            pCtx.drawImage(latestMask, 0, 0, personCanvas.width, personCanvas.height);
+            pCtx.drawImage(maskBuffer, 0, 0, personCanvas.width, personCanvas.height);
 
-            // 3. Estampar la imagen de la persona recortada en la posición exacta
+            // 4. Pintar tu cuerpo recortado y limpio sin distorsiones sobre el lienzo final
             procCtx.drawImage(personCanvas, 0, 0, procCanvas.width, procCanvas.height);
         }
         procCtx.restore();
@@ -1021,22 +1033,13 @@
             } else if (camFx === 'punchOut') {
                 let pScale = 1.4 - (Math.min(camFxTimer, 1) * 0.4);
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(pScale, pScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'boom' || camFx === 'shakeEffect' || camFx === 'datamosh' || camFx === 'opticalMorph') {
-                cx += (Math.random() - 0.5) * 18; cy += (Math.random() - 0.5) * 18;
-            } else if (camFx === 'fauxShake') {
-                cx += Math.sin(camFxTimer * 3) * 4; cy += Math.cos(camFxTimer * 2) * 4;
-            } else if (camFx === 'whipPan') {
-                cx += Math.sin(camFxTimer * 12) * 40;
+            } else if (camFx === 'boom' || camFx === 'shakeEffect') {
+                cx += (Math.random() - 0.5) * 16; cy += (Math.random() - 0.5) * 16;
             } else if (camFx === 'mirror') {
                 ctx.translate(cx + cw, cy); ctx.scale(-1, 1); cx = 0; cy = 0;
             } else if (camFx === 'dollyZoom') {
                 let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'forcedBlurRamp' || camFx === 'speedRamp') {
-                let ramp = 1 + Math.abs(Math.sin(camFxTimer * 6)) * 0.4;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(ramp, ramp); ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'parallax2D' || camFx === 'nerfAI') {
-                cx += Math.sin(camFxTimer * 2) * 20;
             }
 
             if (camFx === 'freeze' || camFx === 'colorIsolation' || camFx === 'memeFreeze') {
@@ -1047,8 +1050,6 @@
                 ctx.filter = 'blur(5px)';
             } else if (camFx === 'colorPop') {
                 ctx.filter = 'saturate(2.5) contrast(1.2)';
-            } else if (camFx === 'pixel') {
-                ctx.filter = 'contrast(1.8) hue-rotate(90deg)';
             }
 
             ctx.drawImage(procCanvas, cx, cy, cw, ch);
@@ -1060,48 +1061,12 @@
                 ctx.strokeStyle = `hsl(${(camFxTimer * 80) % 360}, 100%, 50%)`; ctx.lineWidth = 6; ctx.strokeRect(cx, cy, cw, ch);
             } else if (camFx === 'cinema') {
                 ctx.fillStyle = 'black'; ctx.fillRect(cx, cy, cw, ch * 0.12); ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-            } else if (camFx === 'strobe' || camFx === 'snapFlash' || camFx === 'chromaFlash') {
+            } else if (camFx === 'strobe' || camFx === 'snapFlash') {
                 if (Math.sin(camFxTimer * 15) > 0) { ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.fillRect(cx, cy, cw, ch); }
-            } else if (camFx === 'fire') {
-                ctx.strokeStyle = '#ff4500'; ctx.shadowColor = 'orange'; ctx.shadowBlur = 15; ctx.lineWidth = 4; ctx.strokeRect(cx, cy, cw, ch);
-            } else if (camFx === 'rainbow') {
-                ctx.fillStyle = `hsla(${(camFxTimer * 60) % 360}, 100%, 50%, 0.15)`; ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'vignette' || camFx === 'ultraVignette') {
-                let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.1, cx+cw/2, cy+ch/2, cw*0.65);
-                grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(0,0,0,0.85)'); ctx.fillStyle = grad; ctx.fillRect(cx, cy, cw, ch);
             } else if (camFx === 'laser') {
                 ctx.strokeStyle = 'red'; ctx.lineWidth = 6; ctx.shadowColor = 'red'; ctx.shadowBlur = 10; ctx.beginPath();
                 ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
                 ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1); ctx.stroke();
-            } else if (camFx === 'cyber' || camFx === 'hudOverlay') {
-                ctx.strokeStyle = "var(--neon)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, 50, 0, Math.PI * 2); ctx.stroke();
-                ctx.fillStyle = "var(--neon)"; ctx.font = "10px monospace"; ctx.fillText("TARGET_LOCKED // CAPACITIUMX_AI", cx + 15, cy + 25);
-            } else if (camFx === 'textMrBeast') {
-                let words = ["¡INCREMENTA!", "¡REACCIONA!", "¡MIRA ESTO!"];
-                let word = words[Math.floor(camFxTimer * 2) % words.length];
-                ctx.fillStyle = "#ffeb3b"; ctx.font = "900 30px Impact"; ctx.textAlign = "center";
-                ctx.strokeStyle = "black"; ctx.lineWidth = 6;
-                ctx.strokeText(word, cx + cw/2, cy + ch*0.85); ctx.fillText(word, cx + cw/2, cy + ch*0.85);
-            } else if (camFx === 'lowerThird') {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; ctx.fillRect(cx + 10, cy + ch - 40, cw * 0.75, 30);
-                ctx.fillStyle = "var(--neon)"; ctx.fillRect(cx + 10, cy + ch - 40, 4, 30);
-                ctx.fillStyle = "white"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left";
-                ctx.fillText(" @CAPACITIUMX_STUDIO", cx + 20, cy + ch - 20);
-            } else if (camFx === 'textPop') {
-                let popScale = Math.min((camFxTimer % 1) * 2, 1);
-                ctx.save(); ctx.translate(cx + cw/2, cy + ch*0.5); ctx.scale(popScale, popScale);
-                ctx.fillStyle = "#ff0055"; ctx.font = "bold 32px Impact"; ctx.textAlign = "center";
-                ctx.strokeStyle = "white"; ctx.lineWidth = 4;
-                ctx.strokeText("POOOW! 💥", 0, 0); ctx.fillText("POOOW! 💥", 0, 0); ctx.restore();
-            } else if (camFx === 'textGlow') {
-                ctx.shadowColor = "#00ff00"; ctx.shadowBlur = 15; ctx.fillStyle = "#ffffff"; ctx.font = "bold 24px Arial"; ctx.textAlign = "center";
-                ctx.fillText("NEON GLOW EFFECT", cx + cw/2, cy + ch*0.25);
-            } else if (camFx === 'matrix') {
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.15)'; ctx.fillRect(cx, cy, cw, ch);
-                ctx.fillStyle = '#00ff00'; ctx.font = '12px monospace'; ctx.fillText("10101010101", cx + 10, cy + (camFxTimer*50)%ch);
-            } else if (camFx === 'mirror4' || camFx === 'splitScreen' || camFx === 'invisibleSplit') {
-                ctx.drawImage(procCanvas, cx, cy, cw/2, ch/2); ctx.drawImage(procCanvas, cx + cw/2, cy, cw/2, ch/2);
-                ctx.drawImage(procCanvas, cx, cy + ch/2, cw/2, ch/2); ctx.drawImage(procCanvas, cx + cw/2, cy + ch/2, cw/2, ch/2);
             }
 
             if (camMode === 'mini') {
