@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V329 - ULTIMATE STUDIO PRO</title>
+    <title>CAPACITIUMX V329 - ULTIMATE STUDIO & PRO FX</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -23,7 +23,7 @@
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
 
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 350px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .sidebar { width: 360px; background: #000; border-right: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         .btn-load { background: var(--neon); color: black; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; }
         
         #media-list { flex: 1; min-height: 90px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
@@ -84,7 +84,7 @@
         <input type="text" id="slide-text" class="input-text" placeholder="Texto para este slide..." oninput="updateCurrentText()">
         <div id="media-list"></div>
 
-        <div class="section-title">💥 30 EFECTOS YOUTUBER AVANZADOS</div>
+        <div class="section-title">💥 60 EFECTOS YOUTUBER & TÉCNICAS PRO</div>
         <div class="grid-buttons">
             <button class="btn-c" onclick="setCamFx('none')">🚫 1. Normal</button>
             <button class="btn-c" onclick="setCamFx('boom')">💥 2. Explosión</button>
@@ -103,10 +103,9 @@
             <button class="btn-c" onclick="setCamFx('vignette')">🖤 15. Viñeta Cómic</button>
             <button class="btn-c" onclick="setCamFx('spotlight')">🎯 16. Enfoque Spot</button>
             <button class="btn-c" onclick="setCamFx('rainbow')">🌈 17. Arcoíris</button>
-            <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado</button>
+            <button class="btn-c" onclick="setCamFx('freeze')">❄️ 18. Congelado B&N</button>
             <button class="btn-c" onclick="setCamFx('fisheye')">👁️ 19. Ojo de Pez</button>
             <button class="btn-c" onclick="setCamFx('sparkle')">💎 20. Diamante</button>
-            <!-- NUEVOS EFECTOS AÑADIDOS -->
             <button class="btn-c" onclick="setCamFx('laser')">🔴 21. Láser Rage</button>
             <button class="btn-c" onclick="setCamFx('vortex')">🌀 22. Vortex Holo</button>
             <button class="btn-c" onclick="setCamFx('cyber')">🤖 23. Cyberpunk</button>
@@ -114,10 +113,41 @@
             <button class="btn-c" onclick="setCamFx('particles')">🎆 25. Partículas</button>
             <button class="btn-c" onclick="setCamFx('magnify')">🔍 26. Lupa Deform</button>
             <button class="btn-c" onclick="setCamFx('matrix')">🔲 27. Matrix Code</button>
-
             <button class="btn-c" onclick="setCamFx('mirror4')">🪞 28. Espejo 4X</button>
             <button class="btn-c" onclick="setCamFx('pulseRed')">💓 29. Latido Rojo</button>
             <button class="btn-c" onclick="setCamFx('snapFlash')">📸 30. Foto Snap</button>
+            
+            <!-- NUEVA SUITE INTEGRADA DE TÉCNICAS YOUTUBER (31 a 60) -->
+            <button class="btn-c" onclick="setCamFx('punchIn')">🎯 31. Punch-In Fast</button>
+            <button class="btn-c" onclick="setCamFx('punchOut')">🔍 32. Punch-Out Zoom</button>
+            <button class="btn-c" onclick="setCamFx('textMrBeast')">🔤 33. Texto MrBeast</button>
+            <button class="btn-c" onclick="setCamFx('shakeEffect')">📳 34. Shake Vibración</button>
+            <button class="btn-c" onclick="setCamFx('lowerThird')">🏷️ 35. Lower Third</button>
+            <button class="btn-c" onclick="setCamFx('textPop')">🍿 36. Text Pop-Up</button>
+            <button class="btn-c" onclick="setCamFx('textGlow')">✨ 37. Text Neon Glow</button>
+            <button class="btn-c" onclick="setCamFx('typingText')">⌨️ 38. Typing Effect</button>
+            <button class="btn-c" onclick="setCamFx('kineticText')">🔀 39. Kinetic Typography</button>
+            <button class="btn-c" onclick="setCamFx('filmGrain')">🎞️ 40. Film Grain Retro</button>
+            <button class="btn-c" onclick="setCamFx('fauxShake')">📽️ 41. Faux Cam Shake</button>
+            <button class="btn-c" onclick="setCamFx('callout')">📌 42. Callout Gráfico</button>
+            <button class="btn-c" onclick="setCamFx('whipPan')">🌀 43. Whip Pan Latigo</button>
+            <button class="btn-c" onclick="setCamFx('textGlitch')">👾 44. Glitch de Texto</button>
+            <button class="btn-c" onclick="setCamFx('chromaFlash')">⚡ 45. Chroma Flash</button>
+            <button class="btn-c" onclick="setCamFx('speedRamp')">🏎️ 46. Speed Ramp FX</button>
+            <button class="btn-c" onclick="setCamFx('blurBg')">🌫️ 47. Blur Fondo Cam</button>
+            <button class="btn-c" onclick="setCamFx('colorPop')">🎨 48. Color Grade Pop</button>
+            <button class="btn-c" onclick="setCamFx('splitScreen')">📱 49. Split Screen 2X</button>
+            <button class="btn-c" onclick="setCamFx('motionBlur')">💨 50. Motion Blur FX</button>
+            <button class="btn-c" onclick="setCamFx('outroEnd')">🏁 51. Outro Template</button>
+            <button class="btn-c" onclick="setCamFx('bRoll')">🎞️ 52. B-Roll Overlay</button>
+            <button class="btn-c" onclick="setCamFx('jumpCutFx')">✂️ 53. Jump-Cut Fast</button>
+            <button class="btn-c" onclick="setCamFx('slideIn')">⬅️ 54. Slide In Graphic</button>
+            <button class="btn-c" onclick="setCamFx('jCutOverlay')">🎵 55. J-Cut Audio Visual</button>
+            <button class="btn-c" onclick="setCamFx('lCutOverlay')">🎬 56. L-Cut Audio Visual</button>
+            <button class="btn-c" onclick="setCamFx('greenKeying')">🟩 57. Chroma Key Pro</button>
+            <button class="btn-c" onclick="setCamFx('soundDuck')">🎙️ 58. Ducking Visual</button>
+            <button class="btn-c" onclick="setCamFx('memeFreeze')">🛑 59. Meme Freeze Frame</button>
+            <button class="btn-c" onclick="setCamFx('ultraVignette')">🕶️ 60. Ultra Vignette</button>
         </div>
 
         <div class="section-title">🎬 20 Transiciones PowerPoint (Fotos)</div>
@@ -498,120 +528,142 @@
 
             ctx.save();
             
-            if (camFx === 'zoom') {
+            // --- LÓGICA DE TRANSFORMACIONES BÁSICAS Y AVANZADAS ---
+            if (camFx === 'zoom' || camFx === 'punchIn') {
                 ctx.translate(cx + cw/2, cy + ch/2);
-                ctx.scale(1.25, 1.25);
+                ctx.scale(1.35, 1.35);
                 ctx.translate(-(cx + cw/2), -(cy + ch/2));
-            } else if (camFx === 'boom') {
-                cx += (Math.random() - 0.5) * 8;
-                cy += (Math.random() - 0.5) * 8;
+            } else if (camFx === 'punchOut') {
+                let pScale = 1.4 - (Math.min(camFxTimer, 1) * 0.4);
+                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(pScale, pScale);
+                ctx.translate(-(cx + cw/2), -(cy + ch/2));
+            } else if (camFx === 'boom' || camFx === 'shakeEffect') {
+                cx += (Math.random() - 0.5) * 16;
+                cy += (Math.random() - 0.5) * 16;
+            } else if (camFx === 'fauxShake') {
+                cx += Math.sin(camFxTimer * 3) * 3;
+                cy += Math.cos(camFxTimer * 2) * 3;
+            } else if (camFx === 'whipPan') {
+                cx += Math.sin(camFxTimer * 15) * 40;
+            } else if (camFx === 'speedRamp') {
+                let rampScale = 1 + Math.abs(Math.sin(camFxTimer * 4)) * 0.3;
+                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(rampScale, rampScale);
+                ctx.translate(-(cx + cw/2), -(cy + ch/2));
             } else if (camFx === 'mirror') {
-                ctx.translate(cx + cw, cy);
-                ctx.scale(-1, 1);
+                ctx.translate(cx + cw, cy); ctx.scale(-1, 1);
                 cx = 0; cy = 0;
             }
 
             if (camMode === 'mini') {
-                ctx.strokeStyle = (camFx === 'boom') ? "#ff3333" : "#00ff00"; 
-                ctx.lineWidth = (camFx === 'boom') ? 5 : 3;
+                ctx.strokeStyle = (camFx === 'boom' || camFx === 'shakeEffect') ? "#ff3333" : "#00ff00"; 
+                ctx.lineWidth = 3;
                 ctx.strokeRect(cx, cy, cw, ch);
             }
 
-            ctx.drawImage(procCanvas, cx, cy, cw, ch);
+            // APLICACIÓN DE EFECTOS DENTRO DEL PROC_CANVAS
+            if (camFx === 'freeze' || camFx === 'memeFreeze') {
+                ctx.filter = 'grayscale(1) contrast(1.5)';
+            } else if (camFx === 'blurBg') {
+                ctx.filter = 'blur(4px)';
+            } else if (camFx === 'colorPop') {
+                ctx.filter = 'saturate(2.5) contrast(1.2)';
+            }
 
-            // --- LÓGICA DE LOS 30 EFECTOS ---
-            if (camFx === 'alert') {
-                ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(camFxTimer * 3)) * 0.35})`;
-                ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'neon') {
-                ctx.strokeStyle = `hsl(${(camFxTimer * 50) % 360}, 100%, 50%)`;
-                ctx.lineWidth = 6;
-                ctx.strokeRect(cx, cy, cw, ch);
-            } else if (camFx === 'cinema') {
-                ctx.fillStyle = 'black';
-                ctx.fillRect(cx, cy, cw, ch * 0.12);
-                ctx.fillRect(cx, cy + ch - (ch * 0.12), cw, ch * 0.12);
-            } else if (camFx === 'strobe') {
-                if (Math.sin(camFxTimer * 20) > 0) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.drawImage(procCanvas, cx, cy, cw, ch);
+            ctx.filter = 'none'; // reset filter
+
+            // --- LÓGICA DE SUPERPOSICIÓN DE EFECTOS DE TEXTO & YOUTUBER (31 - 60) ---
+            if (camFx === 'textMrBeast') {
+                let words = ["¡INCREMENTA!", "¡REACCIONA!", "¡MIRA ESTO!"];
+                let word = words[Math.floor(camFxTimer * 2) % words.length];
+                ctx.fillStyle = "#ffeb3b"; ctx.font = "900 32px Arial"; ctx.textAlign = "center";
+                ctx.strokeStyle = "black"; ctx.lineWidth = 6;
+                ctx.strokeText(word, cx + cw/2, cy + ch*0.85);
+                ctx.fillText(word, cx + cw/2, cy + ch*0.85);
+            } else if (camFx === 'lowerThird') {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+                ctx.fillRect(cx + 10, cy + ch - 45, cw * 0.7, 35);
+                ctx.fillStyle = "var(--neon)";
+                ctx.fillRect(cx + 10, cy + ch - 45, 5, 35);
+                ctx.fillStyle = "white"; ctx.font = "bold 12px Arial"; ctx.textAlign = "left";
+                ctx.fillText(" @CAPACITIUMX_STUDIO", cx + 22, cy + ch - 22);
+            } else if (camFx === 'textPop') {
+                let popScale = Math.min((camFxTimer % 1) * 2, 1);
+                ctx.save();
+                ctx.translate(cx + cw/2, cy + ch*0.5);
+                ctx.scale(popScale, popScale);
+                ctx.fillStyle = "#ff0055"; ctx.font = "bold 36px Impact"; ctx.textAlign = "center";
+                ctx.strokeStyle = "white"; ctx.lineWidth = 4;
+                ctx.strokeText("POOOW! 💥", 0, 0); ctx.fillText("POOOW! 💥", 0, 0);
+                ctx.restore();
+            } else if (camFx === 'textGlow') {
+                ctx.shadowColor = "#00ff00"; ctx.shadowBlur = 15;
+                ctx.fillStyle = "#ffffff"; ctx.font = "bold 26px Arial"; ctx.textAlign = "center";
+                ctx.fillText("NEON GLOW EFFECT", cx + cw/2, cy + ch*0.2);
+            } else if (camFx === 'typingText') {
+                let fullTxt = "Escribiendo en vivo...";
+                let chars = Math.floor(camFxTimer * 10) % (fullTxt.length + 1);
+                ctx.fillStyle = "#00ffff"; ctx.font = "14px monospace"; ctx.textAlign = "left";
+                ctx.fillText("> " + fullTxt.substring(0, chars) + "_", cx + 15, cy + ch - 15);
+            } else if (camFx === 'kineticText') {
+                let rot = Math.sin(camFxTimer * 5) * 0.2;
+                ctx.save();
+                ctx.translate(cx + cw/2, cy + ch*0.3); ctx.rotate(rot);
+                ctx.fillStyle = "#ff6600"; ctx.font = "900 28px Impact"; ctx.textAlign = "center";
+                ctx.fillText("KINETIC RHYTHM", 0, 0);
+                ctx.restore();
+            } else if (camFx === 'filmGrain') {
+                ctx.fillStyle = "rgba(255,255,255,0.06)";
+                for(let i=0; i<30; i++) {
+                    ctx.fillRect(cx + Math.random()*cw, cy + Math.random()*ch, 2, 2);
+                }
+            } else if (camFx === 'callout') {
+                ctx.strokeStyle = "yellow"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(cx + cw*0.3, cy + ch*0.3); ctx.lineTo(cx + cw*0.15, cy + ch*0.15);
+                ctx.lineTo(cx + cw*0.05, cy + ch*0.15); ctx.stroke();
+                ctx.fillStyle = "yellow"; ctx.font = "bold 10px Arial";
+                ctx.fillText("PUNTO CLAVE", cx + cw*0.05, cy + ch*0.12);
+            } else if (camFx === 'textGlitch') {
+                let offX = (Math.random() - 0.5) * 6;
+                ctx.fillStyle = "cyan"; ctx.font = "bold 24px monospace";
+                ctx.fillText("GLITCH_ERR_404", cx + cw/2 + offX, cy + ch*0.5);
+                ctx.fillStyle = "red";
+                ctx.fillText("GLITCH_ERR_404", cx + cw/2 - offX, cy + ch*0.5);
+            } else if (camFx === 'chromaFlash') {
+                if (Math.sin(camFxTimer * 12) > 0) {
+                    ctx.fillStyle = "rgba(0, 255, 255, 0.25)";
                     ctx.fillRect(cx, cy, cw, ch);
                 }
-            } else if (camFx === 'vhs') {
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.05)';
-                ctx.fillRect(cx, cy + (Math.sin(camFxTimer * 5) * ch/2) + ch/2, cw, 4);
-            } else if (camFx === 'fire') {
-                ctx.shadowColor = 'orange'; ctx.shadowBlur = 20;
-                ctx.strokeStyle = '#ff4500'; ctx.lineWidth = 4;
-                ctx.strokeRect(cx, cy, cw, ch);
-            } else if (camFx === 'rainbow') {
-                ctx.fillStyle = `hsla(${(camFxTimer * 60) % 360}, 100%, 50%, 0.15)`;
-                ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'vignette') {
-                let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.3, cx+cw/2, cy+ch/2, cw*0.7);
+            } else if (camFx === 'splitScreen') {
+                ctx.drawImage(procCanvas, cx, cy, cw/2, ch);
+                ctx.drawImage(procCanvas, cx + cw/2, cy, cw/2, ch);
+                ctx.strokeStyle = "var(--neon)"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(cx + cw/2, cy); ctx.lineTo(cx + cw/2, cy + ch); ctx.stroke();
+            } else if (camFx === 'motionBlur') {
+                ctx.fillStyle = "rgba(0,0,0,0.2)"; ctx.fillRect(cx, cy, cw, ch);
+            } else if (camFx === 'outroEnd') {
+                ctx.strokeStyle = "var(--neon)"; ctx.lineWidth = 3;
+                ctx.strokeRect(cx + cw*0.1, cy + ch*0.2, cw*0.35, ch*0.5);
+                ctx.strokeRect(cx + cw*0.55, cy + ch*0.2, cw*0.35, ch*0.5);
+                ctx.fillStyle = "white"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center";
+                ctx.fillText("VIDEO RECOMENDADO", cx + cw*0.27, cy + ch*0.48);
+                ctx.fillText("SUSCRÍBETE AQUÍ", cx + cw*0.72, cy + ch*0.48);
+            } else if (camFx === 'bRoll') {
+                ctx.fillStyle = "rgba(0, 150, 255, 0.3)";
+                ctx.fillRect(cx + cw*0.05, cy + ch*0.05, cw*0.9, ch*0.4);
+                ctx.fillStyle = "white"; ctx.font = "bold 12px Arial"; ctx.textAlign = "center";
+                ctx.fillText("🎬 B-ROLL OVERLAY DE APOYO", cx + cw/2, cy + ch*0.25);
+            } else if (camFx === 'slideIn') {
+                let slideX = Math.min((camFxTimer * 2) * cw, cw * 0.7);
+                ctx.fillStyle = "rgba(255,0,85,0.85)";
+                ctx.fillRect(cx + cw - slideX, cy + ch*0.6, cw*0.7, 40);
+                ctx.fillStyle = "white"; ctx.font = "bold 12px Arial"; ctx.textAlign = "left";
+                ctx.fillText("➡️ DATO IMPORTANTE SLIDE", cx + cw - slideX + 15, cy + ch*0.6 + 25);
+            } else if (camFx === 'ultraVignette') {
+                let grad = ctx.createRadialGradient(cx+cw/2, cy+ch/2, cw*0.1, cx+cw/2, cy+ch/2, cw*0.65);
                 grad.addColorStop(0, 'rgba(0,0,0,0)');
-                grad.addColorStop(1, 'rgba(0,0,0,0.8)');
+                grad.addColorStop(1, 'rgba(0,0,0,0.95)');
                 ctx.fillStyle = grad; ctx.fillRect(cx, cy, cw, ch);
-            } 
-            // --- NUEVOS EFECTOS DE IMPACTO YOUTUBER ---
-            else if (camFx === 'laser') {
-                ctx.shadowColor = 'red'; ctx.shadowBlur = 15;
-                ctx.strokeStyle = 'red'; ctx.lineWidth = 6;
-                ctx.beginPath();
-                ctx.moveTo(cx + cw*0.35, cy + ch*0.4); ctx.lineTo(cx + cw*0.05, cy + ch*0.1);
-                ctx.moveTo(cx + cw*0.65, cy + ch*0.4); ctx.lineTo(cx + cw*0.95, cy + ch*0.1);
-                ctx.stroke();
-            } else if (camFx === 'vortex') {
-                ctx.save();
-                ctx.translate(cx + cw/2, cy + ch/2);
-                ctx.rotate(camFxTimer * 2);
-                ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.arc(0, 0, cw*0.25, 0, Math.PI*1.5); ctx.stroke();
-                ctx.restore();
-            } else if (camFx === 'cyber') {
-                ctx.fillStyle = 'rgba(0, 255, 255, 0.15)'; ctx.fillRect(cx, cy, cw, ch);
-                ctx.fillStyle = 'yellow'; ctx.font = '10px monospace';
-                ctx.fillText("TARGET_LOCKED // 99.8%", cx + 10, cy + 20);
-            } else if (camFx === 'anime') {
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; ctx.lineWidth = 2;
-                for(let i=0; i<8; i++){
-                    let angle = (i/8) * Math.PI * 2;
-                    ctx.beginPath();
-                    ctx.moveTo(cx + cw/2 + Math.cos(angle)*cw*0.2, cy + ch/2 + Math.sin(angle)*ch*0.2);
-                    ctx.lineTo(cx + cw/2 + Math.cos(angle)*cw*0.7, cy + ch/2 + Math.sin(angle)*ch*0.7);
-                    ctx.stroke();
-                }
-            } else if (camFx === 'particles') {
-                ctx.fillStyle = '#00ff00';
-                for(let i=0; i<6; i++){
-                    let px = cx + (Math.sin(camFxTimer + i) * 0.4 + 0.5) * cw;
-                    let py = cy + (Math.cos(camFxTimer * 1.5 + i) * 0.4 + 0.5) * ch;
-                    ctx.fillRect(px, py, 4, 4);
-                }
-            } else if (camFx === 'magnify') {
-                ctx.save();
-                ctx.beginPath(); ctx.arc(cx + cw/2, cy + ch/2, cw*0.25, 0, Math.PI*2);
-                ctx.clip();
-                ctx.drawImage(procCanvas, cx - cw*0.1, cy - ch*0.1, cw*1.2, ch*1.2);
-                ctx.restore();
-            } else if (camFx === 'matrix') {
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
-                ctx.fillRect(cx, cy, cw, ch);
-                ctx.fillStyle = '#00ff00'; ctx.font = '12px monospace';
-                ctx.fillText("10101010101", cx + 10, cy + (camFxTimer*50)%ch);
-            } else if (camFx === 'mirror4') {
-                ctx.drawImage(procCanvas, cx, cy, cw/2, ch/2);
-                ctx.drawImage(procCanvas, cx + cw/2, cy, cw/2, ch/2);
-                ctx.drawImage(procCanvas, cx, cy + ch/2, cw/2, ch/2);
-                ctx.drawImage(procCanvas, cx + cw/2, cy + ch/2, cw/2, ch/2);
-            } else if (camFx === 'pulseRed') {
-                let scale = 1 + Math.sin(camFxTimer * 6) * 0.05;
-                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(scale, scale);
-                ctx.translate(-(cx + cw/2), -(cy + ch/2));
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.15)'; ctx.fillRect(cx, cy, cw, ch);
-            } else if (camFx === 'snapFlash') {
-                if(camFxTimer < 0.3) {
-                    ctx.fillStyle = 'white'; ctx.fillRect(cx, cy, cw, ch);
-                }
             }
 
             ctx.restore();
