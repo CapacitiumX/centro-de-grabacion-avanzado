@@ -7,17 +7,6 @@
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        /* PANTALLA DE BLOQUEO DE PAGO (PAYWALL) CORREGIDA */
-        #paywall {
-            position: fixed; top:0; left:0; width: 100vw; height: 100vh;
-            background: rgba(5, 5, 5, 0.98); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 20px; box-sizing: border-box;
-        }
-        .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 500px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
-        .pay-card h2 { color: var(--neon); margin-top: 0; }
-        .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 15px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; text-align: left; line-height: 1.6; }
 
         header { background: #111; padding: 10px 20px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; }
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
@@ -63,26 +52,6 @@
     </style>
 </head>
 <body>
-
-<div id="paywall">
-    <div class="pay-card">
-        <h2>🔒 ACTIVAR CAPACITIUMX PRO</h2>
-        <p style="font-size:12px; color:#ccc;">Para obtener acceso ilimitado de por vida al editor profesional por <b>$500 MXN</b>, realiza tu depósito o transferencia SPEI:</p>
-        
-        <div class="clabe-box">
-            💳 <b>CLABE INTERBANCARIA:</b><br>
-            <span style="font-size:16px; color:var(--neon); font-family: monospace;">728969 0000 6819 1316</span><br><br>
-            📧 <b>CORREO DE ENVÍO:</b><br>
-            <span style="font-size:14px; color:#ffffff;">capacitiumx@gmail.com</span>
-        </div>
-        
-        <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante al correo electrónico o por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
-
-        <input type="text" id="license-input" class="input-text" style="text-align:center; font-size:14px; margin-bottom:10px;" placeholder="Ingresa tu Clave de Licencia...">
-        <button class="btn-load" style="width:100%;" onclick="validateLicense()">DESBLOQUEAR AHORA</button>
-        <p id="lic-error" style="color:red; font-size:11px; margin-top:10px; display:none;">❌ Clave de licencia no válida.</p>
-    </div>
-</div>
 
 <div id="thumb-modal">
     <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES COMPLETAMENTE LIMPIAS)</h2>
@@ -356,22 +325,6 @@
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
-    const MASTER_KEY = "CAPACITIUMX-MASTER-2026";
-
-    function validateLicense() {
-        const input = document.getElementById('license-input').value.trim();
-        if (input === MASTER_KEY || (input.startsWith("CAPX-") && input.length === 19)) {
-            localStorage.setItem('capX_activated', 'true');
-            document.getElementById('paywall').style.display = 'none';
-        } else {
-            document.getElementById('lic-error').style.display = 'block';
-        }
-    }
-
-    if (localStorage.getItem('capX_activated') === 'true') {
-        document.getElementById('paywall').style.display = 'none';
-    }
-
     const canvas = document.getElementById('canvas-render');
     const ctx = canvas.getContext('2d');
     const vCam = document.getElementById('v-cam');
@@ -622,7 +575,6 @@
         requestAnimationFrame(processAIFrames);
     }
 
-    // ARQUITECTURA DE RECORTE COMPUESTO BINARIO ROBUSTO
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
 
@@ -732,8 +684,8 @@
 
         if (isPanda) {
             context.fillStyle = '#212121';
-            context.beginPath(); context.ellipse(cx - r*0.4, cy - r*0.1, r*0.25, r*0.35, 0.2, 0, Math.PI*2); context.fill();
-            context.beginPath(); context.ellipse(cx + r*0.4, cy - r*0.1, r*0.25, r*0.35, -0.2, 0, Math.PI*2); context.fill();
+            context.beginPath(); context.ellipse(cx - r*0.4, cy - r*0.1, r*0.25, r*0.35, -0.2, 0, Math.PI*2); context.fill();
+            context.beginPath(); context.ellipse(cx + r*0.4, cy - r*0.1, r*0.25, r*0.35, 0.2, 0, Math.PI*2); context.fill();
         }
 
         context.fillStyle = '#ffffff';
