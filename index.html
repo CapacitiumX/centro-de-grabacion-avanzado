@@ -75,7 +75,7 @@
 
 <header>
     <div class="logo">CAPACITIUMX V329 - ULTIMATE STUDIO & LIVE AVATARS</div>
-    <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA DE RASTREO...</div>
+    <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO CÁMARA E IA...</div>
 </header>
 
 <div class="main">
@@ -230,41 +230,44 @@
     let faceLandmarks = null;
 
     function initAI() {
-        selfieSegmentation = new SelfieSegmentation({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
-        });
-        selfieSegmentation.setOptions({ modelSelection: 0 });
-        selfieSegmentation.onResults(results => { latestMask = results.segmentationMask; });
+        try {
+            selfieSegmentation = new SelfieSegmentation({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+            });
+            selfieSegmentation.setOptions({ modelSelection: 0 });
+            selfieSegmentation.onResults(results => { latestMask = results.segmentationMask; });
 
-        faceMesh = new FaceMesh({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-        });
-        faceMesh.setOptions({
-            maxNumFaces: 1,
-            refineLandmarks: true,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-        });
-        faceMesh.onResults(results => {
-            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-                faceLandmarks = results.multiFaceLandmarks[0];
-            } else {
-                faceLandmarks = null;
-            }
-        });
+            faceMesh = new FaceMesh({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+            });
+            faceMesh.setOptions({
+                maxNumFaces: 1,
+                refineLandmarks: true,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+            faceMesh.onResults(results => {
+                if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                    faceLandmarks = results.multiFaceLandmarks[0];
+                } else {
+                    faceLandmarks = null;
+                }
+            });
+        } catch(e) {
+            console.log("Error cargando IA MediaPipe:", e);
+        }
 
         navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
             vCam.srcObject = stream;
-            document.getElementById('status-mic').innerText = "ESTADO: IA RASTREO LISTA";
+            document.getElementById('status-mic').innerText = "ESTADO: CÁMARA E IA ACTIVAS";
             processAIFrames();
         });
     }
 
     async function processAIFrames() {
         if (vCam.readyState >= 2) {
-            await selfieSegmentation.send({ image: vCam });
-            await faceMesh.send({ image: vCam });
-            drawProcessedCamera();
+            if (selfieSegmentation) await selfieSegmentation.send({ image: vCam });
+            if (faceMesh) await faceMesh.send({ image: vCam });
         }
         requestAnimationFrame(processAIFrames);
     }
@@ -273,6 +276,7 @@
         procCtx.save();
         procCtx.clearRect(0, 0, procCanvas.width, procCanvas.height);
 
+        // 1. Dibujar Fondo Virtual
         if (bgMode !== 'none') {
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
             if (latestMask) {
@@ -283,13 +287,15 @@
 
                 procCtx.globalCompositeOperation = 'destination-over';
                 procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
+            } else {
+                procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
             }
         } else {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         }
 
-        // Renderizado del Avatar sobre el rostro rastreado
-        if (currentAvatar !== 'none' && faceLandmarks) {
+        // 2. Renderizado directo del Avatar sobre la cara
+        if (currentAvatar !== 'none') {
             renderARAvatar(procCtx, faceLandmarks, currentAvatar, procCanvas.width, procCanvas.height);
         }
 
@@ -297,21 +303,7 @@
     }
 
     function renderARAvatar(ctxAR, landmarks, type, w, h) {
-        // Puntos faciales mapeados a resolucion canvas
-        const nose = { x: landmarks[1].x * w, y: landmarks[1].y * h };
-        const leftEye = { x: landmarks[33].x * w, y: landmarks[33].y * h };
-        const rightEye = { x: landmarks[263].x * w, y: landmarks[263].y * h };
-        const mouthTop = { x: landmarks[13].x * w, y: landmarks[13].y * h };
-        const mouthBottom = { x: landmarks[14].x * w, y: landmarks[14].y * h };
-
-        const faceWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y) * 2.3;
-        const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
-        const mouthOpen = Math.hypot(mouthBottom.x - mouthTop.x, mouthBottom.y - mouthTop.y);
-
         ctxAR.save();
-        ctxAR.translate(nose.x, nose.y);
-        ctxAR.rotate(angle);
-
         ctxAR.textAlign = 'center';
         ctxAR.textBaseline = 'middle';
 
@@ -329,13 +321,31 @@
 
         const emoji = mapAvatar[type] || '👤';
 
-        ctxAR.font = `${faceWidth * 0.9}px Arial`;
-        ctxAR.fillText(emoji, 0, -faceWidth * 0.05);
+        if (landmarks) {
+            // Posicionamiento preciso si la IA FaceMesh respondió
+            const nose = { x: landmarks[1].x * w, y: landmarks[1].y * h };
+            const leftEye = { x: landmarks[33].x * w, y: landmarks[33].y * h };
+            const rightEye = { x: landmarks[263].x * w, y: landmarks[263].y * h };
+            const mouthTop = { x: landmarks[13].x * w, y: landmarks[13].y * h };
+            const mouthBottom = { x: landmarks[14].x * w, y: landmarks[14].y * h };
 
-        // Reacción al abrir la boca (ejemplo: saca la lengua en perro)
-        if (type === 'dog' && mouthOpen > 18) {
-            ctxAR.font = `${faceWidth * 0.45}px Arial`;
-            ctxAR.fillText('👅', 0, faceWidth * 0.35);
+            const faceWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y) * 2.5;
+            const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
+            const mouthOpen = Math.hypot(mouthBottom.x - mouthTop.x, mouthBottom.y - mouthTop.y);
+
+            ctxAR.translate(nose.x, nose.y);
+            ctxAR.rotate(angle);
+            ctxAR.font = `${faceWidth}px Arial`;
+            ctxAR.fillText(emoji, 0, -faceWidth * 0.05);
+
+            if (type === 'dog' && mouthOpen > 18) {
+                ctxAR.font = `${faceWidth * 0.45}px Arial`;
+                ctxAR.fillText('👅', 0, faceWidth * 0.35);
+            }
+        } else {
+            // Posicionamiento de respaldo central (Fallback para visibilidad instantánea)
+            ctxAR.font = `240px Arial`;
+            ctxAR.fillText(emoji, w / 2, h / 2 - 30);
         }
 
         ctxAR.restore();
@@ -500,6 +510,9 @@
         }
 
         if (camMode !== 'off' && vCam.srcObject) {
+            // Actualizar cámara procesada
+            drawProcessedCamera();
+
             camFxTimer += 0.05;
             let cx = (camMode === 'full') ? 0 : camX;
             let cy = (camMode === 'full') ? 0 : camY;
