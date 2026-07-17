@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V343 - PRO STUDIO & PERFECT MATTING</title>
+    <title>CAPACITIUMX V344 - PRO STUDIO & ULTRA CLEAN MATTING</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
@@ -83,25 +83,24 @@
 </div>
 
 <div id="thumb-modal">
-    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES COMPLETAMENTE LIMPIAS)</h2>
-    <p style="font-size: 11px; color: #ccc;">Haz clic en cualquier opción para descargarla en formato PNG:</p>
+    <h2 style="color:var(--neon); margin-bottom: 2px;">🤖 ELIGE TU MINIATURA IA (10 OPCIONES TOTALMENTE LIMPIAS)</h2>
     <div class="thumb-grid-10">
-        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Limpia HD (Sin Textos Preestablecidos)</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Pro Outlines</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Inclinación Reacción + Flecha 3D</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Viñeta Cine Dramática Oscura</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Neon Acento Color</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(6)"><canvas id="thumb-c6"></canvas><div class="thumb-label">6. Enfoque Velocidad Radial</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(7)"><canvas id="thumb-c7"></canvas><div class="thumb-label">7. Láser Memes Rage Mode</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(1)"><canvas id="thumb-c1"></canvas><div class="thumb-label">1. Portada Limpia Original</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(2)"><canvas id="thumb-c2"></canvas><div class="thumb-label">2. Estilo MrBeast Neon Glow</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(3)"><canvas id="thumb-c3"></canvas><div class="thumb-label">3. Inclinación + Flecha 3D</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(4)"><canvas id="thumb-c4"></canvas><div class="thumb-label">4. Viñeta Cine Oscura</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(5)"><canvas id="thumb-c5"></canvas><div class="thumb-label">5. Cyberpunk Neon Grade</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(6)"><canvas id="thumb-c6"></canvas><div class="thumb-label">6. Enfoque Radial Zoom</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(7)"><canvas id="thumb-c7"></canvas><div class="thumb-label">7. Láser Rage Meme Mode</div></div>
         <div class="thumb-option" onclick="downloadAutoThumb(8)"><canvas id="thumb-c8"></canvas><div class="thumb-label">8. Matrix Code Digital Overlay</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(9)"><canvas id="thumb-c9"></canvas><div class="thumb-label">9. Drama B&N Alto Contraste</div></div>
-        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte Border Oro</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(9)"><canvas id="thumb-c9"></canvas><div class="thumb-label">9. Drama B&N Contrast</div></div>
+        <div class="thumb-option" onclick="downloadAutoThumb(10)"><canvas id="thumb-c10"></canvas><div class="thumb-label">10. Ultra Matte Gold Border</div></div>
     </div>
     <button class="btn-load" style="margin-top:20px; width:220px; background:#ff3333; color:white;" onclick="closeThumbModal()">❌ CERRAR VENTANA</button>
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V343 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V344 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -130,7 +129,7 @@
 
         <div class="section-title">🖼️ ESTUDIO Y GENERADOR DE MINIATURAS</div>
         <button class="btn-load" style="background:#00ffff; color:black; font-weight:900;" onclick="generateAutoThumbnails()">✨ GENERAR 10 OPCIONES AUTO (IA)</button>
-        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Escribe tu título aquí (o déjalo en blanco)...">
+        <input type="text" id="thumb-text" class="input-text" style="margin-top:4px;" placeholder="Escribe tu título aquí personalizado...">
         
         <div class="ctrl-row">
             <span>Color Texto:</span>
@@ -352,7 +351,7 @@
         <button id="recBtn" class="btn-rec" onclick="startCapture()">🎙️ EMPEZAR GRABACIÓN</button>
         <button id="pauseBtn" class="btn-pause" onclick="togglePause()">⏸ PAUSAR (CORTAR)</button>
         <button class="btn-next" onclick="nextSlide()">SIGUIENTE FOTO ➡️</button>
-        <button id="dlBtn" style="display:none; background:var(--neon); color:black; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
+        <button id="dlBtn; style="display:none; background:var(--neon); color:black; font-weight:bold; cursor:pointer; border:none; border-radius:8px;" onclick="download()">📥 GUARDAR VIDEO FINAL</button>
     </div>
     <div style="color:#666; font-size:10px;">TIP: PRESIONA LA TECLA 'ESPACIO' PARA PAUSAR/REANUDAR SI TE TRABAS AL HABLAR.</div>
 </div>
@@ -629,7 +628,7 @@
         requestAnimationFrame(processAIFrames);
     }
 
-    // NUEVO MOTOR INTEGRAL CON ELIMINACIÓN DE HALOS COMPUESTA POR FILTRADO BINARIO DURO
+    // ALGORITMO HARD-UMBRALADO POR PIXEL (GARANTIZA CERO HALOS NI MANCHAS BLANCAS)
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
 
@@ -641,38 +640,45 @@
         } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Renderizar el fondo virtual (Oficina, Fotos o Colores)
+            // 1. Dibujar el Fondo Virtual Completo Primero
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Crear un buffer temporal para binarizar estrictamente el canal alpha de la máscara
+            // 2. Procesar la Máscara a Nivel de Píxel en un Canvas Oculto en memoria
             const maskBuffer = document.createElement('canvas');
             maskBuffer.width = procCanvas.width; maskBuffer.height = procCanvas.height;
             const mCtx = maskBuffer.getContext('2d');
+            
+            mCtx.clearRect(0, 0, maskBuffer.width, maskBuffer.height);
             mCtx.drawImage(latestMask, 0, 0, procCanvas.width, procCanvas.height);
 
             const maskData = mCtx.getImageData(0, 0, procCanvas.width, procCanvas.height);
             const pixels = maskData.data;
+
             for (let i = 0; i < pixels.length; i += 4) {
-                // Si la confianza es mayor al 35%, forzar el pixel a sólido (255), de lo contrario borrar (0)
-                let alpha = (pixels[i] / 255 >= 0.35) ? 255 : 0;
-                pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
-                pixels[i+3] = alpha;
+                // Forzar umbral de dureza binario: Si el pixel supera el 40% de confianza, se vuelve 100% opaco negro
+                let val = pixels[i];
+                if (val > 100) { 
+                    pixels[i] = 0; pixels[i+1] = 0; pixels[i+2] = 0;
+                    pixels[i+3] = 255; // Opaco Absoluto
+                } else {
+                    pixels[i+3] = 0;   // Transparente Absoluto (Cero fugas de luz de fondo)
+                }
             }
             mCtx.putImageData(maskData, 0, 0);
 
-            // 3. Crear el lienzo de la persona recortado
+            // 3. Crear el Lienzo Aislado de la Persona
             const personCanvas = document.createElement('canvas');
             personCanvas.width = procCanvas.width; personCanvas.height = procCanvas.height;
             const pCtx = personCanvas.getContext('2d');
-
-            // Dibujar tu video de cámara real
+            
+            pCtx.clearRect(0, 0, personCanvas.width, personCanvas.height);
             pCtx.drawImage(vCam, 0, 0, personCanvas.width, personCanvas.height);
 
-            // Cortar geométricamente con la máscara binarizada en la orilla exacta
+            // Cortar con la regla matemática 'destination-in' usando el buffer binarizado duro
             pCtx.globalCompositeOperation = 'destination-in';
             pCtx.drawImage(maskBuffer, 0, 0, personCanvas.width, personCanvas.height);
 
-            // 4. Pintar tu cuerpo recortado y limpio sin distorsiones sobre el lienzo final
+            // 4. Estampar tu silueta limpia e intacta arriba del fondo
             procCtx.drawImage(personCanvas, 0, 0, procCanvas.width, procCanvas.height);
         }
         procCtx.restore();
@@ -744,14 +750,14 @@
 
         context.fillStyle = '#ffffff';
         context.beginPath();
-        context.arc(cx - r*0.4, cy - r*0.1, r*0.2, 0, Math.PI * 2);
-        context.arc(cx + r*0.4, cy - r*0.1, r*0.2, 0, Math.PI * 2);
+        context.arc(cx - r*0.4, cy - r*0.2, r*0.2, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.2, r*0.2, 0, Math.PI * 2);
         context.fill();
 
         context.fillStyle = '#000000';
         context.beginPath();
-        context.arc(cx - r*0.4, cy - r*0.1, r*0.09, 0, Math.PI * 2);
-        context.arc(cx + r*0.4, cy - r*0.1, r*0.09, 0, Math.PI * 2);
+        context.arc(cx - r*0.4, cy - r*0.2, r*0.09, 0, Math.PI * 2);
+        context.arc(cx + r*0.4, cy - r*0.2, r*0.09, 0, Math.PI * 2);
         context.fill();
 
         if (isBear || isKoala || isDog || isFox || isMonkey) {
@@ -1040,6 +1046,9 @@
             } else if (camFx === 'dollyZoom') {
                 let dScale = 1 + Math.sin(camFxTimer * 2) * 0.25;
                 ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(dScale, dScale); ctx.translate(-(cx + cw/2), -(cy + ch/2));
+            } else if (camFx === 'forcedBlurRamp' || camFx === 'speedRamp') {
+                let ramp = 1 + Math.abs(Math.sin(camFxTimer * 6)) * 0.4;
+                ctx.translate(cx + cw/2, cy + ch/2); ctx.scale(ramp, ramp); ctx.translate(-(cx + cw/2), -(cy + ch/2));
             }
 
             if (camFx === 'freeze' || camFx === 'colorIsolation' || camFx === 'memeFreeze') {
