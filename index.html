@@ -2,21 +2,22 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CAPACITIUMX V345 - ULTIMATE STUDIO & PERFECT MATTING</title>
+    <title>CAPACITIUMX V346 - ULTIMATE STUDIO</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
     <style>
         :root { --neon: #00ff00; --dark: #050505; --red: #ff3333; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
+        /* PANTALLA DE BLOQUEO DE PAGO (PAYWALL) CORREGIDA */
         #paywall {
             position: fixed; top:0; left:0; width: 100vw; height: 100vh;
             background: rgba(5, 5, 5, 0.98); z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; padding: 20px; box-sizing: border-box;
         }
-        .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 450px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
+        .pay-card { background: #111; border: 2px solid var(--neon); border-radius: 12px; padding: 30px; max-width: 500px; width: 100%; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); }
         .pay-card h2 { color: var(--neon); margin-top: 0; }
-        .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 12px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; }
+        .clabe-box { background: #222; border: 1px dashed var(--neon); padding: 15px; font-weight: bold; font-size: 14px; margin: 15px 0; border-radius: 6px; color: #ffeb3b; text-align: left; line-height: 1.6; }
 
         header { background: #111; padding: 10px 20px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; }
         .logo { color: var(--neon); font-weight: bold; letter-spacing: 2px; }
@@ -69,12 +70,13 @@
         <p style="font-size:12px; color:#ccc;">Para obtener acceso ilimitado de por vida al editor profesional por <b>$500 MXN</b>, realiza tu depósito o transferencia SPEI:</p>
         
         <div class="clabe-box">
-            📌 <b>BANCO / BANCO DIGITAL:</b> Spin by OXXO<br>
             💳 <b>CLABE INTERBANCARIA:</b><br>
-            <span style="font-size:16px; color:var(--neon);">646180111800000000</span>
+            <span style="font-size:16px; color:var(--neon); font-family: monospace;">728969 0000 6819 1316</span><br><br>
+            📧 <b>CORREO DE ENVÍO:</b><br>
+            <span style="font-size:14px; color:#ffffff;">capacitiumx@gmail.com</span>
         </div>
         
-        <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
+        <p style="font-size:11px; color:#aaa;">Una vez realizado tu pago, envía tu comprobante al correo electrónico o por WhatsApp para recibir tu <b>Clave de Activación</b>.</p>
 
         <input type="text" id="license-input" class="input-text" style="text-align:center; font-size:14px; margin-bottom:10px;" placeholder="Ingresa tu Clave de Licencia...">
         <button class="btn-load" style="width:100%;" onclick="validateLicense()">DESBLOQUEAR AHORA</button>
@@ -101,7 +103,7 @@
 </div>
 
 <header>
-    <div class="logo">CAPACITIUMX V345 - ULTIMATE STUDIO</div>
+    <div class="logo">CAPACITIUMX V346 - ULTIMATE STUDIO</div>
     <div id="status-mic" style="color:yellow; font-size: 12px;">ESTADO: CARGANDO IA...</div>
 </header>
 
@@ -335,14 +337,6 @@
     </aside>
 
     <main class="monitor-area">
-        <div class="console">
-            <span style="font-size: 9px; color: var(--neon); text-align: center;">MODO CÁMARA</span>
-            <button class="btn-c" onclick="camMode='full'">👤 YO GRANDE</button>
-            <button class="btn-c" onclick="camMode='mini'">🖼️ YO CHICO</button>
-            <button class="btn-c" onclick="camMode='off'">🚫 OCULTARME</button>
-            
-            <button class="btn-c" id="playBtn" style="margin-top:5px;" onclick="togglePlay()">▶ PLAY FONDO</button>
-        </div>
         <canvas id="canvas-render" width="1280" height="720"></canvas>
     </main>
 </div>
@@ -362,6 +356,22 @@
 <canvas id="canvas-cam-processed" width="1280" height="720" style="display:none"></canvas>
 
 <script>
+    const MASTER_KEY = "CAPACITIUMX-MASTER-2026";
+
+    function validateLicense() {
+        const input = document.getElementById('license-input').value.trim();
+        if (input === MASTER_KEY || (input.startsWith("CAPX-") && input.length === 19)) {
+            localStorage.setItem('capX_activated', 'true');
+            document.getElementById('paywall').style.display = 'none';
+        } else {
+            document.getElementById('lic-error').style.display = 'block';
+        }
+    }
+
+    if (localStorage.getItem('capX_activated') === 'true') {
+        document.getElementById('paywall').style.display = 'none';
+    }
+
     const canvas = document.getElementById('canvas-render');
     const ctx = canvas.getContext('2d');
     const vCam = document.getElementById('v-cam');
@@ -612,7 +622,7 @@
         requestAnimationFrame(processAIFrames);
     }
 
-    // ALGORITMO HARD-UMBRALADO POR PIXEL POR HARDWARE (CERO HALOS NI MANCHAS BLANCAS)
+    // ARQUITECTURA DE RECORTE COMPUESTO BINARIO ROBUSTO
     function onResultsAI(results) {
         latestMask = results.segmentationMask;
 
@@ -624,10 +634,8 @@
         } else if (bgMode === 'none') {
             procCtx.drawImage(vCam, 0, 0, procCanvas.width, procCanvas.height);
         } else {
-            // 1. Renderizar el Fondo Virtual Primero
             drawVirtualBackgroundToCtx(procCtx, 0, 0, procCanvas.width, procCanvas.height);
 
-            // 2. Crear un buffer temporal para binarizar estrictamente el canal alpha de la máscara
             const maskBuffer = document.createElement('canvas');
             maskBuffer.width = procCanvas.width; maskBuffer.height = procCanvas.height;
             const mCtx = maskBuffer.getContext('2d');
@@ -639,18 +647,16 @@
             const pixels = maskData.data;
 
             for (let i = 0; i < pixels.length; i += 4) {
-                // Si la confianza es mayor al 40%, forzar el pixel a sólido (255), de lo contrario borrar (0)
                 let val = pixels[i];
                 if (val > 100) { 
                     pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
-                    pixels[i+3] = 255; // Opaco Absoluto
+                    pixels[i+3] = 255; 
                 } else {
-                    pixels[i+3] = 0;   // Transparente Absoluto (Cero fugas de luz de fondo)
+                    pixels[i+3] = 0;   
                 }
             }
             mCtx.putImageData(maskData, 0, 0);
 
-            // 3. Crear el Lienzo Aislado de la Persona
             const personCanvas = document.createElement('canvas');
             personCanvas.width = procCanvas.width; personCanvas.height = procCanvas.height;
             const pCtx = personCanvas.getContext('2d');
@@ -658,11 +664,9 @@
             pCtx.clearRect(0, 0, personCanvas.width, personCanvas.height);
             pCtx.drawImage(vCam, 0, 0, personCanvas.width, personCanvas.height);
 
-            // Cortar con la regla matemática 'destination-in' usando el buffer binarizado duro
             pCtx.globalCompositeOperation = 'destination-in';
             pCtx.drawImage(maskBuffer, 0, 0, personCanvas.width, personCanvas.height);
 
-            // 4. Estampar tu silueta limpia e intacta arriba del fondo sin distorsiones
             procCtx.drawImage(personCanvas, 0, 0, procCanvas.width, procCanvas.height);
         }
         procCtx.restore();
@@ -680,7 +684,7 @@
         
         let baseColor = '#ffa500';
         let detailColor = '#ff9900';
-        let isCat = false, isCrocodile = false, isBear = false, isKoala = false, isDog = false, isRabbit = false, isLion = false, isFox = false, isPanda = false, isMonkey = false, isShark = false;
+        let isCat = false, isDog = false, isCrocodile = false, isBear = false, isKoala = false, isRabbit = false, isLion = false, isFox = false, isPanda = false, isMonkey = false, isShark = false;
 
         switch(selectedAvatar) {
             case 'cat': baseColor = '#ffa500'; detailColor = '#ff9900'; isCat = true; break;
@@ -702,7 +706,7 @@
             context.beginPath(); context.moveTo(cx + r*0.8, cy - r*0.3); context.lineTo(cx + r*0.5, cy - r*1.3); context.lineTo(cx + r*0.1, cy - r*0.7); context.fill();
         } else if (isDog || isKoala || isBear || isPanda || isMonkey) {
             context.beginPath(); context.arc(cx - r*0.7, cy - r*0.7, r*0.35, 0, Math.PI*2); context.fill();
-            context.beginPath(); context.arc(cx + r*0.7, cy - r*0.7, r*0.35, 0, Math.PI*2); fill();
+            context.beginPath(); context.arc(cx + r*0.7, cy - r*0.7, r*0.35, 0, Math.PI*2); context.fill();
         } else if (isRabbit) {
             context.beginPath(); context.ellipse(cx - r*0.4, cy - r*1.2, r*0.2, r*0.6, -0.1, 0, Math.PI*2); context.fill();
             context.beginPath(); context.ellipse(cx + r*0.4, cy - r*1.2, r*0.2, r*0.6, 0.1, 0, Math.PI*2); context.fill();
@@ -832,7 +836,7 @@
         }
     }
 
-    function updateList() {
+    UXList = function() {
         const list = document.getElementById('media-list');
         list.innerHTML = "";
         library.forEach((m, i) => {
@@ -852,6 +856,7 @@
             list.appendChild(d);
         });
     }
+    function updateList() { UXList(); }
 
     function selectMedia(i) {
         curIdx = i;
@@ -1082,7 +1087,7 @@
         requestAnimationFrame(render);
     }
 
-    async function startCapture() {
+    async startCapture() {
         const btn = document.getElementById('recBtn');
         
         if (!isRecording) {
@@ -1113,7 +1118,6 @@
             isRecording = true;
             btn.innerText = "⏹ TERMINAR";
             btn.classList.add('recording');
-            document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
         } else {
             recorder.stop();
             isRecording = false;
@@ -1130,12 +1134,10 @@
             recorder.pause();
             isPaused = true;
             pBtn.innerText = "▶ REANUDAR";
-            document.getElementById('status-mic').innerText = "⏸ PAUSADO (CORTA AQUÍ)";
         } else {
             recorder.resume();
             isPaused = false;
             pBtn.innerText = "⏸ PAUSAR (CORTAR)";
-            document.getElementById('status-mic').innerText = "🔴 GRABANDO...";
         }
     }
 
